@@ -1657,6 +1657,27 @@ function toggleLiveview()
 	size();
 }
 
+function toggleLiveviewNEBULITE()
+{
+	//WLEDMM adding liveview2D support
+	if (isInfo && isM) toggleInfo();
+	if (isNodes && isM) toggleNodes();
+	isLv = !isLv;
+
+	var lvID = "liveviewNEBULITE"
+	if (isLv) {
+	var cn = '<iframe id="liveviewNEBULITE" src="about:blank" allowtransparency="true" scrolling="no" seamless></iframe>';
+	d.getElementById('kliveviewNEBULITE').innerHTML = cn;
+	}
+
+	gId(lvID).style.display = (isLv) ? "inline-block":"none";
+	var url = (loc?`http://${locip}`:'') + "/liveviewNEBULITE";
+	gId(lvID).src = (isLv) ? url:"about:blank";
+	gId('buttonSr').className = (isLv) ? "active":"";
+	if (!isLv && ws && ws.readyState === WebSocket.OPEN) ws.send('{"lv":false}');
+	size();
+}
+
 function toggleInfo()
 {
 	if (isNodes) toggleNodes();

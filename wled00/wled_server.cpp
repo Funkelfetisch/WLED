@@ -131,6 +131,30 @@ void initServer()
     //request->send_P(200, "text/html", PAGE_liveviewws);
   });
   #endif
+  #ifndef WLED_DISABLE_NEBULITE_LIVEPREVIEW
+  server.on("/liveviewNEBULITE", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (handleIfNoneMatchCacheHeader(request)) return;
+    AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", PAGE_liveviewNEBULITE, PAGE_liveviewNEBULITE_length);
+    response->addHeader(FPSTR(s_content_enc),"gzip");
+    setStaticContentCacheHeaders(response);
+    request->send(response);
+    //request->send_P(200, "text/html", PAGE_liveviewws);
+  });
+
+  server.on("/NEBULITE_fannypack_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_fannypack_leds.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_fannypack_leds_png, 81137);
+    }
+  });
+  server.on("/NEBULITE_fannypack_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_fannypack_top.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_fannypack_top_png, 34639);
+    }
+  });
+
+  #endif
 #else
   server.on("/liveview", HTTP_GET, [](AsyncWebServerRequest *request){
     if (handleIfNoneMatchCacheHeader(request)) return;

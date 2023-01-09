@@ -419,6 +419,22 @@ const char PAGE_dmxmap[] PROGMEM = R"=====()=====";
       file: "rangetouch.js",
       name: "rangetouchJs",
       method: "gzip"
+    },
+    {
+      file: "../../usermods/NEBULITE_Previews/liveviewwsNEBULITE.html",
+      name: "PAGE_liveviewNEBULITE",
+      method: "gzip",
+      filter: "html-minify",
+    },
+    {
+      file: "../../usermods/NEBULITE_Previews/assets/fannypack_leds.png",
+      name: "NEBULITE_fannypack_leds_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE_Previews/assets/fannypack_top.png",
+      name: "NEBULITE_fannypack_top_png",
+      method: "binary",
     }
   ],
   "wled00/html_other.h"
