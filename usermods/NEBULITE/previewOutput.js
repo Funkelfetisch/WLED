@@ -9,7 +9,7 @@ function radialGradient(c, x, y, r1, r2, r, g, b) {
 }
 
 function colorsRGB(colors, offset) {
-  offset = (offset - 1)*4; //correct for zero index, multiply by 4 bytes per pixel
+  offset = (offset - 1) * 3; //correct for zero index, multiply by N bytes per pixel
   var color ="rgb(" + colors[offset] + "," + colors[offset+1] + "," + colors[offset+2] + ")";
   return color;
 }
@@ -84,6 +84,7 @@ var outputTypes = {
     drawFn: function (c, colors) {
       //if the images haven't loaded yet, show some gray
       if (!canvases['fannypack_leds.png'] || ! canvases['fannypack_top.png']) {
+          console.log("images not loaded yet...");
         c.globalCompositeOperation = 'source-over';
         c.fillStyle = "rgb(64,64,64)";
         c.fillRect(0, 0, 200, 100);
@@ -283,16 +284,9 @@ for (let [key, outputType] of Object.entries(outputTypes)) {
       ctx.drawImage(img, 0, 0, outputType.width, outputType.height);
       canvases[name] = canvas;
     };
-    img.src = '/assets/previews/' + name;
+    img.src = '/NEBULITE_' + name;
   });
 }
-
-export default outputTypes;
-
-
-
-
-
 
 
 function draw_croptop2021_5__1_0(ctx, c1, c2) {
@@ -480,14 +474,6 @@ function draw_croptop2021_7__8_3(ctx, c1, c2) {
   ctx.fillStyle = grd;
   ctx.fill();
 }
-
-
-
-
-
-
-
-
 
 
 // This file is generated from the pathgen tool from the fannypack svg file

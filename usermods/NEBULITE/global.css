@@ -1,0 +1,180 @@
+#liveviewNEBULITE {
+	background-color: transparent;
+	border: 0px none transparent;
+	padding: 0px;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: middle;
+	width: 200px;
+	height: 100px;
+}
+
+.lstIname {
+  -webkit-filter: unset !important;
+  filter: unset !important;
+}
+
+.lstI, #putil .btn-s, #segutil .btn-s, #segutil2 .btn-s, .fnd input[type="text"], .btn, .pres, .seg {
+  background-color: black !important;
+  border: 1px solid #7f73f5 !important;
+}
+
+.selected {
+  background-color: black !important;
+  border: 1px solid white !important;
+}
+
+.wrapper {
+  background-color: black !important;
+  border-bottom: 1px solid #7f73f5 !important;
+}
+
+#bot {
+  background-color: black !important;
+  border-top: 1px solid #7f73f5 !important;
+}
+
+.tab button.active {
+  background-color: #7f73f5 !important;
+}
+
+.filter, .option {
+  background: #9288f2 !important;
+}
+
+.slider, #connind {
+  background-color: #7f73f5 !important;
+}
+
+#connind {
+  bottom: 16px !important;
+  z-index: 10;
+}
+
+body {
+  scrollbar-color: #7f73f5 transparent;
+}
+
+.nebuliteCanvas {
+  padding: 8px 39px;
+  position: relative;
+}
+
+.checkmark, .radiomark {
+  border: 1px solid #7f73f5;
+}
+
+input[type="number"], input[type="text"] {
+  background: transparent;
+  border: 1px solid #7f73f5;
+}
+
+.check:hover input ~ .checkmark, .radio:hover input ~ .radiomark {
+  background-color: #574ea6;
+}
+
+/* #filters {
+  visibility: unset !important;
+} */
+
+#namelabel, #psFind {
+  display: none !important;
+}
+body > .container {
+  display: flex; 
+}
+
+#Presets {
+  order: 1;
+}
+
+#Colors {
+  order: 2;
+}
+
+#Effects {
+  order: 3;
+}
+
+#Segments {
+  display: none;
+}
+
+#pcont {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin: 0;
+  width: 100%;
+}
+
+#Presets .lstI {
+  margin: 5px !important;
+  position: relative;
+}
+#pcont .selected:not([class*="expanded"]) {
+  bottom: unset !important;
+  top: unset !important;
+}
+.nebuliteCanvas {
+  padding: 8px 0;
+  position: relative;
+  transform: scale(0.85);
+  transform-origin: left;
+}
+
+.pres .lstIcontent, .segin {
+  transform: scale(0.65);
+  transform-origin: left;
+}
+.pid {
+  display: none;
+}
+div.c:nth-child(8) {
+  display: initial !important;
+}
+.c, .h, .po2, .po1 {
+  display: none !important;
+}
+.tablinks {
+  float: unset !important;
+}
+.wi {
+  filter: invert(100%);
+}
+
+.pcMode #Presets {
+  width: 50%;
+}
+.pcMode #Colors {
+  width: 25%;
+}
+.pcMode #Effects {
+  width: 25%;
+}
+
+.pcMode #pcont {
+  grid-template-columns: 30% 30% 30%;
+}
+
+@media screen and (min-width: 2000px) {
+  .pcMode #pcont {
+    grid-template-columns: 25% 25% 25% 25%;
+  }
+}
+@media screen and (min-width: 440px) {
+  .nebuliteCanvas {
+    transform: scale(1) !important;
+  }
+}
+
+#Presets .lstI {
+  text-align: center;
+}
+
+#toast {
+  background-color: #9f94ff;
+}
+
+input[type="number"]:focus, input[type="text"]:focus {
+  background: #27234d;
+}

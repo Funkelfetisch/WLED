@@ -1,9 +1,5 @@
 #include "wled.h"
 
-#ifdef USERMOD_NEBULITE
-  #include <libb64/cencode.h>
-#endif
-
 /*
  * Methods to handle saving and loading presets to/from the filesystem
  */
@@ -25,6 +21,8 @@ static const char *getFileName(bool persist = true) {
 }
 
 #ifdef USERMOD_NEBULITE
+  #include <libb64/cencode.h>
+
   unsigned long nebulitePresetRecordingLastRecord = 0;
   char nebuliteJsonBuffer[7000];
 
@@ -191,7 +189,7 @@ void handlePresets()
     #ifdef USERMOD_NEBULITE
     if (handleRecording())
     #endif
-      doSaveState();
+    doSaveState();
     return;
   }
 
@@ -321,9 +319,6 @@ void handlePresets()
 //called from handleSet(PS=) [network callback (fileDoc==nullptr), IR (irrational), deserializeState, UDP] and deserializeState() [network callback (filedoc!=nullptr)]
 void savePreset(byte index, const char* pname, JsonObject sObj)
 {
-  Serial.println("serialized object");
-  serializeJsonPretty(sObj, Serial);
-
   if (index == 0 || (index > 250 && index < 255)) return;
   if (pname) strlcpy(saveName, pname, 33);
   else {

@@ -1508,14 +1508,3 @@ TD .checkmark, TD .radiomark {
 	}
 }
 
-
-#liveviewNEBULITE {
-	background-color: transparent;
-	border: 0px none transparent;
-	padding: 0px;
-	overflow: hidden;
-	display: inline-block;
-	vertical-align: middle;
-	width: 200px;
-	height: 100px;
-}

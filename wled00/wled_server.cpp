@@ -140,17 +140,61 @@ void initServer()
     request->send(response);
     //request->send_P(200, "text/html", PAGE_liveviewws);
   });
+  server.on("/previewOutput.js", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (handleIfNoneMatchCacheHeader(request)) return;
+    AsyncWebServerResponse *response = request->beginResponse_P(200, "application/javascript", NEBULITE_previewOutput_js, NEBULITE_previewOutput_js_length);
+    response->addHeader(FPSTR(s_content_enc),"gzip");
+    setStaticContentCacheHeaders(response);
+    request->send(response);
+    //request->send_P(200, "text/html", PAGE_liveviewws);
+  });
 
   server.on("/NEBULITE_fannypack_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
     if(!handleFileRead(request, "/NEBULITE_fannypack_leds.png"))
     {
-      request->send_P(200, "image/png", NEBULITE_fannypack_leds_png, 81137);
+      request->send_P(200, "image/png", NEBULITE_fannypack_leds_png, 37147);
     }
   });
   server.on("/NEBULITE_fannypack_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
     if(!handleFileRead(request, "/NEBULITE_fannypack_top.png"))
     {
       request->send_P(200, "image/png", NEBULITE_fannypack_top_png, 34639);
+    }
+  });
+  server.on("/NEBULITE_backpack_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_backpack_leds.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_backpack_leds_png, 57344);
+    }
+  });
+  server.on("/NEBULITE_backpack_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_backpack_top.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_backpack_top_png, 34166);
+    }
+  });
+  server.on("/NEBULITE_croptop_leds_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_croptop_leds_leds.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_croptop_leds_png, 16221);
+    }
+  });
+  server.on("/NEBULITE_croptop_leds_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_croptop_leds_top.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_croptop_top_png, 136581);
+    }
+  });
+  server.on("/NEBULITE_jacket_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_jacket_leds.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_jacket_leds_png, 74824);
+    }
+  });
+  server.on("/NEBULITE_jacket_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_jacket_top.png"))
+    {
+      request->send_P(200, "image/png", NEBULITE_jacket_top_png, 9370);
     }
   });
 
@@ -372,7 +416,7 @@ void initServer()
   #endif
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     if (captivePortal(request)) return;
-    serveIndexOrWelcome(request);
+    serveIndex(request);
   });
 
   #ifdef WLED_ENABLE_WEBSOCKETS
