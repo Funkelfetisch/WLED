@@ -94,7 +94,7 @@ uint16_t mode_2DWeather(void) {
   return FRAMETIME;
 }
 
-static const char _data_FX_MODE_2DWEATHER[] PROGMEM = "Weather@;!;!;pal=54,2d"; //temperature palette
+static const char _data_FX_MODE_2DWEATHER[] PROGMEM = "Weather@;!;!;2;pal=54"; //temperature palette
 
 //utility function, move somewhere else???
 void epochToString(time_t time, char *timeString) {
@@ -317,7 +317,7 @@ class WeatherUsermod : public Usermod {
 
     void appendConfigData()
     {
-      oappend(SET_F("addInfo('Weather:help',0,'<button onclick=\"location.href=&quot;https://mm.kno.wled.ge/moonmodules/Weather&quot;\" type=\"button\">?</button>');"));  // 0 is field type, 1 is actual field
+      oappend(SET_F("addInfo('Weather:help',0,'<button onclick=\"location.href=&quot;https://mm.kno.wled.ge/moonmodules/Weather&quot;\" type=\"button\">?</button>');"));
       
       oappend(SET_F("dd=addDropdown('Weather','units');"));
       oappend(SET_F("addOption(dd,'Kelvin',0);"));

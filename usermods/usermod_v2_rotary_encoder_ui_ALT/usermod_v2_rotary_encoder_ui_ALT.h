@@ -272,6 +272,7 @@ public:
       DEBUG_PRINTLN(F("Invalid GPIO pins for Usermod Rotary Encoder (ALT)."));   //WLEDMM add debug info
       return;      
     }
+    if (!enabled) return;     // WLEDMM don't allocated PINS if disabled
     if (!pinManager.allocateMultiplePins(pins, 3, PinOwner::UM_RotaryEncoderUI)) {
       // BUG: configuring this usermod with conflicting pins
       //      will cause it to de-allocate pins it does not own
@@ -615,8 +616,8 @@ public:
 
 
   void changeCustom(uint8_t par, bool increase) {
-    uint8_t val = 0;
   #ifdef USERMOD_FOUR_LINE_DISPLAY
+    uint8_t val = 0;
     if (display && display->wakeDisplay()) {
       display->redraw(true);
       // Throw away wake up input
@@ -628,11 +629,13 @@ public:
     if (applyToAll) {
       uint8_t id = strip.getFirstSelectedSegId();
       Segment& sid = strip.getSegment(id);
+  #ifdef USERMOD_FOUR_LINE_DISPLAY
       switch (par) {
         case 3:  val = sid.custom3 = max(min((increase ? sid.custom3+fadeAmount : sid.custom3-fadeAmount), 255), 0); break;
         case 2:  val = sid.custom2 = max(min((increase ? sid.custom2+fadeAmount : sid.custom2-fadeAmount), 255), 0); break;
         default: val = sid.custom1 = max(min((increase ? sid.custom1+fadeAmount : sid.custom1-fadeAmount), 255), 0); break;
       }
+  #endif
       for (byte i=0; i<strip.getSegmentsNum(); i++) {
         Segment& seg = strip.getSegment(i);
         if (!seg.isActive() || i == id) continue;
@@ -643,12 +646,14 @@ public:
         }
       }
     } else {
+  #ifdef USERMOD_FOUR_LINE_DISPLAY
       Segment& seg = strip.getMainSegment();
       switch (par) {
         case 3:  val = seg.custom3 = max(min((increase ? seg.custom3+fadeAmount : seg.custom3-fadeAmount), 255), 0); break;
         case 2:  val = seg.custom2 = max(min((increase ? seg.custom2+fadeAmount : seg.custom2-fadeAmount), 255), 0); break;
         default: val = seg.custom1 = max(min((increase ? seg.custom1+fadeAmount : seg.custom1-fadeAmount), 255), 0); break;
       }
+  #endif
     }
     lampUdated();
   #ifdef USERMOD_FOUR_LINE_DISPLAY
@@ -864,6 +869,22 @@ public:
     DEBUG_PRINTLN(F("Rotary Encoder config saved."));
   }
 
+  //WLEDMM: add appendConfigData
+  void appendConfigData()
+  {
+    oappend(SET_F("addHB('Rotary-Encoder');"));
+
+    #ifdef ENCODER_DT_PIN
+      oappend(SET_F("xOpt('Rotary-Encoder:DT-pin',1,' ⎌',")); oappendi(ENCODER_DT_PIN); oappend(");"); 
+    #endif
+    #ifdef ENCODER_CLK_PIN
+      oappend(SET_F("xOpt('Rotary-Encoder:CLK-pin',1,' ⎌',")); oappendi(ENCODER_CLK_PIN); oappend(");"); 
+    #endif
+    #ifdef ENCODER_SW_PIN
+      oappend(SET_F("xOpt('Rotary-Encoder:SW-pin',1,' ⎌',")); oappendi(ENCODER_SW_PIN); oappend(");"); 
+    #endif
+  }
+
   /**
    * readFromConfig() is called before setup() to populate properties from values stored in cfg.json
    *
@@ -906,7 +927,7 @@ public:
         pinA = newDTpin;
         pinB = newCLKpin;
         pinC = newSWpin;
-        if (pinA<0 || pinB<0 || pinC<0) {
+        if (pinA<0 || pinB<0) { // WLEDMM support for rotary without pushbutton
           enabled = false;
           return true;
         }

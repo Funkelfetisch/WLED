@@ -47,7 +47,9 @@ void WLED::loop()
   #endif
 
   handleTime();
+  #ifndef WLED_DISABLE_INFRARED
   handleIR();        // 2nd call to function needed for ESP32 to return valid results -- should be good for ESP8266, too
+  #endif
   handleConnection();
   handleSerial();
   handleNotifications();
@@ -69,7 +71,9 @@ void WLED::loop()
 
   yield();
   handleIO();
+  #ifndef WLED_DISABLE_INFRARED
   handleIR();
+  #endif
   #ifndef WLED_DISABLE_ALEXA
   handleAlexa();
   #endif
@@ -140,7 +144,9 @@ void WLED::loop()
   }
   if (millis() - lastMqttReconnectAttempt > 30000 || lastMqttReconnectAttempt == 0) { // lastMqttReconnectAttempt==0 forces immediate broadcast
     lastMqttReconnectAttempt = millis();
+    #ifndef WLED_DISABLE_MQTT
     initMqtt();
+    #endif
     yield();
     // refresh WLED nodes list
     refreshNodeList();
@@ -155,14 +161,14 @@ void WLED::loop()
   }
 
   //LED settings have been saved, re-init busses
-  //This code block causes severe FPS drop on ESP32 with the original "if (busConfigs[0] != nullptr)" conditional. Investigate! 
+  //This code block causes severe FPS drop on ESP32 with the original "if (busConfigs[0] != nullptr)" conditional. Investigate!
   if (doInitBusses) {
     doInitBusses = false;
     DEBUG_PRINTLN(F("Re-init busses."));
     bool aligned = strip.checkSegmentAlignment(); //see if old segments match old bus(ses)
     busses.removeAll();
     uint32_t mem = 0;
-    for (uint8_t i = 0; i < WLED_MAX_BUSSES; i++) {
+    for (uint8_t i = 0; i < WLED_MAX_BUSSES+WLED_MIN_VIRTUAL_BUSSES; i++) {
       if (busConfigs[i] == nullptr) break;
       mem += BusManager::memUsage(*busConfigs[i]);
       if (mem <= MAX_LED_MEMORY) {
@@ -276,6 +282,8 @@ void WLED::setup()
   #endif
 
   Serial.begin(115200);
+  if (!Serial) delay(1000); // WLEDMM make sure that Serial has initalized
+
   #if !ARDUINO_USB_CDC_ON_BOOT
   Serial.setTimeout(50);  // this causes troubles on new MCUs that have a "virtual" USB Serial (HWCDC)
   #else
@@ -297,11 +305,13 @@ void WLED::setup()
   Serial0.setDebugOutput(false);
   Serial.setDebugOutput(true);
   #else
-  Serial.setTimeout(50);
+  if (Serial) Serial.setTimeout(50);  // WLEDMM - only when serial is initialized
   #endif
 
   //Serial0.setDebugOutput(false);
-  //Serial.setDebugOutput(true);
+  #ifdef WLED_DEBUG
+  Serial.setDebugOutput(true);
+  #endif
   USER_FLUSH(); delay(100);
   USER_PRINTLN();
   USER_PRINT(F("---WLED "));
@@ -323,12 +333,12 @@ void WLED::setup()
     DEBUG_PRINTLN(F("arduino-esp32 v1.0.x\n"));  // we can't say in more detail.
   #endif
 
-  DEBUG_PRINT(F("CPU:   ")); DEBUG_PRINT(ESP.getChipModel());
-  DEBUG_PRINT(F(" rev.")); DEBUG_PRINT(ESP.getChipRevision());
-  DEBUG_PRINT(F(", ")); DEBUG_PRINT(ESP.getChipCores()); DEBUG_PRINT(F(" core(s)"));
-  DEBUG_PRINT(F(", ")); DEBUG_PRINT(ESP.getCpuFreqMHz()); DEBUG_PRINTLN(F("MHz."));
-  DEBUG_PRINT(F("FLASH: ")); DEBUG_PRINT((ESP.getFlashChipSize()/1024)/1024);
-  DEBUG_PRINT(F("MB, Mode ")); DEBUG_PRINT(ESP.getFlashChipMode());
+  USER_PRINT(F("CPU:   ")); USER_PRINT(ESP.getChipModel());
+  USER_PRINT(F(" rev.")); USER_PRINT(ESP.getChipRevision());
+  USER_PRINT(F(", ")); USER_PRINT(ESP.getChipCores()); USER_PRINT(F(" core(s)"));
+  USER_PRINT(F(", ")); USER_PRINT(ESP.getCpuFreqMHz()); USER_PRINTLN(F("MHz."));
+  USER_PRINT(F("FLASH: ")); USER_PRINT((ESP.getFlashChipSize()/1024)/1024);
+  USER_PRINT(F("MB, Mode ")); USER_PRINT(ESP.getFlashChipMode());
   #ifdef WLED_DEBUG
   switch (ESP.getFlashChipMode()) {
     // missing: Octal modes
@@ -339,13 +349,38 @@ void WLED::setup()
     default: break;
   }
   #endif
-  DEBUG_PRINT(F(", speed ")); DEBUG_PRINT(ESP.getFlashChipSpeed()/1000000);DEBUG_PRINTLN(F("MHz."));
+  USER_PRINT(F(", speed ")); USER_PRINT(ESP.getFlashChipSpeed()/1000000);USER_PRINTLN(F("MHz."));
   
   #if defined(WLED_DEBUG) && defined(ARDUINO_ARCH_ESP32)
   showRealSpeed();
   #endif
 
 #else
+  // WLEDMM: more info for 8266
+  USER_PRINTLN();
+  USER_PRINTF("CPU:   ESP8266 (id 0x%08X)", ESP.getChipId());
+  USER_PRINT(F(", ")); USER_PRINT(ESP.getCpuFreqMHz()); USER_PRINTLN(F("MHz."));
+  USER_PRINT(F("CPU    Last Restart Reason = "));
+  USER_PRINT((int)ESP.getResetInfoPtr()->reason); USER_PRINT(F(" -> "));
+  USER_PRINTLN(ESP.getResetInfo());
+
+  USER_PRINT(F("FLASH: ")); USER_PRINT((ESP.getFlashChipRealSize()/1024)/1024);
+  USER_PRINT(F("MB, Mode ")); USER_PRINT((int)ESP.getFlashChipMode());
+  #ifdef WLED_DEBUG
+  switch (ESP.getFlashChipMode()) {
+    // missing: Octal modes
+    case FM_QIO:  DEBUG_PRINT(F(" (QIO)")); break;
+    case FM_QOUT: DEBUG_PRINT(F(" (QOUT)"));break;
+    case FM_DIO:  DEBUG_PRINT(F(" (DIO)")); break;
+    case FM_DOUT: DEBUG_PRINT(F(" (DOUT)"));break;
+    default: break;
+  }
+  #endif
+  USER_PRINT(F(", speed ")); USER_PRINT(ESP.getFlashChipSpeed()/1000000);USER_PRINT(F("MHz; "));
+  USER_PRINT(F(" chip ID = 0x"));
+  USER_PRINTF("%08X\n", ESP.getFlashChipId());
+  USER_PRINTLN();
+
   DEBUG_PRINT(F("esp8266 "));
   DEBUG_PRINTLN(ESP.getCoreVersion());
 #endif
@@ -393,6 +428,11 @@ void WLED::setup()
     pinMode(NEOPIXEL_POWER, OUTPUT);
     digitalWrite(NEOPIXEL_POWER, HIGH);
   #endif
+  #ifdef NEOPIXEL_I2C_POWER
+    pinManager.allocatePin(NEOPIXEL_I2C_POWER, true, PinOwner::Relay);  // just to ensure this GPIO will not get used for other purposes
+    pinMode(NEOPIXEL_I2C_POWER, OUTPUT);
+    digitalWrite(NEOPIXEL_I2C_POWER, HIGH);
+  #endif
 #endif
 
   USER_PRINTLN();
@@ -411,7 +451,7 @@ void WLED::setup()
   if (!fsinit) {
     DEBUG_PRINTLN(F("FS failed!"));
     errorFlag = ERR_FS_BEGIN;
-  } 
+  }
 #ifdef WLED_ADD_EEPROM_SUPPORT
   else deEEP();
 #else
@@ -463,8 +503,10 @@ void WLED::setup()
 
   // fill in unique mdns default
   if (strcmp(cmDNS, "x") == 0) sprintf_P(cmDNS, PSTR("wled-%*s"), 6, escapedMac.c_str() + 6);
+#ifndef WLED_DISABLE_MQTT
   if (mqttDeviceTopic[0] == 0) sprintf_P(mqttDeviceTopic, PSTR("wled/%*s"), 6, escapedMac.c_str() + 6);
   if (mqttClientID[0] == 0)    sprintf_P(mqttClientID, PSTR("WLED-%*s"), 6, escapedMac.c_str() + 6);
+#endif
 
 #ifdef WLED_ENABLE_ADALIGHT
   if (Serial.available() > 0 && Serial.peek() == 'I') handleImprovPacket();
@@ -523,6 +565,14 @@ void WLED::setup()
     if(pinManager.isPinOk(pinNr, false)) {
       //if ((!pinManager.isPinAllocated(pinNr)) && (pinManager.getPinSpecialText(pinNr).length() == 0)) continue;      // un-comment to hide no-name,unused GPIO pins
       bool is_inOut = pinManager.isPinOk(pinNr, true);
+#if 0 // for testing
+      USER_PRINT(pinManager.isPinAnalog(pinNr) ? "A": " ");
+      USER_PRINT(pinManager.isPinADC1(pinNr) ? "1": " ");
+      USER_PRINT(pinManager.isPinADC2(pinNr) ? "2": " ");
+      USER_PRINT(pinManager.isPinTouch(pinNr) ? "T": " ");
+      USER_PRINT(pinManager.isPinPWM(pinNr) ? " P": "  ");
+      USER_PRINT(pinManager.isPinINT(pinNr) ? "I ": "  ");
+#endif
       USER_PRINTF("%s  %2d\t  %-17s %s\t  %s\n", 
           (is_inOut?"i/o":"in "), 
           pinNr, 
@@ -533,6 +583,27 @@ void WLED::setup()
       USER_FLUSH();  // avoid lost lines (Serial buffer overflow)
     }
   }
+
+#if 0 // for testing
+  USER_PRINTLN(F("\n"));
+  USER_PRINTF("ADC1-0 = %d, ADC1-3 = %d, ADC1-7 = %d, ADC2-0 = %d, ADC2-1 = %d, ADC2-8 = %d, ADC2-10 = %d\n",
+    pinManager.getADCPin(PM_ADC1, 0), pinManager.getADCPin(PM_ADC1, 3), pinManager.getADCPin(PM_ADC1, 7), 
+    pinManager.getADCPin(PM_ADC2, 0), pinManager.getADCPin(PM_ADC2, 1), pinManager.getADCPin(PM_ADC2, 8),
+    pinManager.getADCPin(PM_ADC2, 10)
+  );
+  USER_PRINTLN();
+  for(int p=0; p<11; p++) {
+    if(pinManager.getADCPin(PinManagerClass::ADC1, p) < 255)
+      USER_PRINTF("ADC1-%d = %d, ", p, pinManager.getADCPin(PinManagerClass::ADC1, p));
+  }
+  USER_PRINTLN();
+  for(int p=0; p<11; p++) {
+    if(pinManager.getADCPin(PinManagerClass::ADC2, p) < 255)
+      USER_PRINTF("ADC2-%d = %d, ", p, pinManager.getADCPin(PinManagerClass::ADC2, p));
+  }
+  USER_PRINTLN(F("\n"));
+#endif
+
   USER_PRINTLN(F("WLED initialization done.\n"));
   delay(50);
   // repeat Ada prompt
@@ -657,7 +728,7 @@ bool WLED::initEthernet()
   } else {
     DEBUG_PRINT(F("initE: Failing due to invalid eth_clk_mode ("));
     DEBUG_PRINT(es.eth_clk_mode);
-    DEBUG_PRINTLN(F(")"));
+    DEBUG_PRINTLN(")");
     return false;
   }
 
@@ -667,10 +738,10 @@ bool WLED::initEthernet()
   }
 
   if (!ETH.begin(
-                (uint8_t) es.eth_address, 
-                (int)     es.eth_power, 
-                (int)     es.eth_mdc, 
-                (int)     es.eth_mdio, 
+                (uint8_t) es.eth_address,
+                (int)     es.eth_power,
+                (int)     es.eth_mdc,
+                (int)     es.eth_mdio,
                 (eth_phy_type_t)   es.eth_type,
                 (eth_clock_mode_t) es.eth_clk_mode
                 )) {
@@ -742,6 +813,10 @@ void WLED::initConnection()
   WiFi.begin(clientSSID, clientPass);
 
 #ifdef ARDUINO_ARCH_ESP32
+#ifdef WLEDMM_WIFI_POWERON_HACK
+  // WLEDMM - if your board has issues connecting to WiFi, try this
+  WiFi.setTxPower(WIFI_POWER_5dBm);  // required for ESP32-C3FH4-RGB
+#endif
   WiFi.setSleep(!noWifiSleep);
   WiFi.setHostname(hostname);
 #else
@@ -762,9 +837,11 @@ void WLED::initInterfaces()
   }
 #endif
 
+#ifndef WLED_DISABLE_ALEXA
   // init Alexa hue emulation
   if (alexaEnabled)
     alexaInit();
+#endif
 
 #ifndef WLED_DISABLE_OTA
   if (aOtaEnabled)
@@ -810,7 +887,9 @@ void WLED::initInterfaces()
   e131.begin(e131Multicast, e131Port, e131Universe, E131_MAX_UNIVERSE_COUNT);
   ddp.begin(false, DDP_DEFAULT_PORT);
   reconnectHue();
+#ifndef WLED_DISABLE_MQTT
   initMqtt();
+#endif
   interfacesInited = true;
   wasConnected = true;
 }

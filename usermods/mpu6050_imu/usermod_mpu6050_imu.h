@@ -50,6 +50,11 @@
 // WLEDMM: make sure that the "standard" Wire object is used
 #define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
 
+// WLEDMM avoid stupid warnings
+#undef DEBUG_PRINT
+#undef DEBUG_PRINTLN
+#undef DEBUG_PRINTF
+
 #include <I2Cdev.h>
 
 #include <MPU6050_6Axis_MotionApps20.h>
@@ -72,7 +77,7 @@
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
+    //#include "Wire.h"        // WLEDMM not necessary
 #endif
 
 // ================================================================
@@ -111,7 +116,7 @@ class MPU6050Driver : public Usermod {
     float ypr[3]  = {0.0f}; // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
     #if !defined(ARDUINO_ARCH_ESP32) || !defined(MPU6050_INT_GPIO)
-    static const int INTERRUPT_PIN = 15; // use pin 15 on ESP8266
+    static const int INTERRUPT_PIN = -1; // WLEDMM: not use pin 15 (on ESP8266) as can and will cause conflict with other pins
     #else
     static const int INTERRUPT_PIN = MPU6050_INT_GPIO;       // WLEDMM
     #endif
@@ -119,36 +124,31 @@ class MPU6050Driver : public Usermod {
     void setup() {
     // WLEDMM begin
       USER_PRINTLN(F("mpu setup"));
-#if 0  // WLEDMM: delay I2C pin alloc
-      int8_t hw_scl = i2c_scl<0 ? HW_PIN_SCL : i2c_scl;
-      int8_t hw_sda = i2c_sda<0 ? HW_PIN_SDA : i2c_sda;
-#else
-      int8_t hw_scl = i2c_scl;
-      int8_t hw_sda = i2c_sda;
-#endif
-
-      PinManagerPinType pins[2] = { { hw_scl, true }, { hw_sda, true } };
-      if ((hw_scl < 0) || (hw_sda < 0)) {
+      PinManagerPinType pins[2] = { { i2c_scl, true }, { i2c_sda, true } };
+      if ((i2c_scl < 0) || (i2c_sda < 0)) {
         //enabled = false;
-        USER_PRINTF("mpu6050: warning - ivalid I2C pins: sda=%d scl=%d\n", hw_sda, hw_scl);
+        USER_PRINTF("mpu6050: warning - ivalid I2C pins: sda=%d scl=%d\n", i2c_sda, i2c_scl);
         //return;
       }
 
       if (pins[1].pin < 0 || pins[0].pin < 0)  { enabled=false; dmpReady = false; return; }  //WLEDMM bugfix - ensure that "final" GPIO are valid and no "-1" sneaks trough
+      //if (!pinManager.allocateMultiplePins(pins, 2, PinOwner::HW_I2C)) {       
 
-      if (!pinManager.allocateMultiplePins(pins, 2, PinOwner::HW_I2C)) { 
+      // WLEDMM join I2C HW wire
+      if (!pinManager.joinWire()) {
         enabled = false;
-        USER_PRINTF("mpu6050: failed to allocate I2C sda=%d scl=%d\n", hw_sda, hw_scl);
+        dmpReady = false;
+        USER_PRINTF("mpu6050: failed to allocate I2C sda=%d scl=%d\n", i2c_sda, i2c_scl);
         return;
       }
-    // WLEDMM end
+      // WLEDMM end
 
       // join I2C bus (I2Cdev library doesn't do this automatically)
       #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #if defined(ARDUINO_ARCH_ESP32)
-      Wire.begin(pins[1].pin, pins[0].pin);        // WLEDMM fix - need to use proper pins, in case that Wire was not started yet. Call will silently fail if Wire is initialized already.
+      //Wire.begin(pins[1].pin, pins[0].pin);        // WLEDMM fix - need to use proper pins, in case that Wire was not started yet. Call will silently fail if Wire is initialized already.
 #else
-      Wire.begin();  // WLEDMM - i2c pins on 8266 are fixed.
+      //Wire.begin();  // WLEDMM - i2c pins on 8266 are fixed.
 #endif
 
           Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
@@ -228,13 +228,13 @@ class MPU6050Driver : public Usermod {
           // get expected DMP packet size for later comparison
           packetSize = mpu.dmpGetFIFOPacketSize();
       } else {
-          // ERROR!
-          // 1 = initial memory load failed
-          // 2 = DMP configuration updates failed
-          // (if it's going to break, usually the code will be 1)
-          USER_PRINT(F("mpu6050: DMP Initialization failed (code "));
-          USER_PRINT(devStatus);
-          USER_PRINTLN(F(")"));
+        // ERROR!
+        // 1 = initial memory load failed
+        // 2 = DMP configuration updates failed
+        // (if it's going to break, usually the code will be 1)
+        DEBUG_PRINT(F("DMP Initialization failed (code "));
+        DEBUG_PRINT(devStatus);
+        DEBUG_PRINTLN(")");
       }
     }
 

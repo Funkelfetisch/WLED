@@ -4,11 +4,7 @@
 
 #ifndef PIR_SENSOR_PIN
   // compatible with QuinLED-Dig-Uno
-  #ifdef ARDUINO_ARCH_ESP32
-    #define PIR_SENSOR_PIN 23 // Q4
-  #else //ESP8266 boards
-    #define PIR_SENSOR_PIN 13 // Q4 (D7 on D1 mini)
-  #endif
+  #define PIR_SENSOR_PIN -1 //WLEDMM not default 23 // Q4 for esp32 or otherwise 13 // Q4 (D7 on D1 mini)
 #endif
 
 #ifndef PIR_SENSOR_OFF_SEC
@@ -136,7 +132,7 @@ private:
       }
     } else {
       if (m_offPreset) {
-        if (currentPreset==m_onPreset || currentPlaylist==m_onPreset) applyPreset(m_offPreset, NotifyUpdateMode);
+        applyPreset(m_offPreset, NotifyUpdateMode);
         return;
       } else if (prevPlaylist) {
         if (currentPreset==m_onPreset || currentPlaylist==m_onPreset) applyPreset(prevPlaylist, NotifyUpdateMode);
@@ -159,6 +155,7 @@ private:
 
   void publishMqtt(const char* state)
   {
+  #ifndef WLED_DISABLE_MQTT
     //Check if MQTT Connected, otherwise it will crash the 8266
     if (WLED_MQTT_CONNECTED) {
       char subuf[64];
@@ -166,11 +163,13 @@ private:
       strcat_P(subuf, PSTR("/motion"));
       mqtt->publish(subuf, 0, false, state);
     }
+  #endif
   }
 
   // Create an MQTT Binary Sensor for Home Assistant Discovery purposes, this includes a pointer to the topic that is published to in the Loop.
   void publishHomeAssistantAutodiscovery()
   {
+  #ifndef WLED_DISABLE_MQTT
     if (WLED_MQTT_CONNECTED) {
       StaticJsonDocument<600> doc;
       char uid[24], json_str[1024], buf[128];
@@ -200,6 +199,7 @@ private:
 
       mqtt->publish(buf, 0, true, json_str, payload_size); // do we really need to retain?
     }
+  #endif
   }
 
   /**
@@ -414,7 +414,7 @@ public:
 
   void appendConfigData()
   {
-    oappend(SET_F("addInfo('PIRsensorSwitch:help',0,'<button onclick=\"location.href=&quot;https://mm.kno.wled.ge/usermods/PIRsensorSwitch&quot;\" type=\"button\">?</button>');"));  // 0 is field type, 1 is actual field
+    oappend(SET_F("addHB('PIRsensorSwitch');"));
 
     oappend(SET_F("addInfo('PIRsensorSwitch:HA-discovery',1,'HA=Home Assistant');"));     // 0 is field type, 1 is actual field
     oappend(SET_F("addInfo('PIRsensorSwitch:notifications',1,'Periodic WS updates');"));  // 0 is field type, 1 is actual field

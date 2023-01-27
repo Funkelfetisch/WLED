@@ -31,35 +31,26 @@
 
 //The SCL and SDA pins are defined here. 
 #ifndef FLD_PIN_SCL
-  #define FLD_PIN_SCL i2c_scl
+  #define FLD_PIN_SCL -1
 #endif
 #ifndef FLD_PIN_SDA
-  #define FLD_PIN_SDA i2c_sda
+  #define FLD_PIN_SDA -1
 #endif
 #ifndef FLD_PIN_CLOCKSPI
-  #define FLD_PIN_CLOCKSPI spi_sclk
+  #define FLD_PIN_CLOCKSPI -1
 #endif
-  #ifndef FLD_PIN_DATASPI
-  #define FLD_PIN_DATASPI spi_mosi
+#ifndef FLD_PIN_MOSISPI //WLEDMM renamed from HW_PIN_DATASPI
+  #define FLD_PIN_MOSISPI -1
 #endif   
 #ifndef FLD_PIN_CS
-  #define FLD_PIN_CS spi_cs
+  #define FLD_PIN_CS -1
 #endif
 
-#ifdef ARDUINO_ARCH_ESP32
-  #ifndef FLD_PIN_DC
-    #define FLD_PIN_DC 19
-  #endif
-  #ifndef FLD_PIN_RESET
-    #define FLD_PIN_RESET 26
-  #endif
-#else
-  #ifndef FLD_PIN_DC
-    #define FLD_PIN_DC 12
-  #endif
-  #ifndef FLD_PIN_RESET
-    #define FLD_PIN_RESET 16
-  #endif
+#ifndef FLD_PIN_DC
+  #define FLD_PIN_DC -1
+#endif
+#ifndef FLD_PIN_RESET
+  #define FLD_PIN_RESET -1
 #endif
 
 #ifndef FLD_TYPE
@@ -103,14 +94,18 @@ typedef enum {
 
 class FourLineDisplayUsermod : public Usermod {
   public:
+#ifdef ARDUINO_ARCH_ESP32
     FourLineDisplayUsermod() { if (!instance) instance = this; }
     static FourLineDisplayUsermod* getInstance(void) { return instance; }
+#endif
 
   private:
 
     static FourLineDisplayUsermod *instance;
     bool initDone = false;
     volatile bool drawing = false;
+
+    char errorMessage[100] = ""; //WLEDMM: show error in um settings if occurred
 
     // HW interface & configuration
     U8X8 *u8x8 = nullptr;           // pointer to U8X8 display object
@@ -119,11 +114,12 @@ class FourLineDisplayUsermod : public Usermod {
     int8_t ioPin[5] = {FLD_PIN_SCL, FLD_PIN_SDA, -1, -1, -1};        // I2C pins: SCL, SDA
     uint32_t ioFrequency = 400000;  // in Hz (minimum is 100000, baseline is 400000 and maximum should be 3400000)
     #else
-    int8_t ioPin[5] = {FLD_PIN_CLOCKSPI, FLD_PIN_DATASPI, FLD_PIN_CS, FLD_PIN_DC, FLD_PIN_RESET}; // SPI pins: CLK, MOSI, CS, DC, RST
+    int8_t ioPin[5] = {FLD_PIN_CLOCKSPI, FLD_PIN_MOSISPI, FLD_PIN_CS, FLD_PIN_DC, FLD_PIN_RESET}; // SPI pins: CLK, MOSI, CS, DC, RST
     uint32_t ioFrequency = 1000000;  // in Hz (minimum is 500kHz, baseline is 1MHz and maximum should be 20MHz)
     #endif
 
     DisplayType type = FLD_TYPE;    // display type
+    bool typeOK = true;             //WLEDMM: instead of type == NULL and type=NULL
     bool flip = false;              // flip display 180°
     uint8_t contrast = 10;          // screen contrast
     uint8_t lineHeight = 1;         // 1 row or 2 rows
@@ -132,8 +128,12 @@ class FourLineDisplayUsermod : public Usermod {
     bool sleepMode = true;          // allow screen sleep?
     bool clockMode = false;         // display clock
     bool showSeconds = true;        // display clock with seconds
-#if defined(ARDUINO_ARCH_ESP32) && ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 0, 0)
+#if defined(ARDUINO_ARCH_ESP32) 
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 0, 0)
     bool enabled = false;  // WLEDMM workaround for I2C bugs in IDF v4.4.1
+#else
+    bool enabled = true;
+#endif
 #else
     bool enabled = true;
 #endif
@@ -198,45 +198,45 @@ class FourLineDisplayUsermod : public Usermod {
      * Wrappers for screen drawing
      */
     void setFlipMode(uint8_t mode) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setFlipMode(mode);
     }
     void setContrast(uint8_t contrast) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setContrast(contrast);
     }
     void drawString(uint8_t col, uint8_t row, const char *string, bool ignoreLH=false) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setFont(u8x8_font_chroma48medium8_r);
       if (!ignoreLH && lineHeight==2) u8x8->draw1x2String(col, row, string);
       else                            u8x8->drawString(col, row, string);
     }
     void draw2x2String(uint8_t col, uint8_t row, const char *string) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setFont(u8x8_font_chroma48medium8_r);
       u8x8->draw2x2String(col, row, string);
     }
     void drawGlyph(uint8_t col, uint8_t row, char glyph, const uint8_t *font, bool ignoreLH=false) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setFont(font);
       if (!ignoreLH && lineHeight==2) u8x8->draw1x2Glyph(col, row, glyph);
       else                            u8x8->drawGlyph(col, row, glyph);
     }
     void draw2x2Glyph(uint8_t col, uint8_t row, char glyph, const uint8_t *font) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setFont(font);
       u8x8->draw2x2Glyph(col, row, glyph);
     }
     uint8_t getCols() {
-      if (type==NONE || !enabled) return 0;
+      if (!typeOK || !enabled) return 0;
       return u8x8->getCols();
     }
     void clear() {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->clear();
     }
     void setPowerSave(uint8_t save) {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       u8x8->setPowerSave(save);
     }
 
@@ -268,7 +268,7 @@ class FourLineDisplayUsermod : public Usermod {
      * the useAMPM configuration.
      */
     void showTime() {
-      if (type == NONE || !enabled || !displayTurnedOff) return;
+      if (!typeOK || !enabled || !displayTurnedOff) return;
 
       unsigned long now = millis();
       while (drawing && millis()-now < 250) delay(1); // wait if someone else is drawing
@@ -316,40 +316,43 @@ class FourLineDisplayUsermod : public Usermod {
     // gets called once at boot. Do all initialization that doesn't depend on
     // network here
     void setup() {
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
 
       bool isHW, isSPI = (type == SSD1306_SPI || type == SSD1306_SPI64);
       PinOwner po = PinOwner::UM_FourLineDisplay;
       if (isSPI) {
-        int8_t hw_sclk = spi_sclk<0 ? HW_PIN_CLOCKSPI : spi_sclk;
-        int8_t hw_mosi = spi_mosi<0 ? HW_PIN_DATASPI : spi_mosi;
         if (ioPin[0] < 0 || ioPin[1] < 0) {
-          ioPin[0] = hw_sclk;
-          ioPin[1] = hw_mosi;
+          ioPin[0] = spi_sclk;
+          ioPin[1] = spi_mosi;
         }
-        isHW = (ioPin[0]==hw_sclk && ioPin[1]==hw_mosi);
+        isHW = (ioPin[0]==spi_sclk && ioPin[1]==spi_mosi);
         PinManagerPinType cspins[3] = { { ioPin[2], true }, { ioPin[3], true }, { ioPin[4], true } };
-        if (!pinManager.allocateMultiplePins(cspins, 3, PinOwner::UM_FourLineDisplay)) { type=NONE; return; }
+        if (!pinManager.allocateMultiplePins(cspins, 3, PinOwner::UM_FourLineDisplay)) { typeOK=false; strcpy(errorMessage, PSTR("SPI3 alloc pins failed")); return; }
         if (isHW) po = PinOwner::HW_SPI;  // allow multiple allocations of HW I2C bus pins
         PinManagerPinType pins[2] = { { ioPin[0], true }, { ioPin[1], true } };
         if (!pinManager.allocateMultiplePins(pins, 2, po)) {
           pinManager.deallocateMultiplePins(cspins, 3, PinOwner::UM_FourLineDisplay);
-          type = NONE;
+          typeOK=false;
+          strcpy(errorMessage, PSTR("SPI2 alloc pins failed"));
           return;
         }
       } else {
-        int8_t hw_scl = i2c_scl<0 ? HW_PIN_SCL : i2c_scl;
-        int8_t hw_sda = i2c_sda<0 ? HW_PIN_SDA : i2c_sda;
         if (ioPin[0] < 0 || ioPin[1] < 0) {
-          ioPin[0] = hw_scl;
-          ioPin[1] = hw_sda;
+          ioPin[0] = i2c_scl;
+          ioPin[1] = i2c_sda;
         }
-        isHW = (ioPin[0]==hw_scl && ioPin[1]==hw_sda);
+        isHW = (ioPin[0]==i2c_scl && ioPin[1]==i2c_sda);
         // isHW = true;
         if (isHW) po = PinOwner::HW_I2C;  // allow multiple allocations of HW I2C bus pins
         PinManagerPinType pins[2] = { {ioPin[0], true }, { ioPin[1], true } };
-        if (ioPin[0] < 0 || ioPin[1] < 0)  { type=NONE; enabled=false; return; }  //WLEDMM bugfix - ensure that "final" GPIO are valid
-        if (!pinManager.allocateMultiplePins(pins, 2, po)) { type=NONE; enabled=false; return; }
+
+        if (ioPin[0] < 0 || ioPin[1] < 0)  { typeOK=false; strcpy(errorMessage, PSTR("I2C No Pins defined")); return; }  //WLEDMM bugfix - ensure that "final" GPIO are valid
+
+        if (isHW) {
+          if (!pinManager.joinWire(ioPin[1], ioPin[0])) { typeOK=false; strcpy(errorMessage, PSTR("I2C init failed")); return; }  // WLEDMM join the HW bus
+        } else {
+          if (!pinManager.allocateMultiplePins(pins, 2, po)) { typeOK=false; strcpy(errorMessage, PSTR("I2C Alloc pins failed")); return; } // WLEDMM use software bus
+        }
       }
 
       DEBUG_PRINTLN(F("Allocating display."));
@@ -380,7 +383,8 @@ class FourLineDisplayUsermod : public Usermod {
           u8x8_Setup(u8x8.getU8x8(), u8x8_d_ssd1306_128x64_noname, u8x8_cad_001, u8x8_byte_arduino_4wire_sw_spi, u8x8_gpio_and_delay_arduino);
           break;
         default:
-          type = NONE;
+          typeOK=false;
+          strcpy(errorMessage, PSTR("No valid type"));
           return;
       }
       if (isSPI) {
@@ -429,7 +433,8 @@ class FourLineDisplayUsermod : public Usermod {
       if (nullptr == u8x8) {
           USER_PRINTLN(F("Display init failed."));
           pinManager.deallocateMultiplePins((const uint8_t*)ioPin, isSPI ? 5 : 2, po);
-          type = NONE;
+          typeOK=false;
+          strcpy(errorMessage, PSTR("Display init failed"));
           return;
       }
 
@@ -460,7 +465,7 @@ class FourLineDisplayUsermod : public Usermod {
      */
     void loop() {
     #ifndef ARDUINO_ARCH_ESP32
-      if (!enabled || strip.isUpdating()) return;
+      if (!enabled || !typeOK || strip.isUpdating()) return;
       unsigned long now = millis();
       if (now < nextUpdate) return;
       nextUpdate = now + ((displayTurnedOff && clockMode && showSeconds) ? 1000 : refreshRate);
@@ -481,7 +486,7 @@ class FourLineDisplayUsermod : public Usermod {
       bool needRedraw = false;
       unsigned long now = millis();
  
-      if (type == NONE || !enabled) return;
+      if (!typeOK || !enabled) return;
       if (overlayUntil > 0) {
         if (now >= overlayUntil) {
           // Time to display the overlay has elapsed.
@@ -713,7 +718,7 @@ class FourLineDisplayUsermod : public Usermod {
      * to wake up the screen.
      */
     bool wakeDisplay() {
-      if (type == NONE || !enabled) return false;
+      if (!typeOK || !enabled) return false;
       if (displayTurnedOff) {
         unsigned long now = millis();
         while (drawing && millis()-now < 250) delay(1); // wait if someone else is drawing
@@ -1036,7 +1041,7 @@ class FourLineDisplayUsermod : public Usermod {
     //}
 
     void appendConfigData() {
-      oappend(SET_F("addInfo('4LineDisplay:help',0,'<button onclick=\"location.href=&quot;https://mm.kno.wled.ge/usermods/4LineDisplay&quot;\" type=\"button\">?</button>');"));  // 0 is field type, 1 is actual field
+      oappend(SET_F("addHB('4LineDisplay');"));
       
       oappend(SET_F("dd=addDropdown('4LineDisplay','type');"));
       oappend(SET_F("addOption(dd,'None',0);"));
@@ -1047,20 +1052,50 @@ class FourLineDisplayUsermod : public Usermod {
       oappend(SET_F("addOption(dd,'SSD1305 128x64',5);"));
       oappend(SET_F("addOption(dd,'SSD1306 SPI',6);"));
       oappend(SET_F("addOption(dd,'SSD1306 SPI 128x64',7);"));
+      bool isSPI = (type == SSD1306_SPI || type == SSD1306_SPI64);
       // WLEDMM add defaults
       oappend(SET_F("addInfo('4LineDisplay:pin[]',0,'','I2C/SPI CLK');"));
-    #ifdef FLD_PIN_SCL
-      oappend(SET_F("replaceOption('4LineDisplay:pin[]',0,'")); oappendi(FLD_PIN_SCL); oappend(" ⎌',"); oappendi(FLD_PIN_SCL); oappend(");"); 
-    #endif
-      oappend(SET_F("replaceOption('4LineDisplay:pin[]',0,'use global (")); oappendi(i2c_scl); oappend(")',-1);"); 
+      oappend(SET_F("dRO('4LineDisplay:pin[]',0);")); // disable read only pins
+      if (isSPI) {
+        oappend(SET_F("rOpt('4LineDisplay:pin[]',0,'use global (")); oappendi(spi_sclk); oappend(")',-1);"); 
+        #ifdef FLD_PIN_CLOCKSPI
+          oappend(SET_F("xOpt('4LineDisplay:pin[]',0,' ⎌',")); oappendi(FLD_PIN_CLOCKSPI); oappend(");"); 
+        #endif
+      } else {
+        oappend(SET_F("rOpt('4LineDisplay:pin[]',0,'use global (")); oappendi(i2c_scl); oappend(")',-1);"); 
+        #ifdef FLD_PIN_SCL
+          oappend(SET_F("xOpt('4LineDisplay:pin[]',0,' ⎌',")); oappendi(FLD_PIN_SCL); oappend(");"); 
+        #endif
+      }
       oappend(SET_F("addInfo('4LineDisplay:pin[]',1,'','I2C/SPI DTA');"));
-    #ifdef FLD_PIN_SDA
-      oappend(SET_F("replaceOption('4LineDisplay:pin[]',1,'")); oappendi(FLD_PIN_SDA); oappend(" ⎌',"); oappendi(FLD_PIN_SDA); oappend(");"); 
-    #endif
-      oappend(SET_F("replaceOption('4LineDisplay:pin[]',1,'use global (")); oappendi(i2c_sda); oappend(")',-1);"); 
+      if (isSPI) {
+        oappend(SET_F("rOpt('4LineDisplay:pin[]',1,'use global (")); oappendi(spi_mosi); oappend(")',-1);"); 
+        #ifdef FLD_PIN_MOSISPI
+          oappend(SET_F("xOpt('4LineDisplay:pin[]',1,' ⎌',")); oappendi(FLD_PIN_MOSISPI); oappend(");"); 
+        #endif
+      } else {
+        oappend(SET_F("rOpt('4LineDisplay:pin[]',1,'use global (")); oappendi(i2c_sda); oappend(")',-1);"); 
+        #ifdef FLD_PIN_SDA
+          oappend(SET_F("xOpt('4LineDisplay:pin[]',1,' ⎌',")); oappendi(FLD_PIN_SDA); oappend(");"); 
+        #endif
+      }
       oappend(SET_F("addInfo('4LineDisplay:pin[]',2,'','SPI CS');"));
+      #ifdef FLD_PIN_CS
+        oappend(SET_F("xOpt('4LineDisplay:pin[]',2,' ⎌',")); oappendi(FLD_PIN_CS); oappend(");"); 
+      #endif
       oappend(SET_F("addInfo('4LineDisplay:pin[]',3,'','SPI DC');"));
+      #ifdef FLD_PIN_DC
+        oappend(SET_F("xOpt('4LineDisplay:pin[]',3,' ⎌',")); oappendi(FLD_PIN_DC); oappend(");"); 
+      #endif
       oappend(SET_F("addInfo('4LineDisplay:pin[]',4,'','SPI RST');"));
+      #ifdef FLD_PIN_RESET
+        oappend(SET_F("xOpt('4LineDisplay:pin[]',4,' ⎌',")); oappendi(FLD_PIN_RESET); oappend(");"); 
+      #endif
+
+      //WLEDMM add errorMessage to um settings
+      if (strcmp(errorMessage, "") != 0) {
+        oappend(SET_F("addInfo('errorMessage', 0, '<i>error: ")); oappend(errorMessage); oappend("! Correct and reboot</i>');");
+      }
     }
 
     /*
@@ -1081,11 +1116,11 @@ class FourLineDisplayUsermod : public Usermod {
       // determine if we are using global HW pins (data & clock)
       int8_t hw_dta, hw_clk;
       if ((type == SSD1306_SPI || type == SSD1306_SPI64)) {
-        hw_clk = spi_sclk<0 ? HW_PIN_CLOCKSPI : spi_sclk;
-        hw_dta = spi_mosi<0 ? HW_PIN_DATASPI : spi_mosi;
+        hw_clk = spi_sclk;
+        hw_dta = spi_mosi;
       } else {
-        hw_clk = i2c_scl<0 ? HW_PIN_SCL : i2c_scl;
-        hw_dta = i2c_sda<0 ? HW_PIN_SDA : i2c_sda;
+        hw_clk = i2c_scl;
+        hw_dta = i2c_sda;
       }
 
       JsonObject top   = root.createNestedObject(FPSTR(_name));
@@ -1162,19 +1197,15 @@ class FourLineDisplayUsermod : public Usermod {
         bool pinsChanged = false;
         for (byte i=0; i<5; i++) if (ioPin[i] != oldPin[i]) { pinsChanged = true; break; }
         if (pinsChanged || type!=newType) {
-          if (type != NONE) delete u8x8;
+          if (typeOK) delete u8x8;
           PinOwner po = PinOwner::UM_FourLineDisplay;
           bool isSPI = (type == SSD1306_SPI || type == SSD1306_SPI64);
           if (isSPI) {
             pinManager.deallocateMultiplePins((const uint8_t *)(&oldPin[2]), 3, po);
-            uint8_t hw_sclk = spi_sclk<0 ? HW_PIN_CLOCKSPI : spi_sclk;
-            uint8_t hw_mosi = spi_mosi<0 ? HW_PIN_DATASPI : spi_mosi;
-            bool isHW = (oldPin[0]==hw_sclk && oldPin[1]==hw_mosi);
+            bool isHW = (oldPin[0]==spi_sclk && oldPin[1]==spi_mosi);
             if (isHW) po = PinOwner::HW_SPI;
           } else {
-            uint8_t hw_scl = i2c_scl<0 ? HW_PIN_SCL : i2c_scl;
-            uint8_t hw_sda = i2c_sda<0 ? HW_PIN_SDA : i2c_sda;
-            bool isHW = (oldPin[0]==hw_scl && oldPin[1]==hw_sda);
+            bool isHW = (oldPin[0]==i2c_scl && oldPin[1]==i2c_sda);
             if (isHW) po = PinOwner::HW_I2C;
           }
           pinManager.deallocateMultiplePins((const uint8_t *)oldPin, 2, po);
@@ -1217,4 +1248,6 @@ const char FourLineDisplayUsermod::_showSeconds[]     PROGMEM = "showSeconds";
 const char FourLineDisplayUsermod::_busClkFrequency[] PROGMEM = "i2c-freq-kHz";
 const char FourLineDisplayUsermod::_contrastFix[]     PROGMEM = "contrastFix";
 
+#ifdef ARDUINO_ARCH_ESP32
 FourLineDisplayUsermod *FourLineDisplayUsermod::instance = nullptr;
+#endif

@@ -1,5 +1,9 @@
-// force the compiler to show a warning to confirm that this file is included
-#warning **** Included USERMOD_BME280 version 2.0 ****
+// force the compiler to show a warning to confirm that this file is included  WLEDMM: commented this warning as we want serious warnings ;-)
+// #warning **** Included USERMOD_BME280 version 2.0 ****
+
+#ifndef WLED_ENABLE_MQTT
+#error "This user mod requires MQTT to be enabled."
+#endif
 
 #pragma once
 
@@ -80,6 +84,7 @@ private:
   void UpdateBME280Data(int SensorType)
   {
     float _temperature, _humidity, _pressure;
+    if (!enabled || (sensorType == 0)) return;  // WLEDMM bugfix
 
     if (UseCelsius) {
       BME280::TempUnit tempUnit(BME280::TempUnit_Celsius);
@@ -183,12 +188,13 @@ public:
   void setup()
   {
     bool HW_Pins_Used = (ioPin[0]==i2c_scl && ioPin[1]==i2c_sda); // note whether architecture-based hardware SCL/SDA pins used
-    PinOwner po = PinOwner::UM_BME280; // defaults to being pinowner for SCL/SDA pins
+    //PinOwner po = PinOwner::UM_BME280; // defaults to being pinowner for SCL/SDA pins  // WLEDMM not needed
     PinManagerPinType pins[2] = { { ioPin[0], true }, { ioPin[1], true } };  // allocate pins
-    if (HW_Pins_Used) po = PinOwner::HW_I2C; // allow multiple allocations of HW I2C bus pins
-    if (!pinManager.allocateMultiplePins(pins, 2, po)) { sensorType=0; return; }
-    
-    Wire.begin(ioPin[1], ioPin[0]);
+    //if (HW_Pins_Used) po = PinOwner::HW_I2C; // allow multiple allocations of HW I2C bus pins  // WLEDMM not needed
+    // WLEDMM join I2C HW wire
+    if (!pinManager.joinWire()) { sensorType=0; enabled = false; return; }
+    //if (!pinManager.allocateMultiplePins(pins, 2, po)) { sensorType=0; return; }
+    //Wire.begin(ioPin[1], ioPin[0]);
 
     if (!bme.begin())
     {
@@ -398,6 +404,18 @@ public:
       return;
   }
 
+  void appendConfigData() {
+    oappend(SET_F("addHB('BME280');"));
+
+    oappend(SET_F("addInfo('BME280/BMP280:pin[]',0,'','I2C/SPI CLK');"));
+    oappend(SET_F("dRO('BME280/BMP280:pin[]',0);")); // disable read only pins
+    oappend(SET_F("rOpt('BME280/BMP280:pin[]',0,'use global (")); oappendi(i2c_scl); oappend(")',-1);"); 
+
+    oappend(SET_F("addInfo('BME280/BMP280:pin[]',1,'','I2C/SPI DTA');"));
+    oappend(SET_F("rOpt('BME280/BMP280:pin[]',1,'use global (")); oappendi(i2c_sda); oappend(")',-1);"); 
+  }
+      
+
   // Save Usermod Config Settings
   void addToConfig(JsonObject& root)
   {
@@ -412,8 +430,9 @@ public:
     top[F("UseCelsius")] = UseCelsius;
     top[F("HomeAssistantDiscovery")] = HomeAssistantDiscovery;
     JsonArray io_pin = top.createNestedArray(F("pin"));
-    for (byte i=0; i<2; i++) io_pin.add(ioPin[i]);
-    top[F("help4Pins")] = F("SCL,SDA"); // help for Settings page
+    //WLEDMM: avoid global pin hijacking
+    io_pin.add((ioPin[0]==i2c_scl)?-1:ioPin[0]);
+    io_pin.add((ioPin[1]==i2c_sda)?-1:ioPin[1]);
     DEBUG_PRINTLN(F("BME280 config saved."));
   }
 

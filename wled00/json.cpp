@@ -30,6 +30,15 @@
 #else // for 8266
 #include <Esp.h>
 #include <user_interface.h>
+
+#include <core_esp8266_features.h>
+#include <core_version.h>
+#include <spi_vendors.h>
+
+#include <flash_utils.h>
+#include <memory>
+#include <cont.h>
+#include <coredecls.h>
 #endif
 // end WLEDMM
 
@@ -152,7 +161,7 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
     of = offsetAbs;
   }
   if (stop > start && of > len -1) of = len -1;
-  strip.setSegment(id, start, stop, grp, spc, of, startY, stopY);
+  seg.set(start, stop, grp, spc, of, startY, stopY);
 
   byte segbri = seg.opacity;
   if (getVal(elem["bri"], &segbri)) {
@@ -223,13 +232,20 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
   }
   #endif
 
+  #ifndef WLED_DISABLE_2D
+  bool reverse  = seg.reverse;
+  bool mirror   = seg.mirror;
+  #endif
   seg.selected  = elem["sel"] | seg.selected;
   seg.reverse   = elem["rev"] | seg.reverse;
   seg.mirror    = elem["mi"]  | seg.mirror;
   #ifndef WLED_DISABLE_2D
-  seg.reverse_y = elem["rY"]  | seg.reverse_y;
-  seg.mirror_y  = elem["mY"]  | seg.mirror_y;
-  seg.transpose = elem[F("tp")] | seg.transpose;
+  bool reverse_y = seg.reverse_y;
+  bool mirror_y  = seg.mirror_y;
+  seg.reverse_y  = elem["rY"]  | seg.reverse_y;
+  seg.mirror_y   = elem["mY"]  | seg.mirror_y;
+  seg.transpose  = elem[F("tp")] | seg.transpose;
+  if (seg.is2D() && (seg.map1D2D == M12_pArc || seg.map1D2D == M12_sCircle) && (reverse != seg.reverse || reverse_y != seg.reverse_y || mirror != seg.mirror || mirror_y != seg.mirror_y)) seg.fill(BLACK); // clear entire segment (in case of Arc 1D to 2D expansion) WLEDMM: also Circle
   #endif
 
   byte fx = seg.mode;
@@ -254,7 +270,7 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
   seg.check1 = elem["o1"] | seg.check1;
   seg.check2 = elem["o2"] | seg.check2;
   seg.check3 = elem["o3"] | seg.check3;
-  
+
   JsonArray iarr = elem[F("i")]; //set individual LEDs
   if (!iarr.isNull()) {
     // set brightness immediately and disable transition
@@ -274,11 +290,11 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
     for (size_t i = 0; i < iarr.size(); i++) {
       if(iarr[i].is<JsonInteger>()) {
         if (!set) {
-          start = iarr[i];
-          set = 1;
+          start = abs(iarr[i].as<int>());
+          set++;
         } else {
-          stop = iarr[i];
-          set = 2;
+          stop = abs(iarr[i].as<int>());
+          set++;
         }
       } else { //color
         uint8_t rgbw[] = {0,0,0,0};
@@ -294,16 +310,13 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
           }
         }
 
-        if (set < 2) stop = start + 1;
+        if (set < 2 || stop <= start) stop = start + 1;
         uint32_t c = gamma32(RGBW32(rgbw[0], rgbw[1], rgbw[2], rgbw[3]));
-        for (int i = start; i < stop; i++) {
-          seg.setPixelColor(i, c);
-        }
-        if (!set) start++;
+        while (start < stop) seg.setPixelColor(start++, c);
         set = 0;
       }
     }
-    strip.trigger();
+    strip.trigger(); // force segment update
   }
   // send UDP/WS if segment options changed (except selection; will also deselect current preset)
   if (seg.differs(prev) & 0x7F) stateChanged = true;
@@ -530,15 +543,17 @@ void serializeSegment(JsonObject& root, Segment& seg, byte id, bool forPreset, b
   root["sel"] = seg.isSelected();
   root["rev"] = seg.reverse;
   root["mi"]  = seg.mirror;
+  #ifndef WLED_DISABLE_2D
   if (strip.isMatrix) {
     root["rY"] = seg.reverse_y;
     root["mY"] = seg.mirror_y;
     root[F("tp")] = seg.transpose;
   }
-  root["o1"]   = seg.check1;
-  root["o2"]   = seg.check2;
-  root["o3"]   = seg.check3;
-  root["si"] = seg.soundSim;
+  #endif
+  root["o1"]  = seg.check1;
+  root["o2"]  = seg.check2;
+  root["o3"]  = seg.check3;
+  root["si"]  = seg.soundSim;
   root["m12"] = seg.map1D2D;
 }
 
@@ -762,7 +777,7 @@ void serializeInfo(JsonObject root)
   fs_info[F("pmt")] = presetsModifiedTime;
 
   root[F("ndc")] = nodeListEnabled ? (int)Nodes.size() : -1;
-  
+
   #ifdef ARDUINO_ARCH_ESP32
   #ifdef WLED_DEBUG
     wifi_info[F("txPower")] = (int) WiFi.getTxPower();
@@ -837,7 +852,21 @@ void serializeInfo(JsonObject root)
 
   #else // for 8266
   root[F("e32core0code")] = (int)ESP.getResetInfoPtr()->reason;
-  root[F("e32core0text")] = F("");
+  root[F("e32core0text")] = ESP.getResetReason();
+
+  root[F("e32model")] = F("ESP8266  (id 0x") + String(ESP.getChipId(), 16) + String(") ");      // can only be "ESP8266EX" or "ESP8285"
+  root[F("e32cores")] = 1;
+  root[F("e32speed")] = ESP.getCpuFreqMHz();
+  root[F("e32flash")] = int((ESP.getFlashChipRealSize()/1024)/1024);
+  root[F("e32flashspeed")] = int(ESP.getFlashChipSpeed()/1000000);
+  root[F("e32flashmode")] = int(ESP.getFlashChipMode());
+  switch (ESP.getFlashChipMode()) {
+    case FM_QIO:  root[F("e32flashtext")] = F(" (QIO)"); break;
+    case FM_QOUT: root[F("e32flashtext")] = F(" (QOUT)");break;
+    case FM_DIO:  root[F("e32flashtext")] = F(" (DIO)"); break;
+    case FM_DOUT: root[F("e32flashtext")] = F(" (DOUT)");break;
+    default: root[F("e32flashtext")] = F(" (other)"); break;
+  }
   #endif
   // end WLEDMM
 
@@ -959,7 +988,7 @@ void serializePalettes(JsonObject root, AsyncWebServerRequest* request)
     JsonArray curPalette = palettes.createNestedArray(String(i>=palettesCount ? 255 - i + palettesCount : i));
     switch (i) {
       case 0: //default palette
-        setPaletteColors(curPalette, PartyColors_p); 
+        setPaletteColors(curPalette, PartyColors_p);
         break;
       case 1: //random
           curPalette.add("r");

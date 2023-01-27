@@ -59,6 +59,7 @@ String PinManagerClass::getOwnerText(PinOwner tag) {
     case PinOwner::UM_BH1750            : return(F("BH1750 (UM)")); break;            // "usermod_bh1750.h" -- Uses "standard" HW_I2C pins
     case PinOwner::UM_SdCard            : return(F("SD-Card (UM)")); break;           // "usermod_sd_card.h" -- Uses SPI pins
     case PinOwner::UM_PWM_OUTPUTS       : return(F("PWM Output (UM)")); break;        // "usermod_pwm_outputs.h"
+    case PinOwner::UM_Battery           : return(F("Battery (UM)")); break;           // "usermod_battery.h"
 
     case PinOwner::UM_Example      : return(F("example (UM)")); break;            // unspecified usermod
     case PinOwner::UM_Unspecified  : return(F("usermod (UM)")); break;            // unspecified usermod
@@ -132,6 +133,13 @@ String PinManagerClass::getPinSpecialText(int gpio) {  // special purpose PIN in
       #if defined(BOARD_HAS_PSRAM)
         if (gpio == 16 || gpio == 17) return (F("(reserved) PSRAM"));
       #endif
+      #if defined(ARDUINO_TTGO_T7_V14_Mini32) || defined(ARDUINO_LOLIN_D32_PRO) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32_V2)
+        if (gpio == 35) return (F("(reserved) _VBAT voltage monitoring"));  // WLEDMM experimental
+      #endif
+      #if (defined(ARDUINO_TTGO_T7_V14_Mini32) || defined(ARDUINO_TTGO_T7_V15_Mini32)) && defined(BOARD_HAS_PSRAM)
+        if (gpio == 25) return (F("cross-connected to pin 16")); // WLEDMM experimental
+        if (gpio == 27) return (F("Cross-connected to pin 17")); // WLEDMM experimental
+      #endif
     #endif
   #else
     // ESP 8266
@@ -144,11 +152,11 @@ String PinManagerClass::getPinSpecialText(int gpio) {  // special purpose PIN in
   #endif
 
   // hardware special purpose PINS. part2 - default pins
-  if ((gpio == i2c_sda)  || ((gpio == HW_PIN_SDA) && (i2c_sda < 0))) return(F("(default) I2C SDA"));
-  if ((gpio == i2c_scl)  || ((gpio == HW_PIN_SCL) && (i2c_scl < 0))) return(F("(default) I2C SCL"));
-  if ((gpio == spi_sclk) || ((gpio == HW_PIN_CLOCKSPI) && (spi_sclk < 0))) return(F("(default) SPI SLK  / SCK"));
-  if ((gpio == spi_mosi) || ((gpio == HW_PIN_DATASPI) && (spi_mosi < 0)))  return(F("(default) SPI PICO / MOSI"));
-  if ((gpio == spi_miso) || ((gpio == HW_PIN_MISOSPI) && (spi_miso < 0)))  return(F("(default) SPI POCI / MISO"));
+  if (gpio == i2c_sda)   return(F("(default) I2C SDA"));
+  if (gpio == i2c_scl)   return(F("(default) I2C SCL"));
+  if (gpio == spi_sclk)  return(F("(default) SPI SLK  / SCK"));
+  if (gpio == spi_mosi)  return(F("(default) SPI PICO / MOSI"));
+  if (gpio == spi_miso)  return(F("(default) SPI POCI / MISO"));
   //if ((gpio == spi_cs)   || ((gpio == HW_PIN_CS) && (spi_cs < 0)))         return(F("(default) SPI CS   / SS"));
 #if defined(WLED_USE_SD_MMC) || defined(WLED_USE_SD_SPI) || defined(SD_ADAPTER)
   if ((gpio == HW_PIN_CSSPI)) return(F("(default) SPI CS  / SS"));  // no part of usermod default settings, currently only needed by SD_CARD usermod
@@ -205,9 +213,9 @@ String PinManagerClass::getPinSpecialText(int gpio) {  // special purpose PIN in
       if (gpio == FLD_PIN_SDA) return(F("(default) 4lines disp. I2C SDA"));
       if (gpio == FLD_PIN_SCL) return(F("(default) 4lines disp. I2C SCL"));
     #endif
-    #if defined(FLD_PIN_CLOCKSPI) && defined(FLD_PIN_DATASPI)
+    #if defined(FLD_PIN_CLOCKSPI) && defined(FLD_PIN_MOSISPI) //WLEDMM renamed from HW_PIN_DATASPI
       if (gpio == FLD_PIN_CLOCKSPI) return(F("(default) 4lines disp. SPI SCLK"));
-      if (gpio == FLD_PIN_DATASPI)  return(F("(default) 4lines disp. SPI DATA"));
+      if (gpio == FLD_PIN_MOSISPI)  return(F("(default) 4lines disp. SPI DATA"));
     #endif
     #if defined(FLD_PIN_CS)
       if (gpio == FLD_PIN_CS) return(F("(default) 4lines disp. SPI CS"));
@@ -287,7 +295,7 @@ bool PinManagerClass::deallocatePin(byte gpio, PinOwner tag)
     #endif
     return false;
   }
-  
+
   byte by = gpio >> 3;
   byte bi = gpio - 8*by;
   bitWrite(pinAlloc[by], bi, false);
@@ -383,7 +391,7 @@ bool PinManagerClass::allocateMultiplePins(const managed_pin_type * mptArray, by
     } else if (isPinAllocated(gpio)) {
       ownerConflict[gpio] = tag; // WLEDMM record conflict
       #ifdef WLED_DEBUG
-      DEBUG_PRINT(F("PIN ALLOC: FAIL: IO ")); 
+      DEBUG_PRINT(F("PIN ALLOC: FAIL: IO "));
       DEBUG_PRINT(gpio);
       DEBUG_PRINT(F(" already allocated by "));
       DebugPrintOwnerTag(ownerTag[gpio]);
@@ -410,7 +418,7 @@ bool PinManagerClass::allocateMultiplePins(const managed_pin_type * mptArray, by
       // as this can greatly simplify configuration arrays
       continue;
     }
-    if (gpio >= WLED_NUM_PINS) 
+    if (gpio >= WLED_NUM_PINS)
       continue; // other unexpected GPIO => avoid array bounds violation
 
     byte by = gpio >> 3;
@@ -419,7 +427,7 @@ bool PinManagerClass::allocateMultiplePins(const managed_pin_type * mptArray, by
     ownerTag[gpio] = tag;
     // ownerConflict[gpio] = PinOwner::None; // WLEDMM clear conflict (if any)
     #ifdef WLED_DEBUG
-    DEBUG_PRINT(F("PIN ALLOC: Pin ")); 
+    DEBUG_PRINT(F("PIN ALLOC: Pin "));
     DEBUG_PRINT(gpio);
     DEBUG_PRINT(F(" allocated by "));
     DebugPrintOwnerTag(tag);
@@ -459,7 +467,7 @@ bool PinManagerClass::allocatePin(byte gpio, bool output, PinOwner tag)
   if (isPinAllocated(gpio)) {
     ownerConflict[gpio] = tag; // WLEDMM record conflict
     #ifdef WLED_DEBUG
-    DEBUG_PRINT(F("PIN ALLOC: Pin ")); 
+    DEBUG_PRINT(F("PIN ALLOC: Pin "));
     DEBUG_PRINT(gpio);
     DEBUG_PRINT(F(" already allocated by "));
     DebugPrintOwnerTag(ownerTag[gpio]);
@@ -476,12 +484,12 @@ bool PinManagerClass::allocatePin(byte gpio, bool output, PinOwner tag)
   ownerTag[gpio] = tag;
   // ownerConflict[gpio] = PinOwner::None; // WLEDMM clear conflict (if any)
   #ifdef WLED_DEBUG
-  DEBUG_PRINT(F("PIN ALLOC: Pin ")); 
+  DEBUG_PRINT(F("PIN ALLOC: Pin "));
   DEBUG_PRINT(gpio);
   DEBUG_PRINT(F(" successfully allocated by "));
   DebugPrintOwnerTag(tag);
   DEBUG_PRINTLN(F(""));
-  #endif  
+  #endif
 
   return true;
 }
@@ -505,14 +513,179 @@ bool PinManagerClass::isPinAllocated(byte gpio, PinOwner tag)
   return bitRead(pinAlloc[by], bi);
 }
 
+//
+// WLEDMM: central handling of I2C startup (global Wire #0)
+//
+
+bool PinManagerClass::joinWire() {    // shortcut in case no parameters provided
+    return joinWire(i2c_sda, i2c_scl);
+}
+
+bool PinManagerClass::joinWire(int8_t pinSDA, int8_t pinSCL) {
+  // reject PIN = -1, reject SDA=SCL, reject "forbidden" pins
+  if (  (pinSDA < 0) || (pinSCL < 0) 
+     || (pinSDA == pinSCL) 
+     || !isPinOk(pinSDA, true) 
+     || !isPinOk(pinSCL, true)) {
+    DEBUG_PRINT(F("PIN Manager: invalid GPIO for I2C: SDA="));
+    DEBUG_PRINTF("%d, SCL=%d !\n",pinSDA, pinSCL);
+    return(false);
+  } 
+
+  if ((wire0PinSDA < 0) || (wire0PinSCL < 0)) wire0isStarted = false; // this should not happen
+
+  // if wire already started, reject any other GPIO
+  if ((wire0isStarted == true) && 
+      (pinSDA != wire0PinSDA) && (pinSDA != wire0PinSCL) &&       // allow "swapped pins2, i.e. SDA <->SCL
+      (pinSCL != wire0PinSCL) && (pinSCL != wire0PinSDA)) {
+    DEBUG_PRINT(F("PIN Manager: invalid GPIO for I2C: SDA="));
+    DEBUG_PRINTF("%d, SCL=%d. Wire already started with sda=%d and scl=%d!\n",pinSDA, pinSCL, wire0PinSDA, wire0PinSCL);
+    return(false);
+  }
+
+  // make sure pins are allocated
+  PinManagerPinType pins[2] = {{pinSCL, true}, {pinSDA, true}};
+  if (!allocateMultiplePins(pins, 2, PinOwner::HW_I2C)) {    // this will only FAIL when pins are invalid, or used already for other purposes
+    DEBUG_PRINT(F("PIN Manager: failed to allocate GPIO for I2C: SDA="));
+    DEBUG_PRINTF("%d, SCL=%d !\n",pinSDA, pinSCL);
+    return(false);
+  }
+
+  if(wire0isStarted == true) {
+    DEBUG_PRINTLN(F("PIN Manager: all good, I2C already started, nothing to do :-)"));
+    return(true);
+  }
+
+  // NOW do it - start Wire !!! fire ;-)
+
+  bool wireIsOK = true;
+  #ifdef ARDUINO_ARCH_ESP32         // ESP32 - i2c pins can be mapped to any GPIO
+    wireIsOK = Wire.setPins(pinSDA, pinSCL);   // this will fail if Wire is initialised already (i.e. Wire.begin() called prior)
+  #else // 8266 - I2C pins are fixed -> actually they are not.
+    //if((pinSDA != 4) || (pinSCL != 5)) {     // fixed PINS: SDA = 4, SCL = 5
+    // DEBUG_PRINT(F("PIN Manager: warning ESP8266 I2C pins are fixed. please use SDA="));
+    //  DEBUG_PRINTF("%d, SCL=%d !\n",4, 5);
+    //  return(false);
+    //}
+  #endif
+  if (wireIsOK == false) {
+    USER_PRINTLN(F("PIN Manager: warning - wire.setPins failed!"));
+  }
+
+  #ifdef ARDUINO_ARCH_ESP32
+    wireIsOK = Wire.begin(pinSDA, pinSCL);  // this will fail if wire is already running
+  #else
+    Wire.begin(pinSDA, pinSCL);  // returns void on 8266
+  #endif
+
+  if (wireIsOK == false) {
+    USER_PRINTLN(F("PIN Manager: warning - wire.begin failed!"));
+  } else {
+    USER_PRINT(F("PIN Manager: wire.begin successfull! "));
+    USER_PRINT(F("I2C bus is active. SDA="));
+    USER_PRINTF("%d SCL=%d.\n", pinSDA, pinSCL);
+  }
+
+#ifdef ARDUINO_ARCH_ESP32S3
+  Wire.setTimeOut(50);   // workaround for wire timeout bug on -S3
+  Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having wiring difficulties
+#endif
+
+  wire0isStarted = true;
+  wire0PinSDA = pinSDA;
+  wire0PinSCL = pinSCL;
+  return(true);
+}
+
+
+  // WLEDMM more additions
+
+  // returns true if gpio supports touch functions
+  bool PinManagerClass::isPinTouch(int gpio) {
+    #if defined(ARDUINO_ARCH_ESP32)
+      if (digitalPinToTouchChannel(gpio) >= 0) return true;
+    #endif
+    return false;  // fall-through case
+  }
+
+  // returns true if gpio supports analogRead
+  bool PinManagerClass::isPinAnalog(int gpio) {
+    #if !defined(ARDUINO_ARCH_ESP32)
+      if (gpio == A0) return true;   // for 8266
+    #else                            // for ESP32 variants
+      if (digitalPinToAnalogChannel(gpio) >= 0) return true;
+    #endif
+    return false;  // fall-through case
+  }
+
+  // returns true if gpio supports analogRead, and it belongs to ADC unit 1
+  bool PinManagerClass::isPinADC1(int gpio) {
+    if ((gpio < 0) || !isPinAnalog(gpio)) return false;
+
+    #if !defined(ARDUINO_ARCH_ESP32)
+      if (gpio == A0) return true;   // for 8266
+    #else                            // for ESP32 variants
+      #ifdef SOC_ADC_CHANNEL_NUM
+        if (digitalPinToAnalogChannel(gpio) < SOC_ADC_CHANNEL_NUM(0)) return true; // ADC1 on ESP32-S3, ESP32-S2, ESP32-C3 
+      #else
+        if (digitalPinToAnalogChannel(gpio) < 8) return true;   // ADC1 on classic ESP32
+      #endif
+    #endif
+    return false;  // fall-through case
+  }
+
+  // returns true if gpio supports analogRead, and it belongs to ADC unit 2
+  bool PinManagerClass::isPinADC2(int gpio) {
+    if ((gpio < 0) || !isPinAnalog(gpio)) return false; // catch errors
+
+    #if !defined(ARDUINO_ARCH_ESP32)
+      return false;   // for 8266 - no ADC2
+    #else             // for ESP32 variants
+      if (isPinADC1(gpio) == false) return true;   // analog but not ADC1 --> must be ADC2
+    #endif
+    return false;  // fall-through case
+  }
+
+  // returns GPIO number for ADC unit x, channel y. 255 = no such pin
+  // see https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/gpio.html#gpio-summary
+  uint8_t PinManagerClass::getADCPin(AdcIdentifier adcUnit, uint8_t adcPort)
+  {
+    #if !defined(ARDUINO_ARCH_ESP32)
+      if ((adcUnit == ADC1) && (adcPort == 0)) return A0;   // for 8266
+      else return(PM_NO_PIN);
+
+    #else                                                   // for ESP32 variants
+      if ((adcUnit != ADC1) && (adcUnit != ADC2)) return(PM_NO_PIN); // catch errors
+
+      #if defined(SOC_ADC_MAX_CHANNEL_NUM)                                   // for ESP32-S3, ESP32-S2, ESP32-C3
+      int8_t analogChannel = (adcUnit == ADC1) ? adcPort : (SOC_ADC_MAX_CHANNEL_NUM + adcPort);
+      if (adcPort >= SOC_ADC_MAX_CHANNEL_NUM) analogChannel = 255;
+      #else                                                                  // for classic ESP32
+      int8_t analogChannel = (adcUnit == ADC1) ? adcPort : (10 + adcPort);
+      if ((adcUnit == ADC1) && (adcPort >= 8)) analogChannel = 127;
+      if (adcPort >= 10) analogChannel = 127;
+      #endif
+
+      //int analogPin = analogChannelToDigitalPin(analogChannel);
+      int analogPin = analogInputToDigitalPin(analogChannel);
+      if (analogPin >= 0) return(analogPin);
+      else return(PM_NO_PIN);
+    #endif
+
+    return(PM_NO_PIN);  // fall-through case
+  }
+
+  // WLEDMM end
+
+
 /* see https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/api-reference/peripherals/gpio.html
  * The ESP32-S3 chip features 45 physical GPIO pins (GPIO0 ~ GPIO21 and GPIO26 ~ GPIO48). Each pin can be used as a general-purpose I/O
  * Strapping pins: GPIO0, GPIO3, GPIO45 and GPIO46 are strapping pins. For more infomation, please refer to ESP32-S3 datasheet.
  * Serial TX = GPIO43, RX = GPIO44; LED BUILTIN is usually GPIO39
  * USB-JTAG: GPIO 19 and 20 are used by USB-JTAG by default. In order to use them as GPIOs, USB-JTAG will be disabled by the drivers.
- * SPI0/1: GPIO26-32 are usually used for SPI flash and PSRAM and not recommended for other uses. 
+ * SPI0/1: GPIO26-32 are usually used for SPI flash and PSRAM and not recommended for other uses.
  * When using Octal Flash or Octal PSRAM or both, GPIO33~37 are connected to SPIIO4 ~ SPIIO7 and SPIDQS. Therefore, on boards embedded with ESP32-S3R8 / ESP32-S3R8V chip, GPIO33~37 are also not recommended for other uses.
- * 
+ *
  * see https://docs.espressif.com/projects/esp-idf/en/v4.4.2/esp32s3/api-reference/peripherals/adc.html
  *     https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/api-reference/peripherals/adc_oneshot.html
  * ADC1: GPIO1  - GPIO10 (channel 0..9)
@@ -548,10 +721,10 @@ bool PinManagerClass::isPinOk(byte gpio, bool output)
     if (output) return digitalPinCanOutput(gpio);
     else        return true;
   }
-#else
+#else //8266
   if (gpio <  6) return true;
   if (gpio < 12) return false; //SPI flash pins
-  if (gpio < 17) return true;
+  if (gpio <= NUM_DIGITAL_PINS) return true; //WLEDMM: include pin 17 / A0 / Audio in
 #endif
   return false;
 }

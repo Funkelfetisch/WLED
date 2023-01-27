@@ -92,12 +92,14 @@ class Animated_Staircase : public Usermod {
     static const char _bottomEchoCm[];
     
     void publishMqtt(bool bottom, const char* state) {
+#ifndef WLED_DISABLE_MQTT
       //Check if MQTT Connected, otherwise it will crash the 8266
       if (WLED_MQTT_CONNECTED){
         char subuf[64];
         sprintf_P(subuf, PSTR("%s/motion/%d"), mqttDeviceTopic, (int)bottom);
         mqtt->publish(subuf, 0, false, state);
       }
+#endif
     }
 
     void updateSegments() {
@@ -345,6 +347,7 @@ class Animated_Staircase : public Usermod {
 
     uint16_t getId() { return USERMOD_ID_ANIMATED_STAIRCASE; }
 
+#ifndef WLED_DISABLE_MQTT
     /**
      * handling of MQTT message
      * topic only contains stripped topic (part after /wled/MAC)
@@ -382,6 +385,7 @@ class Animated_Staircase : public Usermod {
         mqtt->subscribe(subuf, 0);
       }
     }
+#endif
 
     void addToJsonState(JsonObject& root) {
       JsonObject staircase = root[FPSTR(_name)];
@@ -414,7 +418,7 @@ class Animated_Staircase : public Usermod {
     }
 
     void appendConfigData() {
-      oappend(SET_F("addInfo('staircase:help',0,'<button onclick=\"location.href=&quot;https://mm.kno.wled.ge/usermods/staircase&quot;\" type=\"button\">?</button>');"));  // 0 is field type, 1 is actual field
+      oappend(SET_F("addHB('staircase');"));
       
       //oappend(SET_F("dd=addDropdown('staircase','selectfield');"));
       //oappend(SET_F("addOption(dd,'1st value',0);"));

@@ -219,6 +219,7 @@ class BobLightUsermod : public Usermod {
 
     void enable(bool en) { enabled = en; }
     
+#ifndef WLED_DISABLE_MQTT
     /**
      * handling of MQTT message
      * topic only contains stripped topic (part after /wled/MAC)
@@ -249,6 +250,7 @@ class BobLightUsermod : public Usermod {
       //  mqtt->subscribe(subuf, 0);
       //}
     }
+#endif
 
     void addToJsonInfo(JsonObject& root)
     {
@@ -303,7 +305,7 @@ class BobLightUsermod : public Usermod {
     }
 
     void appendConfigData() {
-      oappend(SET_F("addInfo('BobLight:help',0,'<button onclick=\"location.href=&quot;https://mm.kno.wled.ge/usermods/BobLight&quot;\" type=\"button\">?</button>');"));  // 0 is field type, 1 is actual field
+      oappend(SET_F("addHB('BobLight');"));
 
       //oappend(SET_F("dd=addDropdown('usermod','selectfield');"));
       //oappend(SET_F("addOption(dd,'1st value',0);"));

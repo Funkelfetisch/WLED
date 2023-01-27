@@ -25,7 +25,7 @@ var ws, cpick, ranges;
 var cfg = {
 	theme:{base:"dark", bg:{url:""}, alpha:{bg:0.6,tab:0.8}, color:{bg:""}},
 	comp :{colors:{picker: true, rgb: false, quick: true, hex: false},
-          labels:true, pcmbot:false, pid:true, seglen:false, segpwr:false, segexp:false, css:true, hdays:false}
+          labels:true, pcmbot:false, pid:true, seglen:false, segpwr:false, segexp:true, css:true, hdays:false} //WLEDMM segexp true as default
 };
 var hol = [
 	[0,11,24,4,"https://aircoookie.github.io/xmas.png"], // christmas
@@ -803,7 +803,7 @@ function populateSegments(s)
 				<option value="2" ${inst.m12==2?' selected':''}>Arc</option>
 				<option value="3" ${inst.m12==3?' selected':''}>Corner</option>
 				<option value="4" ${inst.m12==4?' selected':''}>jMap</option>
-				<option value="5" ${inst.m12==5?' selected':''}>Circles</option>
+				<option value="5" ${inst.m12==5?' selected':''}>Circle</option>
 				<option value="6" ${inst.m12==6?' selected':''}>Block</option>
 			</select></div>
 		</div>`;
@@ -857,7 +857,7 @@ function populateSegments(s)
 		<tr>
 			<td><input class="noslide segn" id="seg${i}grp" type="number" min="1" max="255" value="${inst.grp}" oninput="updateLen(${i})" onkeydown="segEnter(${i})"></td>
 			<td><input class="noslide segn" id="seg${i}spc" type="number" min="0" max="255" value="${inst.spc}" oninput="updateLen(${i})" onkeydown="segEnter(${i})"></td>
-			<td><button class="btn btn-xs" onclick="setSeg(${i})"><i class="icons btn-icon" id="segc${i}">&#xe390;</i></button></td>
+			<td style="text-align:left;"><button class="btn btn-xs" onclick="setSeg(${i})"><i class="icons btn-icon" id="segc${i}">&#xe390;</i></button></td>
 		</tr>
 		</table>
 		<div class="h bp" id="seg${i}len"></div>
@@ -893,7 +893,7 @@ function populateSegments(s)
 	if (!isM && !noNewSegs && (cfg.comp.seglen?parseInt(gId(`seg${lSeg}s`).value):0)+parseInt(gId(`seg${lSeg}e`).value)<ledCount) gId(`segr${lSeg}`).style.display = "inline";
 	gId('segutil2').style.display = (segCount > 1) ? "block":"none"; // rsbtn parent
 
-	if (Array.isArray(li.maps) && li.maps.length>1) {
+	if (Array.isArray(li.maps) && li.maps.length>0) { //WLEDMM >0 instead of 1 to show also first ledmap. Attention: WLED AC has isM check, in MM Matrices are supported so do not check on isM
 		let cont = `Ledmap:&nbsp;<select class="sel-sg" onchange="requestJson({'ledmap':parseInt(this.value)})"><option value="" selected>Unchanged</option>`;
 		for (const k of (li.maps||[])) cont += `<option value="${k}">${k==0?'Default':'ledmap'+k+'.json'}</option>`;
 		cont += "</select></div>";
@@ -923,7 +923,7 @@ function populateEffects()
 	});
 
 	for (let ef of effects) {
-		// WLEDMM: add slider and color control to setFX (used by requestjson)
+		// add slider and color control to setFX (used by requestjson)
 		let id = ef.id;
 		let nm = ef.name+" ";
 		let fd = "";
@@ -1134,13 +1134,13 @@ function updateLen(s)
 {
 	if (!gId(`seg${s}s`)) return;
 	var start = parseInt(gId(`seg${s}s`).value);
-	var stop = parseInt(gId(`seg${s}e`).value);
-	var len = stop - (cfg.comp.seglen?0:start);
+	var stop = parseInt(gId(`seg${s}e`).value) + (cfg.comp.seglen?start:0);
+	var len = stop - start;
 	if (isM) {
 		// matrix setup
 		let startY = parseInt(gId(`seg${s}sY`).value);
-		let stopY = parseInt(gId(`seg${s}eY`).value);
-		len *= (stopY-(cfg.comp.seglen?0:startY));
+		let stopY = parseInt(gId(`seg${s}eY`).value) + (cfg.comp.seglen?startY:0);
+		len *= (stopY-startY);
 		let tPL = gId(`seg${s}lbtm`);
 		if (stop-start>1 && stopY-startY>1) {
 			// 2D segment
@@ -1449,7 +1449,7 @@ function readState(s,command=false)
 	return true;
 }
 
-// WLEDMM: control HTML elements for Slider and Color Control
+// control HTML elements for Slider and Color Control (original ported form WLED-SR)
 // Technical notes
 // ===============
 // If an effect name is followed by an @, slider and color control is effective.
@@ -1572,6 +1572,14 @@ function setEffectParameters(idx)
 		pall.innerHTML = '<i class="icons sel-icon" onclick="tglHex()">&#xe2b3;</i> Color palette not used';
 		palw.style.display = "none";
 	}
+	// not all color selectors shown, hide palettes created from color selectors
+	// NOTE: this will disallow user to select "* Color ..." palettes which may be undesirable in some cases or for some users
+	//for (let e of (gId('pallist').querySelectorAll('.lstI')||[])) {
+	//	let fltr = "* C";
+	//	if (cslCnt==1 && csel==0) fltr = "* Colors";
+	//	else if (cslCnt==2) fltr = "* Colors Only";
+	//	if (cslCnt < 3 && e.querySelector('.lstIname').innerText.indexOf(fltr)>=0) e.classList.add('hide'); else e.classList.remove('hide');
+	//}
 }
 
 var jsonTimeout;
@@ -1762,19 +1770,23 @@ function toggleNodes()
 
 function makeSeg()
 {
-	var ns = 0;
+	var ns = 0, ct = 0;
 	var lu = lowestUnused;
 	let li = lastinfo;
 	if (lu > 0) {
-		var pend = parseInt(gId(`seg${lu -1}e`).value,10) + (cfg.comp.seglen?parseInt(gId(`seg${lu -1}s`).value,10):0);
-		if (pend < ledCount) ns = pend;
+		let xend = parseInt(gId(`seg${lu -1}e`).value,10) + (cfg.comp.seglen?parseInt(gId(`seg${lu -1}s`).value,10):0);
+		if (isM) {
+			ns = 0;
+			ct = mw;
+		} else {
+			if (xend < ledCount) ns = xend;
+			ct = ledCount-(cfg.comp.seglen?ns:0)
+		}
 	}
 	gId('segutil').scrollIntoView({
 		behavior: 'smooth',
 		block: 'start',
 	});
-	var ct = (isM?mw:ledCount)-(cfg.comp.seglen?ns:0);
-	//TODO: add calculation for Y in case of 2D matrix
 	var cn = `<div class="seg lstI expanded">
 	<div class="segin">
 		<input type="text" class="noslide" id="seg${lu}t" autocomplete="off" maxlength=32 value="" placeholder="New segment ${lu}"/>
@@ -1948,7 +1960,7 @@ ${makePlSel(plJson[i].end?plJson[i].end:0, true)}
 	<input type="checkbox" id="p${i}sbchk">
 	<span class="checkmark"></span>
 </label>`;
-		if (Array.isArray(lastinfo.maps) && lastinfo.maps.length>0) {
+		if (Array.isArray(lastinfo.maps) && lastinfo.maps.length>0) { //WLEDMM >0 instead of 1 to show also first ledmap. Attention: WLED AC has isM check, in MM Matrices are supported so do not check on isM
 			content += `<div class="lbl-l">Ledmap:&nbsp;<div class="sel-p"><select class="sel-p" id="p${i}lmp"><option value="">Unchanged</option>`;
 			for (const k of (lastinfo.maps||[])) content += `<option value="${k}"${(i>0 && pJson[i].ledmap==k)?" selected":""}>${k==0?'Default':'ledmap'+k+'.json'}</option>`;
 			content += "</select></div></div>";
@@ -2078,7 +2090,6 @@ function selSegAll(o)
 
 function selSegEx(s)
 {
-	if (gId('selall')) gId('selall').checked = false;
 	var obj = {"seg":[]};
 	for (let i=0; i<=lSeg; i++) obj.seg.push({"id":i,"sel":(i==s)});
 	obj.mainseg = s;
@@ -2087,7 +2098,6 @@ function selSegEx(s)
 
 function selSeg(s)
 {
-	if (gId('selall')) gId('selall').checked = false;
 	var sel = gId(`seg${s}sel`).checked;
 	var obj = {"seg": {"id": s, "sel": sel}};
 	requestJson(obj);
@@ -2622,6 +2632,116 @@ function rSegs()
 	}
 	for (let i=1; i<=lSeg; i++) obj.seg.push({"stop":0});
 	requestJson(obj);
+}
+
+//WLEDMM generate presets.json file
+function genPresets()
+{
+	var result = "";
+	var sep = "{";
+
+	var effects = eJson;
+	var playlistPS = JSON.parse("{}");
+	var playlistSep = JSON.parse("{}");
+	var playlistDur = JSON.parse("{}");
+	var playlistTrans = JSON.parse("{}");
+	function addToPlaylist(m, id) {
+		if (!playlistPS[m]) playlistPS[m] = "";
+		if (!playlistDur[m]) playlistDur[m] = "";
+		if (!playlistTrans[m]) playlistTrans[m] = "";
+		if (!playlistSep[m]) playlistSep[m] = "";
+		playlistPS[m] += playlistSep[m] + `${id}`;
+		playlistDur[m] += playlistSep[m] + "100";
+		playlistTrans[m] += playlistSep[m] + "7";
+		playlistSep[m] = ",";
+	}
+	for (let ef of effects) {
+		if (ef.name.indexOf("RSVD") < 0) {
+			if (Array.isArray(fxdata) && fxdata.length>ef.id) {
+				let fd = fxdata[ef.id];
+				let eP = (fd == '')?[]:fd.split(";"); // effect parameters
+				let m = (eP.length<4 || eP[3]==='')?'1':eP[3]; // flags
+				// console.log(ef, eP);
+				//transform key values in json format
+				var defaultString = "";
+				//if key/values defined, convert them to json in defaultString
+				if (eP.length>4) {
+					let defaults = (eP[4] == '')?[]:eP[4].split(",");
+					for (let i=0; i<defaults.length;i++) {
+						let keyValue = (defaults[i] == '')?[]:defaults[i].split("=");
+						defaultString += `,"${keyValue[0]}":${keyValue[1]}`;
+					}
+				}
+				//if not defined set to default
+				if (!defaultString.includes("sx")) defaultString += ',"sx":128'; //Speed
+				if (!defaultString.includes("ix")) defaultString += ',"ix":128'; //Intensity
+				if (!defaultString.includes("c1")) defaultString += ',"c1":128'; //Custom 1
+				if (!defaultString.includes("c2")) defaultString += ',"c2":128'; //Custom 2
+				if (!defaultString.includes("c3")) defaultString += ',"c3":16'; //Custom 3
+				if (!defaultString.includes("o1")) defaultString += ',"o1":0'; //Check 1
+				if (!defaultString.includes("o2")) defaultString += ',"o2":0'; //Check 2
+				if (!defaultString.includes("o3")) defaultString += ',"o3":0'; //Check 3
+				if (!defaultString.includes("pal")) defaultString += ',"pal":1'; //Random palette if not set different
+				if (!defaultString.includes("m12") && m.includes("1") && !m.includes("1.5") && !m.includes("12")) 
+					defaultString += ',"rev":true,"mi":true,"rY":true,"mY":true,"m12":2'; //Arc expansion
+				else {
+					if (!defaultString.includes("rev")) defaultString += ',"rev":false';
+					if (!defaultString.includes("mi")) defaultString += ',"mi":false';
+					if (!defaultString.includes("rY")) defaultString += ',"rY":false';
+					if (!defaultString.includes("mY")) defaultString += ',"mY":false';
+				}
+				result += `${sep}"${ef.id}":{"n":"${ef.name}","mainseg":0,"seg":[{"id":0,"fx":${ef.id}${defaultString}}]}`;
+				sep = "\n,";
+				addToPlaylist(m, ef.id);
+				addToPlaylist("All", ef.id);
+				if (m.includes("1")) addToPlaylist("All1", ef.id);
+				if (m.includes("2")) addToPlaylist("All2", ef.id);
+			} //fxData is array
+		} //not RSVD
+	} //all effects
+
+	var seq=230; //Playlist start here
+	// console.log(playlistPS, playlistDur, playlistTrans);
+	for (const m in playlistPS) {
+		let playListString = `\n,"${seq}":{"n":"${m}D Playlist","ql":"${seq}","on":true,"playlist":{"ps":[${playlistPS[m]}],"dur":[${playlistDur[m]}],"transition":[${playlistTrans[m]}],"repeat":0,"end":0,"r":1}}`;
+		// console.log(playListString);
+		result += playListString;
+		seq++;
+	}
+
+	result += "}";
+
+	//assign result and show text and save button
+	gId("genPresets").hidden = true;
+	gId("savePresetsGen").hidden = false;
+	gId("presetsGen").hidden = false;
+	gId("presetsGen").value = result;
+	// console.log(result);
+
+}
+
+//WLEDMM: utility function to save file to FS
+function uploadFileWithText(name, text)
+{
+  var req = new XMLHttpRequest();
+  req.addEventListener('load', function(){showToast(this.responseText,this.status >= 400)});
+  req.addEventListener('error', function(e){showToast(e.stack,true);});
+  req.open("POST", "/upload");
+  var formData = new FormData();
+
+  var blob = new Blob([text], {type : 'application/text'});
+  var fileOfBlob = new File([blob], name);
+  formData.append("upload", fileOfBlob);
+
+  req.send(formData);
+}
+
+//WLEDMM: save the presets.json to FS
+function savePresetsGen()
+{
+	if (!confirm('Are you sure to (over)write presets.json?')) return;
+
+	uploadFileWithText("/presets.json", gId("presetsGen").value);
 }
 
 function loadPalettesData(callback = null)
