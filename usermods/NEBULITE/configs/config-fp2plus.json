@@ -1,0 +1,30 @@
+{
+    "hw": {
+        "led": {
+            "total": 4,
+            "maxpwr": 1500,
+            "ledma": 0,
+            "cct": false,
+            "cr": false,
+            "cb": 0,
+            "fps": 42,
+            "rgbwm": 255,
+            "ld": true,
+            "ins": [
+                {
+                    "start": 0,
+                    "len": 4,
+                    "pin": [
+                        26
+                    ],
+                    "order": 34,
+                    "rev": false,
+                    "skip": 0,
+                    "type": 30,
+                    "ref": false,
+                    "rgbwm": 1
+                }
+            ]
+        }
+    }
+}

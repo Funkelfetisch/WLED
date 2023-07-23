@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+	<meta charset="utf-8">
+	<meta name="theme-color" content="#222222">
+	<title>NEBULITE Live Preview</title>
+	<style>
+	body {
+		margin: 0;
+	}
+	</style>
+
+	<script src="/previewOutput.js"></script>
+</head>
+<body>
+    <div>
+        <canvas id="canv" width="200" height="200" #myCanvas></canvas>
+    </div>
+	<script>
+
+
+		// let outputKey = this.typeId + '-' + this.groupId;
+		let outputKey = "2-0";
+		let outputType;
+		let bytesPerColor = 3;
+
+		if (outputKey === '4-0') { // fanny pack 2 == fanny pack
+		outputKey = '2-0';
+		} else if (outputKey === '6-0') { // fanny pack 2 == fanny pack
+		outputKey = '1-0';
+		}
+
+		if (outputTypes.hasOwnProperty(outputKey)) {
+		console.log("NEBULITE product found.");
+		outputType = outputTypes[outputKey];
+		} else {
+		console.error('Preview function did not find this product!');
+		}
+
+
+		var c = document.getElementById('canv');
+		var leds = "";
+		var throttled = false;
+		function setCanvas() {
+			c.width  = 200; //remove scroll bars
+			c.height = 200; //remove scroll bars
+		}
+		setCanvas();
+		// Check for canvas support
+		var ctx = c.getContext('2d');
+		if (ctx) { // Access the rendering context
+			// use parent WS or open new
+			var ws;
+			try {
+				ws = top.window.ws;
+			} catch (e) {}
+			if (ws && ws.readyState === WebSocket.OPEN) {
+				ws.send("{'lv':true}");
+			} else {
+				ws = new WebSocket((window.location.protocol == "https:"?"wss":"ws")+"://"+document.location.host+"/ws");
+				ws.onopen = ()=>{
+					ws.send("{'lv':true}");
+				}
+			}
+			ws.binaryType = "arraybuffer";
+			ws.addEventListener('message',(e)=>{
+				try {
+					if (toString.call(e.data) === '[object ArrayBuffer]') {
+						let leds = new Uint8Array(event.data);
+						if (leds[0] != 76 || !ctx) return;
+            
+            let colors = leds.slice(2);
+            outputType.drawFn(ctx, colors);
+					}
+				} catch (err) {
+					console.error("Peek WS error:",err);
+				} 
+			});
+		}
+		// window.resize event listener
+		window.addEventListener('resize', (e)=>{
+			if (!throttled) {     // only run if we're not throttled
+				setCanvas();      // actual callback action
+				throttled = true; // we're throttled!
+				setTimeout(()=>{  // set a timeout to un-throttle
+					throttled = false;
+				}, 250);
+			}
+		});
+	</script>
+</body>
+</html>
+
+
+

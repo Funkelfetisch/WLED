@@ -429,7 +429,79 @@ const char PAGE_dmxmap[] PROGMEM = R"=====()=====";
       file: "rangetouch.js",
       name: "rangetouchJs",
       method: "gzip"
-    }
+    },
+    {
+      file: "../../usermods/NEBULITE/liveviewwsNEBULITE.html",
+      name: "PAGE_liveviewNEBULITE",
+      method: "gzip",
+      filter: "html-minify",
+    },
+    {
+      file: "../../usermods/NEBULITE/previewOutput.js",
+      name: "NEBULITE_previewOutput_js",
+      method: "gzip",
+      filter: "js-minify",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/fannypack_leds.png",
+      name: "NEBULITE_fannypack_leds_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/fannypack_top.png",
+      name: "NEBULITE_fannypack_top_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/backpack_leds.png",
+      name: "NEBULITE_backpack_leds_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/backpack_top.png",
+      name: "NEBULITE_backpack_top_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/croptop_leds.png",
+      name: "NEBULITE_croptop_leds_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/croptop_top.png",
+      name: "NEBULITE_croptop_top_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/jacket_leds.png",
+      name: "NEBULITE_jacket_leds_png",
+      method: "binary",
+    },
+    {
+      file: "../../usermods/NEBULITE/assets/jacket_top.png",
+      name: "NEBULITE_jacket_top_png",
+      method: "binary",
+    },
+    // {
+    //   file: "../../usermods/NEBULITE/configs/fannypack.json",
+    //   name: "NEBULITE_config_fannypack",
+    //   method: "binary",
+    // },
+    // {
+    //   file: "../../usermods/NEBULITE/configs/backpack.json",
+    //   name: "NEBULITE_config_backpack",
+    //   method: "binary",
+    // },
+    // {
+    //   file: "../../usermods/NEBULITE/configs/jacket.json",
+    //   name: "NEBULITE_config_jacket",
+    //   method: "binary",
+    // },
+    // {
+    //   file: "../../usermods/NEBULITE/configs/top.json",
+    //   name: "NEBULITE_config_top",
+    //   method: "binary",
+    // }
   ],
   "wled00/html_other.h"
 );

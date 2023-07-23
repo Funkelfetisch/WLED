@@ -34,6 +34,64 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
   return(false);
 }
 
+#ifdef USERMOD_NEBULITE
+  #include <libb64/cencode.h>
+
+  unsigned long nebulitePresetRecordingLastRecord = 0;
+  char nebuliteJsonBuffer[7000];
+
+  uint16_t pos = 0;
+  // since we have to initialize with constant heap, let's assume we don't have products >50 LEDs :D
+  uint8_t buffer [50 * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION] = {};
+
+  static bool handleRecording() {
+    if (presetToSave == 0) return true;
+    if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
+        uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+        // Serial.print("recordTotalBytes ");
+        // Serial.println(recordTotalBytes);
+        // Serial.print("millis ");
+        // Serial.println(millis());
+        // Serial.print("pos ");
+        // Serial.println(pos);
+        // Serial.print("sizeof buffer ");
+        // Serial.println(sizeof(buffer));
+        // Serial.print("strip.getLengthTotal() ");
+        // Serial.println(strip.getLengthTotal());
+        // Serial.print("pos < (pos + strip.getLengthTotal() * 3) ");
+        // Serial.println(pos < (pos + strip.getLengthTotal() * 3));
+
+        if (pos < (pos + strip.getLengthTotal() * 3)) {
+          for (uint16_t i = 0; i < strip.getLengthTotal(); i++)
+          {
+            uint32_t c = strip.getPixelColor(i);
+            buffer[pos++] = qadd8(W(c), R(c)); //R, add white channel to RGB channels as a simple RGBW -> RGB map
+            buffer[pos++] = qadd8(W(c), G(c)); //G
+            buffer[pos++] = qadd8(W(c), B(c)); //B
+          }
+        }
+
+        if(pos >= recordTotalBytes) {
+          Serial.print("NEBULITE finished recording at pos ");
+          Serial.println(pos);
+
+          base64_encodestate _state;
+          base64_init_encodestate(&_state);
+          int len = base64_encode_block((const char *) buffer, pos, nebuliteJsonBuffer, &_state);
+          len = base64_encode_blockend((nebuliteJsonBuffer + len), &_state);
+
+          // reset
+          nebulitePresetRecordingLastRecord = 0;
+          pos = 0;
+          return true;
+        }
+
+        nebulitePresetRecordingLastRecord = millis();
+      }
+      return false;
+  }
+#endif
+
 static void doSaveState() {
   bool persist = (presetToSave < 251);
   const char *filename = getFileName(persist);
@@ -51,6 +109,11 @@ static void doSaveState() {
     serializeState(sObj, true, includeBri, segBounds, selectedOnly);
   }
   sObj["n"] = saveName;
+
+  #ifdef USERMOD_NEBULITE
+    sObj["r"] = (String) nebuliteJsonBuffer;
+  #endif
+
   if (quickLoad[0]) sObj[F("ql")] = quickLoad;
   if (saveLedmap >= 0) sObj[F("ledmap")] = saveLedmap;
 /*
@@ -137,6 +200,9 @@ bool applyPreset(byte index, byte callMode)
 void handlePresets()
 {
   if (presetToSave) {
+    #ifdef USERMOD_NEBULITE
+    if (handleRecording())
+    #endif
     doSaveState();
     return;
   }

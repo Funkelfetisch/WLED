@@ -189,3 +189,22 @@ td {
     width: 144px;
   }
 }
+
+
+
+body {
+  background: black;
+}
+button, input, select {
+  background: black;
+  border: 1px solid #7f73f5;
+}
+.toprow {
+  background-color: black !important;
+}
+input:disabled {
+  color: #888;
+}
+hr {
+  border-color: #7f73f5;
+}

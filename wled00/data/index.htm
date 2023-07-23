@@ -53,11 +53,13 @@
 	</script>
 	<link rel="stylesheet" href="index.css">
 	<link rel="stylesheet" href="../../usermods/artifx/artifx.css"> <!--WLEDMM ARTIFX -->
+	<script src="../../usermods/NEBULITE/previewOutput.js"></script>
+	<link rel="stylesheet" href="../../usermods/NEBULITE/global.css">
 </head>
 <body>
 
-<div id="cv" class="overlay">Loading WLED UI...</div>
-<noscript><div class="overlay" style="opacity:1;">Sorry, WLED UI needs JavaScript!</div></noscript>
+<div id="cv" class="overlay">Loading NEBULITE UI...</div>
+<noscript><div class="overlay" style="opacity:1;">Sorry, NEBULITE UI needs JavaScript!</div></noscript>
 <div id="bg"></div>
 
 <div class="wrapper" id="top">
@@ -66,7 +68,7 @@
 			<button id="buttonPower" onclick="togglePower()" class="tgl"><i class="icons">&#xe08f;</i><p class="tab-label">Power</p></button>
 			<button id="buttonNl" onclick="toggleNl()"><i class="icons">&#xe2a2;</i><p class="tab-label">Timer</p></button>
 			<button id="buttonSync" onclick="toggleSync()"><i class="icons">&#xe116;</i><p class="tab-label">Sync</p></button>
-			<button id="buttonSr" onclick="toggleLiveview()"><i class="icons">&#xe410;</i><p class="tab-label">GFX</p></button>
+			<button id="buttonSr" onclick="toggleLiveviewNEBULITE()"><i class="icons">&#xe410;</i><p class="tab-label">Liveview</p></button>
 			<button id="buttonI" onclick="toggleInfo()"><i class="icons">&#xe066;</i><p class="tab-label">Info</p></button>
 			<button id="buttonNodes" onclick="toggleNodes()"><i class="icons">&#xe22d;</i><p class="tab-label">Nodes</p></button>
 			<button onclick="window.location.href='/settings';"><i class="icons">&#xe0a2;</i><p class="tab-label">Config</p></button>
@@ -83,6 +85,9 @@
 				<output class="sliderbubble"></output>
 			</div>
 		</div>
+
+		<div id="kliveviewNEBULITE"></div>
+
 		<iframe id="liveview" src="about:blank"></iframe>
 	</div>
 </div>
@@ -363,10 +368,10 @@
 </div>
 
 <div class="tab bot" id="bot">
-	<button class="tablinks" onclick="openTab(0)"><i class="icons">&#xe2b3;</i><p class="tab-label">Colors</p></button>
-	<button class="tablinks" onclick="openTab(1)"><i class="icons">&#xe23d;</i><p class="tab-label">Effects</p></button>
-	<button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe34b;</i><p class="tab-label">Segments</p></button>
-	<button class="tablinks" onclick="openTab(3)"><i class="icons">&#xe04c;</i><p class="tab-label">Presets</p></button>
+	<button class="tablinks" onclick="openTab(0)"><i class="icons">&#xe04c;</i><p class="tab-label">Presets</p></button>
+	<button class="tablinks" onclick="openTab(1)"><i class="icons">&#xe2b3;</i><p class="tab-label">Colors</p></button>
+	<button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe23d;</i><p class="tab-label">Effects</p></button>
+	<!-- <button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe34b;</i><p class="tab-label">Segments</p></button> -->
 </div>
 
 <div id="connind">&#9790;</div> <!-- WLEDMM add moon -->
@@ -375,26 +380,25 @@
 <div id="info" class="modal">
 	<button class="btn btn-xs close" onclick="toggleInfo()"><i class="icons rot45">&#xe18a;</i></button>
 	<div id="imgw">
-		<img class="wi" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAFCAYAAAC5Fuf5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABbSURBVChTlY9bDoAwDMNW7n9nwCipytQN4Z8tbrTHmDmF4oPzyldwRqp1SSdnV/NuZuzqerAByxXznBw3igkeFEfXyUuhK/yFM0CxJfyqXZEOc6/Sr9/bf7uIC5Nwd7orMvAPAAAAAElFTkSuQmCC" />
+		<img class="wi" alt="" src="data:image/svg+xml,%3Csvg%20id%3D%22Ebene_2%22%20data-name%3D%22Ebene%202%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20280.92%2035.69%22%3E%20%3Cdefs%3E%20%3Cstyle%3E%20.cls-1%20{%20fill%3A%20%23010101%3B%20}%20%3C%2Fstyle%3E%20%3C%2Fdefs%3E%20%3Cg%20id%3D%22Layer_1%22%20data-name%3D%22Layer%201%22%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2226.19%2029.35%203.02%20.13%202.92%200%200%200%200%2035.15%203.14%2035.15%203.14%205.17%2026.91%2035.15%2029.33%2035.15%2029.33%200%2026.19%200%2026.19%2029.35%22%2F%3E%20%3Cpath%20class%3D%22cls-1%22%20d%3D%22M102.59%2C17.02c2.55-1.25%2C5.21-3.62%2C5.21-8.1v-.1c0-2.22-.78-4.12-2.32-5.66C103.45%2C1.13%2C100.18%2C0%2C96.28%2C0h-14.57V35.15h15.31c7.71%2C0%2C12.7-3.82%2C12.7-9.74v-.1c0-3.97-2.46-6.82-7.13-8.29Zm-6.61-1.11h-11.03V3.06h11.28c5.1%2C0%2C8.27%2C2.3%2C8.27%2C6.01v.1c0%2C4.15-3.26%2C6.74-8.52%2C6.74Zm1.14%2C16.19h-12.16v-13.15h11.33c6.54%2C0%2C10.14%2C2.26%2C10.14%2C6.35v.1c0%2C4.14-3.57%2C6.7-9.31%2C6.7Z%22%2F%3E%20%3Cpath%20class%3D%22cls-1%22%20d%3D%22M147.33%2C20.48c0%2C7.76-4.06%2C12.21-11.13%2C12.21s-11.33-4.54-11.33-12.46V0h-3.24V20.48c0%2C9.38%2C5.54%2C15.21%2C14.47%2C15.21s14.47-5.94%2C14.47-15.5V0h-3.24V20.48h0Z%22%2F%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%22167.75%200%20164.5%200%20164.5%2035.15%20187.98%2035.15%20187.98%2032.1%20167.75%2032.1%20167.75%200%22%2F%3E%20%3Crect%20class%3D%22cls-1%22%20x%3D%22200.24%22%20y%3D%220%22%20width%3D%223.24%22%20height%3D%2235.14%22%2F%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%22215.85%203.05%20227.86%203.05%20227.86%2035.15%20231.1%2035.15%20231.1%203.05%20243.11%203.05%20243.11%200%20215.85%200%20215.85%203.05%22%2F%3E%20%3Cg%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2242.81%2035.15%2068.25%2035.15%2068.25%2032.1%2046.05%2032.1%2042.81%2032.1%2042.81%2035.15%22%2F%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2246.36%2015.91%2042.81%2015.91%2042.81%2018.95%2046.36%2018.95%2068.01%2018.95%2068.01%2015.91%2046.36%2015.91%22%2F%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2268.01%203.05%2068.01%200%2042.81%200%2042.81%203.05%2046.05%203.05%2068.01%203.05%22%2F%3E%20%3C%2Fg%3E%20%3Cg%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%22255.47%2035.15%20280.92%2035.15%20280.92%2032.1%20258.72%2032.1%20255.47%2032.1%20255.47%2035.15%22%2F%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%22259.03%2015.91%20255.47%2015.91%20255.47%2018.95%20259.03%2018.95%20280.67%2018.95%20280.67%2015.91%20259.03%2015.91%22%2F%3E%20%3Cpolygon%20class%3D%22cls-1%22%20points%3D%22280.67%203.05%20280.67%200%20255.47%200%20255.47%203.05%20258.72%203.05%20280.67%203.05%22%2F%3E%20%3C%2Fg%3E%20%3C%2Fg%3E%20%3C%2Fsvg%3E" />
 	</div>
 	<div id="kv">Loading...</div><br>
 	<div>
 		<button class="btn infobtn" onclick="requestJson()">Refresh</button>
 		<button class="btn infobtn" onclick="toggleNodes()">Instance List</button>
-		<button class="btn infobtn" onclick="window.open('/update','_self');">Update WLED</button>
-		<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Reboot WLED</button>
-		<button class="btn infobtn" id="genPresets" onclick="genPresets()">Generate presets ☾</button>
+		<button class="btn infobtn" onclick="window.open('/update','_self');">Update NEBULITE WLED</button>
+		<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Reboot NEBULITE WLED</button>
+		<button class="btn infobtn" id="genPresets" onclick="genPresets()">Generate presets</button>
 		<button class="btn infobtn" id="savePresetsGen" onclick="savePresetsGen()" hidden="true">Save generated presets</button>
 		<textarea id="presetsGen" hidden="true"></textarea><br>
 	</div>
 	<br>
-	<span class="h">WLED made with <span id="heart">&#10084;&#xFE0E;</span> by Aircoookie and the <a href="https://wled.discourse.group/" target="_blank">WLED community</a></span><br>
-	<span class="h">WLED MM made with <span id="heart">&#10084;&#xFE0E;</span> by Softhack007 & Ewowi and the <a href="https://discord.gg/8P7wGuqT/" target="_blank">WLED 2D & Audio Dev</a> community</span>
+	<span class="h">Heavily modified from <a href="https://github.com/MoonModules/WLED">MoonModules WLED</a> by Veit Nachtmann for Funkelfetisch and <a href="https://nebulite.berlin/" target="_blank">NEBULITE</a>.</span>
 </div>
 
 <div id="nodes" class="modal">
 	<button class="btn btn-xs close" onclick="toggleNodes()"><i class="icons rot45">&#xe18a;</i></button>
-	<div id="ndlt">WLED instances</div>
+	<div id="ndlt">NEBULITE / WLED instances</div>
 	<div id="kn">Loading...</div>
 	<div style="position:sticky;bottom:0;">
 		<button class="btn infobtn" onclick="loadNodes()">Refresh</button>
