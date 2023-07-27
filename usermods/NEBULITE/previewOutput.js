@@ -23,7 +23,7 @@ var outputTypes = {
     height: 200,
     drawFn: function drawBackPack2(c, colors) {
       //if the images haven't loaded yet, show some gray
-      if (!canvases['backpack-leds.png'] || ! canvases['backpack-top.png']) {
+      if (!canvases['backpack_leds.png'] || ! canvases['backpack_top.png']) {
         c.globalCompositeOperation = 'source-over';
         c.fillStyle = "rgb(64,64,64)";
         c.fillRect(0, 0, 200, 200);
@@ -65,13 +65,13 @@ var outputTypes = {
       c.setTransform(storedTransform);
 
       c.globalCompositeOperation = 'hard-light';
-      c.drawImage(canvases['backpack-leds.png'], 0, 0);
+      c.drawImage(canvases['backpack_leds.png'], 0, 0);
       c.globalCompositeOperation = 'source-over';
-      c.drawImage(canvases['backpack-top.png'], 0, 0);
+      c.drawImage(canvases['backpack_top.png'], 0, 0);
     },
     images: [
-      'backpack-leds.png',
-      'backpack-top.png'
+      'backpack_leds.png',
+      'backpack_top.png'
     ],
     numPixels: 6
   },

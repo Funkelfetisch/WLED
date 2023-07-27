@@ -65,6 +65,15 @@ void setup() {
   #ifdef WLED_DEBUG_HEAP
   esp_err_t error = heap_caps_register_failed_alloc_callback(heap_caps_alloc_failed_hook);
   #endif
+
+  // Check if the device woke up from a deep sleep
+  if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT0) {
+    Serial.println("Woke up from deep sleep due to a button press");
+    // Add your logic after wake up here
+  } else {
+    Serial.println("Device is not waking up from deep sleep");
+  }
+
   WLED::instance().setup();
 }
 
@@ -75,6 +84,13 @@ void loop() {
     //USER_PRINTF("%lu lps\n",loopCounter/10);
     lastMillis = millis();
     loopCounter = 0;
+  }
+
+  if (powerDown > 0 && (powerDown + 3000) < millis()) {
+    Serial.println("Going to sleep now");
+
+    // Enter deep sleep mode
+    esp_deep_sleep_start();
   }
 
   WLED::instance().loop();

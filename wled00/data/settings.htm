@@ -102,7 +102,7 @@
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<p>Welcome! Here you can OVERWRITE your configuration with the NEBULITE defaults for each product. </p>
+<!-- <p>Welcome! Here you can OVERWRITE your configuration with the NEBULITE defaults for each product. </p>
 <label for="productType">Choose your product:</label>
 
 <select name="productType" id="productType">
@@ -191,7 +191,7 @@
 		templateLoader.open("GET", "/cfg.json", true); // temporary until I figure out how to put files to SPIFFS
 		templateLoader.send();
 	};
-</script>
+</script> -->
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -220,5 +220,6 @@
 <button type="submit" onclick="window.location='./settings/time'">Time & Macros</button>
 <button type="submit" onclick="window.location='./settings/sec'">Security & Updates</button>
 <button type="submit" onclick="window.location='./edit'">File System ☾</button> <!--WLEDMM-->
+<span id="lserr" style="color:red; display:none">&#9888; Could not access local storage. Make sure it is enabled in your browser.</span><hr>
 </body>
 </html>

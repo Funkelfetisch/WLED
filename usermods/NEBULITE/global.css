@@ -102,9 +102,13 @@ body > .container {
 
 #pcont {
   display: grid;
-  grid-template-columns: 50% 50%;
   margin: 0;
   width: 100%;
+  min-width: 100% !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: auto;
+  align-content: start;
+  gap: 10px;
 }
 
 #Presets .lstI {
@@ -152,15 +156,9 @@ div.c:nth-child(8) {
   width: 25%;
 }
 
-.pcMode #pcont {
-  grid-template-columns: 30% 30% 30%;
+@media screen and (min-width: 2000px) {
 }
 
-@media screen and (min-width: 2000px) {
-  .pcMode #pcont {
-    grid-template-columns: 25% 25% 25% 25%;
-  }
-}
 @media screen and (min-width: 440px) {
   .nebuliteCanvas {
     transform: scale(1) !important;

@@ -45,7 +45,7 @@ let extendedNodes = []; //WLEDMM
 
 
 
-let nebulitePreviewKey = "2-0";
+let nebulitePreviewKey = "5-0";
 let outputType;
 let bytesPerColor = 3;
 
@@ -627,9 +627,9 @@ function populatePresets(fromls)
 
 		cn += `<div class="pres lstI" id="p${i}o">`;
 		if (cfg.comp.pid) cn += `<div class="pid">${i}</div>`;
-		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="200" height="100" onclick="setPreset(${i})"></canvas>
+		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="200" height="200" onclick="setPreset(${i})"></canvas>
 		<div class="pname lstIname" onclick="setPreset(${i})">
-		${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + ${pName(i)}}
+		${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + pName(i)}
 		<i class="icons edit-icon flr" id="p${i}nedit" onclick="tglSegn(${i+100})">&#xe2c6;</i></div>
 		<i class="icons e-icon flr" id="sege${i+100}" onclick="expand(${i+100})">&#xe395;</i>
 		<div class="presin lstIcontent" id="seg${i+100}"></div>
@@ -690,7 +690,7 @@ function parseInfo(i) {
 //	}
 
 	// NEBULITE
-	nebulitePreviewKey = i.nebukey ? i.nebukey : "2-0";
+	nebulitePreviewKey = i.nebukey ? i.nebukey : nebulitePreviewKey;
 	// /NEBULITE
 }
 

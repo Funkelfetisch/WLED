@@ -5,11 +5,11 @@
  */
 
 #define WLED_DEBOUNCE_THRESHOLD      50 // only consider button input of at least 50ms as valid (debouncing)
-#define WLED_LONG_PRESS             600 // long press if button is released after held for at least 600ms
+#define WLED_LONG_PRESS             3000 // long press if button is released after held for at least 600ms
 #define WLED_DOUBLE_PRESS           350 // double press if another press within 350ms after a short press
 #define WLED_LONG_REPEATED_ACTION   300 // how often a repeated action (e.g. dimming) is fired on long press on button IDs >0
-#define WLED_LONG_AP               5000 // how long button 0 needs to be held to activate WLED-AP
-#define WLED_LONG_FACTORY_RESET   10000 // how long button 0 needs to be held to trigger a factory reset
+#define WLED_LONG_AP              12000 // how long button 0 needs to be held to activate WLED-AP
+#define WLED_LONG_FACTORY_RESET   18000 // how long button 0 needs to be held to trigger a factory reset
 
 static const char _mqtt_topic_button[] PROGMEM = "%s/button/%d";  // optimize flash usage
 
@@ -38,7 +38,12 @@ void longPressAction(uint8_t b)
 {
   if (!macroLongPress[b]) {
     switch (b) {
-      case 0: setRandomColor(col); colorUpdated(CALL_MODE_BUTTON); break;
+      case 0:
+        Serial.println("powering down...");
+        toggleOnOff(); 
+        stateUpdated(CALL_MODE_BUTTON);
+        powerDown = millis();
+      break;
       case 1: bri += 8; stateUpdated(CALL_MODE_BUTTON); buttonPressedTime[b] = millis(); break; // repeatable action
     }
   } else {
@@ -227,8 +232,9 @@ void handleButton()
   static unsigned long lastRun = 0UL;
   unsigned long now = millis();
 
-  if (strip.isUpdating() && (now - lastRun < 400)) return; // don't interfere with strip update (unless strip is updating continuously, e.g. very long strips)
-  lastRun = now;
+  //if (strip.isUpdating()) return; // don't interfere with strip updates. Our button will still be there in 1ms (next cycle)
+  if (strip.isUpdating() && (millis() - lastRun < 400)) return;   // be niced, but avoid button starvation
+  lastRun = millis();
 
   for (uint8_t b=0; b<WLED_MAX_BUTTONS; b++) {
     #ifdef ESP8266
@@ -239,7 +245,7 @@ void handleButton()
 
     if (usermods.handleButton(b)) continue; // did usermod handle buttons
 
-    if (buttonType[b] == BTN_TYPE_ANALOG || buttonType[b] == BTN_TYPE_ANALOG_INVERTED) { // button is not a button but a potentiometer
+    if (buttonType[b] == BTN_TYPE_ANALOG || buttonType[b] == BTN_TYPE_ANALOG_INVERTED) {   // button is not a button but a potentiometer
       if (now - lastRead > ANALOG_BTN_READ_CYCLE) {
         handleAnalog(b);
         lastRead = now;
@@ -247,23 +253,14 @@ void handleButton()
       continue;
     }
 
-    // button is not momentary, but switch. This is only suitable on pins whose on-boot state does not matter (NOT gpio0)
+    //button is not momentary, but switch. This is only suitable on pins whose on-boot state does not matter (NOT gpio0)
     if (buttonType[b] == BTN_TYPE_SWITCH || buttonType[b] == BTN_TYPE_PIR_SENSOR) {
       handleSwitch(b);
       continue;
     }
 
-    // momentary button logic
-    if (isButtonPressed(b)) { // pressed
-
-      // if all macros are the same, fire action immediately on rising edge
-      if (macroButton[b] && macroButton[b] == macroLongPress[b] && macroButton[b] == macroDoublePress[b]) {
-        if (!buttonPressedBefore[b])
-          shortPressAction(b);
-        buttonPressedBefore[b] = true;
-        buttonPressedTime[b] = now; // continually update (for debouncing to work in release handler)
-        return;
-      }
+    //momentary button logic
+    if (isButtonPressed(b)) { //pressed
 
       if (!buttonPressedBefore[b]) buttonPressedTime[b] = now;
       buttonPressedBefore[b] = true;
@@ -278,15 +275,9 @@ void handleButton()
       }
 
     } else if (!isButtonPressed(b) && buttonPressedBefore[b]) { //released
+
       long dur = now - buttonPressedTime[b];
-
-      // released after rising-edge short press action
-      if (macroButton[b] && macroButton[b] == macroLongPress[b] && macroButton[b] == macroDoublePress[b]) {
-        if (dur > WLED_DEBOUNCE_THRESHOLD) buttonPressedBefore[b] = false; // debounce, blocks button for 50 ms once it has been released
-        return;
-      }
-
-      if (dur < WLED_DEBOUNCE_THRESHOLD) {buttonPressedBefore[b] = false; continue;} // too short "press", debounce
+      if (dur < WLED_DEBOUNCE_THRESHOLD) {buttonPressedBefore[b] = false; continue;} //too short "press", debounce
       bool doublePress = buttonWaitTime[b]; //did we have a short press before?
       buttonWaitTime[b] = 0;
 

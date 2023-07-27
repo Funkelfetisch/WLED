@@ -749,6 +749,9 @@ WLED_GLOBAL int8_t spi_sclk  _INIT(HW_PIN_CLOCKSPI);
 WLED_GLOBAL StaticJsonDocument<JSON_BUFFER_SIZE> doc;
 WLED_GLOBAL volatile uint8_t jsonBufferLock _INIT(0);
 
+// power down
+WLED_GLOBAL unsigned long powerDown _INIT(0);
+
 // enable additional debug output
 //WLEDMM: switch between netdebug and serial
 // cannot do this on -S2, due to buggy USBCDC serial driver: canUseSerial

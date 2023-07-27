@@ -177,14 +177,14 @@ void initServer()
       request->send_P(200, "image/png", NEBULITE_backpack_top_png, 34166);
     }
   });
-  server.on("/NEBULITE_croptop_leds_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_croptop_leds_leds.png"))
+  server.on("/NEBULITE_croptop_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_croptop_leds.png"))
     {
       request->send_P(200, "image/png", NEBULITE_croptop_leds_png, 16221);
     }
   });
-  server.on("/NEBULITE_croptop_leds_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_croptop_leds_top.png"))
+  server.on("/NEBULITE_croptop_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!handleFileRead(request, "/NEBULITE_croptop_top.png"))
     {
       request->send_P(200, "image/png", NEBULITE_croptop_top_png, 136581);
     }
