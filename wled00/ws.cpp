@@ -239,10 +239,19 @@ static bool sendLiveLedsWs(uint32_t wsClient)  // WLEDMM added "static"
   {
   //WLEDMM: no skipLines
     uint32_t c = restoreColorLossy(strip.getPixelColor(i), stripBrightness); // WLEDMM full bright preview - does _not_ recover ABL reductions
-    uint8_t w = W(c);  // WLEDMM small optimization
-    buffer[pos++] = qadd8(w, R(c)); //R, add white channel to RGB channels as a simple RGBW -> RGB map
-    buffer[pos++] = qadd8(w, G(c)); //G
-    buffer[pos++] = qadd8(w, B(c)); //B
+    // WLEDMM begin: preview with color gamma correction
+    if (gammaCorrectPreview) {
+      uint8_t w = W(c);  // not sure why, but it looks better if using "white" without corrections
+      buffer[pos++] = qadd8(w, unGamma8(R(c))); //R, add white channel to RGB channels as a simple RGBW -> RGB map
+      buffer[pos++] = qadd8(w, unGamma8(G(c))); //G
+      buffer[pos++] = qadd8(w, unGamma8(B(c))); //B
+    } else {
+    // WLEDMM end
+      uint8_t w = W(c);  // WLEDMM small optimization
+      buffer[pos++] = qadd8(w, R(c)); //R, add white channel to RGB channels as a simple RGBW -> RGB map
+      buffer[pos++] = qadd8(w, G(c)); //G
+      buffer[pos++] = qadd8(w, B(c)); //B
+    }
   }
 
   wsc->binary(wsBuf);
@@ -253,7 +262,7 @@ static bool sendLiveLedsWs(uint32_t wsClient)  // WLEDMM added "static"
 
 void handleWs()
 {
-  if (millis() - wsLastLiveTime > max((strip.getLengthTotal()/20), WS_LIVE_INTERVAL)) //WLEDMM dynamic nr of peek frames per second
+  if ((millis() - wsLastLiveTime) > (unsigned long)(max((strip.getLengthTotal()/20), WS_LIVE_INTERVAL))) //WLEDMM dynamic nr of peek frames per second
   {
     #ifdef ESP8266
     ws.cleanupClients(3);

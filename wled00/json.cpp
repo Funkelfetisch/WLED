@@ -457,7 +457,9 @@ bool deserializeState(JsonObject root, byte callMode, byte presetId)
 
   JsonObject udpn      = root["udpn"];
   notifyDirect         = udpn["send"] | notifyDirect;
+  syncGroups           = udpn["sgrp"] | syncGroups;
   receiveNotifications = udpn["recv"] | receiveNotifications;
+  receiveGroups        = udpn["rgrp"] | receiveGroups;
   if ((bool)udpn[F("nn")]) callMode = CALL_MODE_NO_NOTIFY; //send no notification just for this request
 
   unsigned long timein = root["time"] | UINT32_MAX; //backup time source if NTP not synced
@@ -698,6 +700,8 @@ void serializeState(JsonObject root, bool forPreset, bool includeBri, bool segme
     JsonObject udpn = root.createNestedObject("udpn");
     udpn["send"] = notifyDirect;
     udpn["recv"] = receiveNotifications;
+    udpn["sgrp"] = syncGroups;
+    udpn["rgrp"] = receiveGroups;
 
     root[F("lor")] = realtimeOverride;
   }
@@ -1174,7 +1178,7 @@ void serializePalettes(JsonObject root, AsyncWebServerRequest* request)
           curPalette.add("r");
           curPalette.add("r");
         break;
-      case 73: //WLEDMM random AC
+      case 74: //WLEDMM random AC
           curPalette.add("r");
           curPalette.add("r");
           curPalette.add("r");
@@ -1440,9 +1444,19 @@ bool serveLiveLeds(AsyncWebServerRequest* request, uint32_t wsClient)
   for (size_t i= 0; i < used; i += n)
   {
     uint32_t c = strip.getPixelColor(i);
-    uint8_t r = qadd8(W(c), R(c)); //add white channel to RGB channels as a simple RGBW -> RGB map
-    uint8_t g = qadd8(W(c), G(c));
-    uint8_t b = qadd8(W(c), B(c));
+    // WLEDMM begin: live leds with color gamma correction
+    uint8_t w = W(c);  // not sure why, but it looks better if always using "white" without corrections
+    uint8_t r,g,b;
+    if (gammaCorrectPreview) {
+      r = qadd8(w, unGamma8(R(c))); //R, add white channel to RGB channels as a simple RGBW -> RGB map
+      g = qadd8(w, unGamma8(G(c))); //G
+      b = qadd8(w, unGamma8(B(c))); //B
+    } else {
+    // WLEDMM end
+      r = qadd8(w, R(c)); //add white channel to RGB channels as a simple RGBW -> RGB map
+      g = qadd8(w, G(c));
+      b = qadd8(w, B(c));
+    }
     olen += sprintf(obuf + olen, "\"%06X\",", RGBW32(r,g,b,0));
   }
   olen -= 1;

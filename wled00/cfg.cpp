@@ -233,6 +233,9 @@ bool deserializeConfig(JsonObject doc, bool fromFS) {
   disablePullUp = !pull;
   JsonArray hw_btn_ins = btn_obj[F("ins")];
   if (!hw_btn_ins.isNull()) {
+    for (uint8_t b = 0; b < WLED_MAX_BUTTONS; b++) { // deallocate existing button pins
+      pinManager.deallocatePin(btnPin[b], PinOwner::Button); // does nothing if trying to deallocate a pin with PinOwner != Button
+    }
     uint8_t s = 0;
     for (JsonObject btn : hw_btn_ins) {
       CJSON(buttonType[s], btn["type"]);
@@ -300,6 +303,7 @@ bool deserializeConfig(JsonObject doc, bool fromFS) {
 
   int hw_ir_pin = hw["ir"]["pin"] | -2; // 4
   if (hw_ir_pin > -2) {
+    pinManager.deallocatePin(irPin, PinOwner::IR);
     if (pinManager.allocatePin(hw_ir_pin, false, PinOwner::IR)) {
       irPin = hw_ir_pin;
     } else {
@@ -312,6 +316,7 @@ bool deserializeConfig(JsonObject doc, bool fromFS) {
   JsonObject relay = hw[F("relay")];
   int hw_relay_pin = relay["pin"] | -2;
   if (hw_relay_pin > -2) {
+    pinManager.deallocatePin(rlyPin, PinOwner::Relay);
     if (pinManager.allocatePin(hw_relay_pin,true, PinOwner::Relay)) {
       rlyPin = hw_relay_pin;
       pinMode(rlyPin, OUTPUT);
@@ -366,16 +371,20 @@ bool deserializeConfig(JsonObject doc, bool fromFS) {
   CJSON(gammaCorrectVal, light["gc"]["val"]); // default 2.8
   float light_gc_bri = light["gc"]["bri"];
   float light_gc_col = light["gc"]["col"];
+  float light_gc_prev = light["gc"]["prev"];  // WLEDMM
   if (light_gc_bri > 1.0f) gammaCorrectBri = true;
   else                     gammaCorrectBri = false;
   if (light_gc_col > 1.0f) gammaCorrectCol = true;
   else                     gammaCorrectCol = false;
+  if (light_gc_prev > 1.0f) gammaCorrectPreview = true;  // WLEDMM
+  else                      gammaCorrectPreview = false; // WLEDMM
   if (gammaCorrectVal > 1.0f && gammaCorrectVal <= 3) {
     if (gammaCorrectVal != 2.8f) calcGammaTable(gammaCorrectVal);
   } else {
     gammaCorrectVal = 1.0f; // no gamma correction
     gammaCorrectBri = false;
     gammaCorrectCol = false;
+    gammaCorrectPreview = false; // WLEDMM
   }
 
   JsonObject light_tr = light["tr"];
@@ -482,6 +491,13 @@ bool deserializeConfig(JsonObject doc, bool fromFS) {
   getStringFromJson(mqttGroupTopic, if_mqtt[F("topics")][F("group")], 33); // ""
   CJSON(retainMqttMsg, if_mqtt[F("rtn")]);
 #endif
+
+#ifndef WLED_DISABLE_ESPNOW
+  JsonObject remote = doc["remote"];
+  CJSON(enable_espnow_remote, remote[F("remote_enabled")]);
+  getStringFromJson(linked_remote, remote[F("linked_remote")], 13);
+#endif
+
 
 #ifndef WLED_DISABLE_HUESYNC
   JsonObject if_hue = interfaces["hue"];
@@ -870,6 +886,7 @@ void serializeConfig() {
   JsonObject light_gc = light.createNestedObject("gc");
   light_gc["bri"] = (gammaCorrectBri) ? gammaCorrectVal : 1.0f;  // keep compatibility
   light_gc["col"] = (gammaCorrectCol) ? gammaCorrectVal : 1.0f;  // keep compatibility
+  light_gc["prev"] = (gammaCorrectPreview) ? gammaCorrectVal : 1.0f;  // WLEDMM
   light_gc["val"] = gammaCorrectVal;
 
   JsonObject light_tr = light.createNestedObject("tr");
@@ -963,6 +980,13 @@ void serializeConfig() {
   if_mqtt_topics[F("device")] = mqttDeviceTopic;
   if_mqtt_topics[F("group")] = mqttGroupTopic;
 #endif
+
+#ifndef WLED_DISABLE_ESPNOW
+  JsonObject remote = doc.createNestedObject(F("remote"));
+  remote[F("remote_enabled")] = enable_espnow_remote;
+  remote[F("linked_remote")] = linked_remote;
+#endif
+
 
 #ifndef WLED_DISABLE_HUESYNC
   JsonObject if_hue = interfaces.createNestedObject("hue");

@@ -8,7 +8,7 @@
  */
 
 // version code in format yymmddb (b = daily build)
-#define VERSION 2307210
+#define VERSION 2308250
 
 //uncomment this if you have a "my_config.h" file you'd like to use
 //#define WLED_USE_MY_CONFIG
@@ -45,6 +45,8 @@
   #define WLED_ENABLE_WEBSOCKETS
 #endif
 
+//#define WLED_DISABLE_ESPNOW      // Removes dependence on esp now 
+
 #define WLED_ENABLE_FS_EDITOR      // enable /edit page for editing FS content. Will also be disabled with OTA lock
 
 // to toggle usb serial debug (un)comment the following line
@@ -63,6 +65,9 @@
 //This is generally a terrible idea, but improves boot success on boards with a 3.3v regulator + cap setup that can't provide 400mA peaks
 //#define WLED_DISABLE_BROWNOUT_DET
 
+// WLED-MM MANDATORY flags
+#define WLEDMM_PROTECT_SERVICE // prevents crashes when effects are drawing while asyncWebServer tries to modify segments at the same time
+
 // Library inclusions.
 #include <Arduino.h>
 #ifdef ESP8266
@@ -74,6 +79,9 @@
   {
   #include <user_interface.h>
   }
+  #ifndef WLED_DISABLE_ESPNOW
+    #include <espnow.h>
+  #endif
 #else // ESP32
   #include <HardwareSerial.h>  // ensure we have the correct "Serial" on new MCUs (depends on ARDUINO_USB_MODE and ARDUINO_USB_CDC_ON_BOOT)
   #include <WiFi.h>
@@ -90,6 +98,10 @@
     #include <LittleFS.h>
   #endif
   #include "esp_task_wdt.h"
+
+  #ifndef WLED_DISABLE_ESPNOW
+    #include <esp_now.h>
+  #endif
 #endif
 #include <Wire.h>
 #include <SPI.h>
@@ -327,7 +339,8 @@ WLED_GLOBAL byte bootPreset   _INIT(0);                   // save preset to load
 WLED_GLOBAL bool autoSegments    _INIT(false);
 WLED_GLOBAL bool correctWB       _INIT(false); // CCT color correction of RGB color
 WLED_GLOBAL bool cctFromRgb      _INIT(false); // CCT is calculated from RGB instead of using seg.cct
-WLED_GLOBAL bool gammaCorrectCol _INIT(true ); // use gamma correction on colors
+WLED_GLOBAL bool gammaCorrectCol _INIT(true ); // use gamma correction on colors // WLEDMM that's what you would think, but the code tells a different story.
+WLED_GLOBAL bool gammaCorrectPreview _INIT(true); // WLEDMM: revert gamma correction for LiveLeds (screens have their own gamma correction)
 WLED_GLOBAL bool gammaCorrectBri _INIT(false); // use gamma correction on brightness
 WLED_GLOBAL float gammaCorrectVal _INIT(2.8f); // gamma correction value
 
@@ -342,7 +355,7 @@ WLED_GLOBAL byte briS     _INIT(128);                     // default brightness
 WLED_GLOBAL byte nightlightTargetBri _INIT(0);      // brightness after nightlight is over
 WLED_GLOBAL byte nightlightDelayMins _INIT(60);
 WLED_GLOBAL byte nightlightMode      _INIT(NL_MODE_FADE); // See const.h for available modes. Was nightlightFade
-WLED_GLOBAL bool fadeTransition      _INIT(true);   // enable crossfading color transition
+WLED_GLOBAL bool fadeTransition      _INIT(false);  // enable crossfading color transition // WLEDMM disabled - has bugs that will be solved in upstream beta4
 WLED_GLOBAL uint16_t transitionDelay _INIT(750);    // default crossfade duration in ms
 
 WLED_GLOBAL uint_fast16_t briMultiplier _INIT(100);          // % of brightness to set (to limit power, if you set it to 50 and set bri to 255, actual brightness will be 127)
@@ -455,6 +468,12 @@ WLED_GLOBAL bool hueApplyColor _INIT(true);
 #endif
 
 WLED_GLOBAL uint16_t serialBaud _INIT(1152); // serial baud rate, multiply by 100
+
+#ifndef WLED_DISABLE_ESPNOW
+WLED_GLOBAL bool enable_espnow_remote _INIT(false);
+WLED_GLOBAL char linked_remote[13]   _INIT("");
+WLED_GLOBAL char last_signal_src[13]   _INIT("");
+#endif
 
 // Time CONFIG
 WLED_GLOBAL bool ntpEnabled _INIT(false);    // get internet time. Only required if you use clock overlays or time-activated macros
