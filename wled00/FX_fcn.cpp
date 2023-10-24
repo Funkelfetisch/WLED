@@ -294,7 +294,7 @@ CRGBPalette16 &Segment::loadPalette(CRGBPalette16 &targetPalette, uint8_t pal) {
   switch (pal) {
     case 0: //default palette. Exceptions for specific effects above
       targetPalette = PartyColors_p; break;
-    case 1: {//periodically replace palette with a random one. Transition palette change in 500ms
+    case 1: {//Random smooth: periodically replace palette with a random one. Transition palette change in 500ms
       uint32_t timeSinceLastChange = millis() - _lastPaletteChange;
       if (timeSinceLastChange > randomPaletteChangeTime * 1000U) {
         prevRandomPalette = randomPalette;
@@ -575,6 +575,7 @@ void Segment::setMode(uint8_t fx, bool loadDefaults) {
         sOpt = extractModeDefaults(fx, "mY");   if (sOpt >= 0) {if (oldMirror_y==-1) oldMirror_y = mirror_y; mirror_y  = (bool)sOpt;} else {if (oldMirror_y!=-1) mirror_y = oldMirror_y==1; oldMirror_y = -1;} // NOTE: setting this option is a risky business
         sOpt = extractModeDefaults(fx, "pal");  if (sOpt >= 0) {if (oldPalette==-1) oldPalette = palette; setPalette(sOpt);} else {if (oldPalette!=-1) setPalette(oldPalette); oldPalette = -1;}
       }
+      if (!fadeTransition) markForReset(); // WLEDMM quickfix for effect "double startup" bug. -> only works when "Crossfade" is disabled (led settings)
       stateChanged = true; // send UDP/WS broadcast
     }
   }
@@ -1774,16 +1775,18 @@ void WS2812FX::show(void) {
 
   estimateCurrentAndLimitBri();
 
+  #if defined(ARDUINO_ARCH_ESP32) && defined(WLEDMM_FASTPATH)
+  unsigned long b4show = millis(); // WLEDMM the time before calling "show"
+  #endif
   // some buses send asynchronously and this method will return before
   // all of the data has been sent.
   // See https://github.com/Makuna/NeoPixelBus/wiki/ESP32-NeoMethods#neoesp32rmt-methods
-  unsigned long b4show = millis(); // WLEDMM the time before calling "show"
   busses.show();
   unsigned long now = millis();
   unsigned long diff = now - _lastShow;
   uint16_t fpsCurr = 200;
   if (diff > 0) fpsCurr = 1000 / diff;
-  _cumulativeFps = (3 * _cumulativeFps + fpsCurr) >> 2;
+  _cumulativeFps = (3 * _cumulativeFps + fpsCurr +2) >> 2;   // "+2" for proper rounding (2/4 = 0.5)
   #if defined(ARDUINO_ARCH_ESP32) && defined(WLEDMM_FASTPATH)
   _lastShow = b4show;  // WLEDMM this is more accurate, however it also icreases CPU load - strip.service will run more frequently
   #else
@@ -1973,7 +1976,7 @@ void WS2812FX::purgeSegments(bool force) {
     }
   if (deleted) {
     _segments.shrink_to_fit();
-    if (_mainSegment >= _segments.size()) setMainSegmentId(0);
+    /*if (_mainSegment >= _segments.size())*/ setMainSegmentId(0);
   }
 }
 

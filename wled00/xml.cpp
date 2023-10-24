@@ -345,6 +345,14 @@ void getSettingsJS(AsyncWebServerRequest* request, byte subPage, char* dest) //W
     sappend('v',SET_F("AC"),apChannel);
     sappend('c',SET_F("WS"),noWifiSleep);
 
+    #ifndef WLED_DISABLE_ESPNOW
+    sappend('c',SET_F("RE"),enable_espnow_remote);
+    sappends('s',SET_F("RMAC"),linked_remote);
+    #else
+    //hide remote settings if not compiled
+    oappend(SET_F("document.getElementById('remd').style.display='none';"));
+    #endif
+
     #ifdef WLED_USE_ETHERNET
     sappend('v',SET_F("ETH"),ethernetType);
     #else
@@ -377,6 +385,19 @@ void getSettingsJS(AsyncWebServerRequest* request, byte subPage, char* dest) //W
     {
       sappends('m',SET_F("(\"sip\")[1]"),(char*)F("Not active"));
     }
+
+    #ifndef WLED_DISABLE_ESPNOW
+    if (last_signal_src[0] != 0) //Have seen an ESP-NOW Remote
+    {
+      sappends('m',SET_F("(\"rlid\")[0]"),last_signal_src);
+    } else if (!enable_espnow_remote)
+    {
+      sappends('m',SET_F("(\"rlid\")[0]"),(char*)F("(Enable remote to listen)"));
+    } else 
+    {
+      sappends('m',SET_F("(\"rlid\")[0]"),(char*)F("None"));
+    }
+    #endif
   }
 
   if (subPage == 2)
@@ -484,6 +505,7 @@ void getSettingsJS(AsyncWebServerRequest* request, byte subPage, char* dest) //W
 
     sappend('c',SET_F("GB"),gammaCorrectBri);
     sappend('c',SET_F("GC"),gammaCorrectCol);
+    sappend('c',SET_F("GCP"),gammaCorrectPreview);   // WLEDMM
     dtostrf(gammaCorrectVal,3,1,nS); sappends('s',SET_F("GV"),nS);
     sappend('c',SET_F("TF"),fadeTransition);
     sappend('v',SET_F("TD"),transitionDelayDefault);
@@ -660,7 +682,7 @@ void getSettingsJS(AsyncWebServerRequest* request, byte subPage, char* dest) //W
     sappends('s',SET_F("LT"),tm);
     getTimeString(tm);
     sappends('m',SET_F("(\"times\")[0]"),tm);
-    if ((int)(longitude*10.) || (int)(latitude*10.)) {
+    if ((int)(longitude*10.0f) || (int)(latitude*10.0f)) {
       snprintf_P(tm, sizeof(tm), PSTR("Sunrise: %02d:%02d Sunset: %02d:%02d"), hour(sunrise), minute(sunrise), hour(sunset), minute(sunset));
       sappends('m',SET_F("(\"times\")[1]"),tm);
     }

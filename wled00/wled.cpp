@@ -3,6 +3,8 @@
 #include "wled_ethernet.h"
 #include <Arduino.h>
 
+#warning WLED-MM GPL-v3. By installing WLED MM you implicitly accept the terms!
+
 #if defined(ARDUINO_ARCH_ESP32) && defined(WLED_DISABLE_BROWNOUT_DET)
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
@@ -105,7 +107,11 @@ void WLED::loop()
   handleIR();        // 2nd call to function needed for ESP32 to return valid results -- should be good for ESP8266, too
   #endif
   handleConnection();
+  #ifndef WLED_DISABLE_ESPNOW
+  handleRemote();
+  #endif
   handleSerial();
+  handleImprovWifiScan();
 
   #if defined(ARDUINO_ARCH_ESP32) && defined(WLEDMM_PROTECT_SERVICE)  // WLEDMM experimental: handleNotifications() calls strip.show(); handleTransitions modifies segments
   if (!suspendStripService) {
@@ -393,6 +399,20 @@ DEBUG_PRINTLN(F("Watchdog: disabled"));
 
 void WLED::setup()
 {
+  // NEBULITE
+  pinMode(10, INPUT);
+  if (digitalRead(10) == HIGH) {
+    Serial.println("Battery Controller Rev4 detected.");
+    pinMode(21, OUTPUT);
+    digitalWrite(21, HIGH); // enabling enable pin
+    pinMode(14, OUTPUT);
+    digitalWrite(14, HIGH); // enabling main enable pin
+  } else {
+    Serial.println("USB Controller detected.");
+  }
+  // /NEBULITE
+
+
   #if defined(ARDUINO_ARCH_ESP32) && defined(WLED_DISABLE_BROWNOUT_DET)
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detection
   #endif
@@ -441,8 +461,8 @@ void WLED::setup()
   #endif
 
   //Serial0.setDebugOutput(false);
-  #ifdef WLED_DEBUG
-  Serial.setDebugOutput(true);
+  #if CORE_DEBUG_LEVEL || defined(WLED_DEBUG_HEAP) || defined(WLED_DEBUG)
+  Serial.setDebugOutput(true);  // enables kernel debug messages on Serial
   #endif
   USER_FLUSH(); delay(100);
   USER_PRINTLN();
@@ -537,7 +557,7 @@ void WLED::setup()
   DEBUG_PRINT(F("heap ")); DEBUG_PRINTLN(ESP.getFreeHeap());
 #ifdef ARDUINO_ARCH_ESP32
   #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 4, 0)  // unfortunately not availeable in older framework versions
-  USER_PRINT(F("\nArduino  max stack  ")); USER_PRINTLN(getArduinoLoopTaskStackSize());
+  DEBUG_PRINT(F("\nArduino  max stack  ")); DEBUG_PRINTLN(getArduinoLoopTaskStackSize());
   #endif
   DEBUG_PRINTF("%s min free stack %d\n", pcTaskGetTaskName(NULL), uxTaskGetStackHighWaterMark(NULL)); //WLEDMM
 #endif
@@ -835,7 +855,7 @@ void WLED::initAP(bool resetAP)
   USER_PRINTLN(apSSID);                    // WLEDMM
   WiFi.softAPConfig(IPAddress(4, 3, 2, 1), IPAddress(4, 3, 2, 1), IPAddress(255, 255, 255, 0));
   WiFi.softAP(apSSID, apPass, apChannel, apHide);
-  #if defined(LOLIN_WIFI_FIX) && (defined(ARDUINO_ARCH_ESP32C3) || defined(ARDUINO_ARCH_ESP32S2))
+  #if defined(LOLIN_WIFI_FIX) && (defined(ARDUINO_ARCH_ESP32C3) || defined(ARDUINO_ARCH_ESP32S2) || defined(ARDUINO_ARCH_ESP32S3))
   WiFi.setTxPower(WIFI_POWER_8_5dBm);
   #endif
 
@@ -970,7 +990,6 @@ void WLED::initConnection()
   ws.onEvent(wsEvent);
   #endif
 
-
   WiFi.disconnect(true);        // close old connections
 #ifdef ESP8266
   WiFi.setPhyMode(WIFI_PHY_MODE_11N);
@@ -1018,7 +1037,7 @@ void WLED::initConnection()
 
   WiFi.begin(clientSSID, clientPass);
 #ifdef ARDUINO_ARCH_ESP32
-  #if defined(LOLIN_WIFI_FIX) && (defined(ARDUINO_ARCH_ESP32C3) || defined(ARDUINO_ARCH_ESP32S2))
+  #if defined(LOLIN_WIFI_FIX) && (defined(ARDUINO_ARCH_ESP32C3) || defined(ARDUINO_ARCH_ESP32S2) || defined(ARDUINO_ARCH_ESP32S3))
   WiFi.setTxPower(WIFI_POWER_8_5dBm);
   #endif
   WiFi.setSleep(!noWifiSleep);
@@ -1040,6 +1059,8 @@ void WLED::initInterfaces()
     hueIP[2] = ipAddress[2];
   }
 #endif
+
+// aOtaEnabled=false; strcpy(cmDNS, ""); // WLEDMM use this to disable OTA and mDNS
 
 //WLEDMM: add netdebug variables
 #ifdef WLED_DEBUG_HOST
@@ -1234,7 +1255,7 @@ void WLED::handleConnection()
     if (improvActive) {
       if (improvError == 3) sendImprovStateResponse(0x00, true);
       sendImprovStateResponse(0x04);
-      if (improvActive > 1) sendImprovRPCResponse(0x01);
+      if (improvActive > 1) sendImprovIPRPCResult(ImprovRPCType::Command_Wifi);
     }
     initInterfaces();
     userConnected();

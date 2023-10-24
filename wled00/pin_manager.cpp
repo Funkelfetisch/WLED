@@ -144,7 +144,7 @@ String PinManagerClass::getPinSpecialText(int gpio) {  // special purpose PIN in
     #endif
   #else
     // ESP 8266
-      if ((gpio == 0) || (gpio == 17)) return (F("analog-in (A0)"));  // 17 seems to be an alias for "A0" on 8266
+      if ((gpio == A0) || (gpio == 17)) return (F("analog-in (A0)"));  // 17 seems to be an alias for "A0" on 8266
 
   #endif
 
@@ -270,7 +270,7 @@ String PinManagerClass::getPinConflicts(int gpio) {
   if ((gpio == 0xFF) || (gpio < 0)) return(F(""));      // explicitly allow -1 as a no-op
   if (!isPinOk(gpio, false)) return(F(""));             // invalid GPIO
 
-  if (ownerConflict[gpio] == PinOwner::None) {
+  if ((ownerConflict[gpio] == PinOwner::None) || (ownerTag[gpio] == ownerConflict[gpio])) { // no conflict, or "fake" conflict with current owner
     return(F(""));             // no conflict fot this GPIO
   } else {                     // found previous conflic!
     return String("!! Conflict with ") + getOwnerText(ownerConflict[gpio]) + String(" !!");

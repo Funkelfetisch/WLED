@@ -67,6 +67,7 @@ uint8_t gamma8_cal(uint8_t b, float gamma);
 void calcGammaTable(float gamma);
 uint8_t __attribute__((pure)) gamma8(uint8_t b);                                              // WLEDMM: added attribute pure
 uint32_t __attribute__((pure)) gamma32(uint32_t);                                             // WLEDMM: added attribute pure
+uint8_t unGamma8(uint8_t value);                                                              // WLEDMM revert gamma correction
 
 //dmx.cpp
 void initDMX();
@@ -98,10 +99,20 @@ void sendHuePoll();
 void onHueData(void* arg, AsyncClient* client, void *data, size_t len);
 
 //improv.cpp
+enum ImprovRPCType {
+  Command_Wifi = 0x01,
+  Request_State = 0x02,
+  Request_Info = 0x03,
+  Request_Scan = 0x04
+};
+
 void handleImprovPacket();
+void sendImprovRPCResult(ImprovRPCType type, uint8_t n_strings = 0, const char **strings = nullptr);
 void sendImprovStateResponse(uint8_t state, bool error = false);
 void sendImprovInfoResponse();
-void sendImprovRPCResponse(uint8_t commandId);
+void startImprovWifiScan();
+void handleImprovWifiScan();
+void sendImprovIPRPCResult(ImprovRPCType type);
 
 //ir.cpp
 void applyRepeatActions();
@@ -164,9 +175,11 @@ void handleTransitions();
 void handleNightlight();
 byte __attribute__((pure)) scaledBri(byte in);                     // WLEDMM: added attribute pure
 
+#ifdef WLED_ENABLE_LOXONE
 //lx_parser.cpp
 bool parseLx(int lxValue, byte* rgbw);
 void parseLxJson(int lxValue, byte segId, bool secondary);
+#endif
 
 //mqtt.cpp
 bool initMqtt();
@@ -204,11 +217,15 @@ bool presetsActionPending(void);  // WLEDMM true if presetToApply, presetToSave,
 void initPresetsFile();
 void handlePresets();
 bool applyPreset(byte index, byte callMode = CALL_MODE_DIRECT_CHANGE);
+void applyPresetWithFallback(uint8_t presetID, uint8_t callMode, uint8_t effectID = 0, uint8_t paletteID = 0);
 inline bool applyTemporaryPreset() {return applyPreset(255);};
 void savePreset(byte index, const char* pname = nullptr, JsonObject saveobj = JsonObject());
 inline void saveTemporaryPreset() {savePreset(255);};
 void deletePreset(byte index);
 bool getPresetName(byte index, String& name);
+
+//remote.cpp
+void handleRemote();
 
 //set.cpp
 bool isAsterisksOnly(const char* str, byte maxLen);
@@ -217,7 +234,7 @@ bool handleSet(AsyncWebServerRequest *request, const String& req, bool apply=tru
 
 //udp.cpp
 void notify(byte callMode, bool followUp=false);
-uint8_t realtimeBroadcast(uint8_t type, IPAddress client, uint16_t length, byte *buffer, uint8_t bri=255, bool isRGBW=false);
+uint8_t realtimeBroadcast(uint8_t type, IPAddress client, uint16_t length, uint8_t *buffer, uint8_t bri=255, bool isRGBW=false);
 void realtimeLock(uint32_t timeoutMs, byte md = REALTIME_MODE_GENERIC);
 void exitRealtime();
 void handleNotifications();

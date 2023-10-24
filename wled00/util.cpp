@@ -149,7 +149,10 @@ bool oappend(const char* txt)
 {
   uint16_t len = strlen(txt);
   if (olen + len >= SETTINGS_STACK_BUF_SIZE) {
-    DEBUG_PRINTLN(F("oappend() error: buffer full. Increase SETTINGS_STACK_BUF_SIZE."));
+    USER_PRINT(F("oappend() error: buffer full. Increase SETTINGS_STACK_BUF_SIZE for "));
+    USER_PRINTF("%2u bytes \t\"", len /*1 + olen + len - SETTINGS_STACK_BUF_SIZE*/);
+    USER_PRINT(txt);
+    USER_PRINTLN(F("\""));
     return false;        // buffer full
   }
   strcpy(obuf + olen, txt);
@@ -502,7 +505,7 @@ um_data_t* simulateSound(uint8_t simulationId)
   maxVol        = 31;  // this gets feedback fro UI
   binNum        = 8;   // this gets feedback fro UI
   volumeRaw = volumeSmth;
-  my_magnitude = 10000.0 / 8.0f; //no idea if 10000 is a good value for FFT_Magnitude ???
+  my_magnitude = 10000.0f / 8.0f; //no idea if 10000 is a good value for FFT_Magnitude ???
   if (volumeSmth < 1 ) my_magnitude = 0.001f;             // noise gate closed - mute
 
   return um_data;

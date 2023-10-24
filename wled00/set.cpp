@@ -48,6 +48,14 @@ void handleSettingsSet(AsyncWebServerRequest *request, byte subPage)
 
     noWifiSleep = request->hasArg(F("WS"));
 
+    #ifndef WLED_DISABLE_ESPNOW
+    enable_espnow_remote = request->hasArg(F("RE"));
+    strlcpy(linked_remote,request->arg(F("RMAC")).c_str(), 13);
+
+    //Normalize MAC format to lowercase
+    strlcpy(linked_remote,strlwr(linked_remote), 13);
+    #endif
+
     #ifdef WLED_USE_ETHERNET
     ethernetType = request->arg(F("ETH")).toInt();
     WLED::instance().initEthernet();
@@ -243,6 +251,7 @@ void handleSettingsSet(AsyncWebServerRequest *request, byte subPage)
     if (t <= 250) bootPreset = t;
     gammaCorrectBri = request->hasArg(F("GB"));
     gammaCorrectCol = request->hasArg(F("GC"));
+    gammaCorrectPreview = request->hasArg(F("GCP"));  // WLEDMM
     gammaCorrectVal = request->arg(F("GV")).toFloat();
     if (gammaCorrectVal > 1.0f && gammaCorrectVal <= 3)
       calcGammaTable(gammaCorrectVal);
@@ -250,6 +259,7 @@ void handleSettingsSet(AsyncWebServerRequest *request, byte subPage)
       gammaCorrectVal = 1.0f; // no gamma correction
       gammaCorrectBri = false;
       gammaCorrectCol = false;
+      gammaCorrectPreview = false; // WLEDMM
     }
 
     fadeTransition = request->hasArg(F("TF"));
