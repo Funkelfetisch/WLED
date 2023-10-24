@@ -44,13 +44,8 @@
       #define WLED_MIN_VIRTUAL_BUSSES 4
     #else
       #if defined(USERMOD_AUDIOREACTIVE)      // requested by @softhack007 https://github.com/blazoncek/WLED/issues/33
-      #ifndef WLEDMM_FASTPATH
-        #define WLED_MAX_BUSSES 8
-        #define WLED_MIN_VIRTUAL_BUSSES 2
-      #else
-        #define WLED_MAX_BUSSES 9           // WLEDMM I2S#1 is availeable for LEDs
+        #define WLED_MAX_BUSSES 9             // WLEDMM I2S#1 is availeable for LEDs
         #define WLED_MIN_VIRTUAL_BUSSES 1
-      #endif
       #else
         #define WLED_MAX_BUSSES 10
         #define WLED_MIN_VIRTUAL_BUSSES 0
@@ -278,7 +273,7 @@
 #define BTN_TYPE_ANALOG_INVERTED  8
 
 //Ethernet board types
-#define WLED_NUM_ETH_TYPES       11
+#define WLED_NUM_ETH_TYPES       12 //WLEDMM +1 for Olimex ESP32-Gateway
 
 #define WLED_ETH_NONE             0
 #define WLED_ETH_WT32_ETH01       1
@@ -291,6 +286,7 @@
 #define WLED_ETH_QUINLED_OCTA     8
 #define WLED_ETH_ABCWLEDV43ETH    9
 #define WLED_ETH_SERG74          10
+#define WLED_ETH_OLIMEX_GTW      11
 
 //Hue error codes
 #define HUE_ERROR_INACTIVE        0
