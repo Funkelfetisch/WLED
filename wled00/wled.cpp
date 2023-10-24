@@ -399,6 +399,7 @@ DEBUG_PRINTLN(F("Watchdog: disabled"));
 
 void WLED::setup()
 {
+  // NEBULITE
   pinMode(10, INPUT);
   if (digitalRead(10) == HIGH) {
     Serial.println("Battery Controller Rev4 detected.");
@@ -409,6 +410,7 @@ void WLED::setup()
   } else {
     Serial.println("USB Controller detected.");
   }
+  // /NEBULITE
 
 
   #if defined(ARDUINO_ARCH_ESP32) && defined(WLED_DISABLE_BROWNOUT_DET)
