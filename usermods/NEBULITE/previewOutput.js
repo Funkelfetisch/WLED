@@ -16,7 +16,7 @@ function colorsRGB(colors, offset) {
 
 var canvases = {};
 var outputTypes = {
-  "1-0": { //backpack outside
+  "backpack": { //backpack outside
     type: 'ws2812',
     name: 'backpack',
     width: 200,
@@ -76,9 +76,7 @@ var outputTypes = {
     numPixels: 6
   },
 
-  "2-0": { //fannypack outside
-    type: 'ws2812',
-    name: 'backpack',
+  "fannypack": {
     width: 200,
     height: 100,
     drawFn: function (c, colors) {
@@ -114,9 +112,7 @@ var outputTypes = {
     ],
     numPixels: 6
   },
-  "3-0": { //jacket
-    type: 'ws2812',
-    name: 'jacket',
+  "jacket": { //jacket
     width: 200,
     height: 200,
     drawFn: function (c, colors) {
@@ -209,25 +205,7 @@ var outputTypes = {
     ],
     numPixels: 6
   },
-  "4-0": { // Fanny Pack 2
-    type: 'tm1814',
-    name: 'fannypack2',
-    width: 200,
-    height: 100,
-
-    drawFn: function (c, colors) {
-      // load the function from fanny pack 1, it's the same.
-      return outputTypes['2-0'].drawFn(c, colors);
-    },
-    images: [
-      'fannypack_leds.png',
-      'fannypack_top.png'
-    ],
-    numPixels: 6
-  },
-  "5-0": { // crop top 2021 outside
-    type: 'ws2812',
-    name: 'top',
+  "croptop": {
     width: 200,
     height: 200,
     drawFn: function (c, colors) {
@@ -266,7 +244,7 @@ var outputTypes = {
       'croptop_leds.png',
       'croptop_top.png'
     ],
-    numPixels: 6
+    numPixels: 8
   },
 };
 

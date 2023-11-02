@@ -45,22 +45,17 @@ let nodesData = []; //WLEDMM
 
 
 
-let nebulitePreviewKey = "5-0";
+let nebulitePreviewKey = d.title; // should be the name field for this WLED instance
 let outputType;
 let bytesPerColor = 3;
-
-if (nebulitePreviewKey === '4-0') { // fanny pack 2 == fanny pack
-	nebulitePreviewKey = '2-0';
-  } else if (nebulitePreviewKey === '6-0') { // fanny pack 2 == fanny pack
-	nebulitePreviewKey = '1-0';
-  }
   
-  if (outputTypes.hasOwnProperty(nebulitePreviewKey)) {
+if (outputTypes.hasOwnProperty(nebulitePreviewKey)) {
 	console.log("NEBULITE product found.");
 	outputType = outputTypes[nebulitePreviewKey];
-  } else {
-	console.error('Preview function did not find this product!');
-  }
+} else {
+	console.error('Preview function did not find this product! Defaulting to croptop');
+	outputType = outputTypes['croptop'];
+}
 
 var nebuliteIntervals = new Array(255);
 var nebuliteRecordIterator = new Array(255);
@@ -627,7 +622,7 @@ function populatePresets(fromls)
 
 		cn += `<div class="pres lstI" id="p${i}o">`;
 		if (cfg.comp.pid) cn += `<div class="pid">${i}</div>`;
-		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="200" height="200" onclick="setPreset(${i})"></canvas>
+		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="` + outputType.width + `" height="` + outputType.height + `" onclick="setPreset(${i})"></canvas>
 		<div class="pname lstIname" onclick="setPreset(${i})">
 		${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + pName(i)}
 		<i class="icons edit-icon flr" id="p${i}nedit" onclick="tglSegn(${i+100})">&#xe2c6;</i></div>
@@ -688,10 +683,6 @@ function parseInfo(i) {
 //		gId("filterVol").classList.add("hide"); hideModes(" ♪"); // hide volume reactive effects
 //		gId("filterFreq").classList.add("hide"); hideModes(" ♫"); // hide frequency reactive effects
 //	}
-
-	// NEBULITE
-	nebulitePreviewKey = i.nebukey ? i.nebukey : nebulitePreviewKey;
-	// /NEBULITE
 }
 
 //https://stackoverflow.com/questions/2592092/executing-script-elements-inserted-with-innerhtml
