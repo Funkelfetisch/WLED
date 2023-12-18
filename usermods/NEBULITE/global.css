@@ -97,7 +97,8 @@ body > .container {
 }
 
 #Segments {
-  display: none;
+  order: 4;
+  /* display: none; */
 }
 
 #pcont {

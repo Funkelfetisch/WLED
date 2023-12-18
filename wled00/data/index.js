@@ -45,16 +45,18 @@ let nodesData = []; //WLEDMM
 
 
 
-let nebulitePreviewKey = d.title; // should be the name field for this WLED instance
 let outputType;
 let bytesPerColor = 3;
   
-if (outputTypes.hasOwnProperty(nebulitePreviewKey)) {
-	console.log("NEBULITE product found.");
-	outputType = outputTypes[nebulitePreviewKey];
-} else {
-	console.error('Preview function did not find this product! Defaulting to croptop');
-	outputType = outputTypes['croptop'];
+function refreshNebulitePreviewKey() {
+	let nebulitePreviewKey = d.title; // should be the name field for this WLED instance
+	if (outputTypes.hasOwnProperty(nebulitePreviewKey)) {
+		console.log("NEBULITE product found: ", nebulitePreviewKey);
+		outputType = outputTypes[nebulitePreviewKey];
+	} else {
+		console.error('Preview function did not find this product: ', nebulitePreviewKey);
+		outputType = outputTypes['croptop'];
+	}
 }
 
 var nebuliteIntervals = new Array(255);
@@ -683,6 +685,7 @@ function parseInfo(i) {
 //		gId("filterVol").classList.add("hide"); hideModes(" ♪"); // hide volume reactive effects
 //		gId("filterFreq").classList.add("hide"); hideModes(" ♫"); // hide frequency reactive effects
 //	}
+	refreshNebulitePreviewKey();
 }
 
 //https://stackoverflow.com/questions/2592092/executing-script-elements-inserted-with-innerhtml

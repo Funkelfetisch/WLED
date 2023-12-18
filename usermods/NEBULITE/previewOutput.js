@@ -9,8 +9,19 @@ function radialGradient(c, x, y, r1, r2, r, g, b) {
 }
 
 function colorsRGB(colors, offset) {
-  offset = (offset - 1) * 3; //correct for zero index, multiply by N bytes per pixel
-  var color ="rgb(" + colors[offset] + "," + colors[offset+1] + "," + colors[offset+2] + ")";
+  // Calculate the actual offset needed (correcting for zero index and N bytes per pixel)
+  var adjustedOffset = (offset - 1) * 3;
+
+  // Adjust the offset to wrap around in sets of 3 (for RGB)
+  adjustedOffset = adjustedOffset % (colors.length - colors.length % 3);
+
+  // Extract color components
+  var r = colors[adjustedOffset % colors.length];
+  var g = colors[(adjustedOffset + 1) % colors.length];
+  var b = colors[(adjustedOffset + 2) % colors.length];
+
+  var color = "rgb(" + r + "," + g + "," + b + ")";
+  // console.log("converted color: ", color);
   return color;
 }
 
