@@ -459,6 +459,17 @@ void WLED::setup()
   if (!Serial) delay(300);  // just a tiny wait to avoid problems later when acessing serial
 #endif
 
+  pinMode(10, INPUT);
+  if (digitalRead(10) == HIGH) {
+    Serial.println("Battery Controller Rev4 detected.");
+    pinMode(21, OUTPUT);
+    digitalWrite(21, HIGH); // enabling enable pin
+    pinMode(14, OUTPUT);
+    digitalWrite(14, HIGH); // enabling main enable pin
+  } else {
+    Serial.println("USB Controller detected.");
+  }
+
   #ifdef ARDUINO_ARCH_ESP32
   #if defined(WLED_DEBUG) && (defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32C3) || ARDUINO_USB_CDC_ON_BOOT)
   if (!Serial) delay(2500);  // WLEDMM allow CDC USB serial to initialise (WLED_DEBUG only)
