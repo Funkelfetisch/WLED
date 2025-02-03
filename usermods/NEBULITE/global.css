@@ -15,14 +15,19 @@
 }
 
 .lstI, #putil .btn-s, #segutil .btn-s, #segutil2 .btn-s, .fnd input[type="text"], .btn, .pres, .seg {
-  background-color: black !important;
-  border: 1px solid #7f73f5 !important;
+  /* background-color: black !important;
+  border: 1px solid #7f73f5 !important; */
 }
 
-.selected {
+#Presets .lstI {
+  background-color: black;
+  border: 1px solid #7f73f5;
+}
+
+/* .selected {
   background-color: black !important;
   border: 1px solid white !important;
-}
+} */
 
 .wrapper {
   background-color: black !important;
@@ -42,8 +47,51 @@
   background: #9288f2 !important;
 }
 
-.slider, #connind {
+/* .slider, #connind {
   background-color: #7f73f5 !important;
+} */
+
+#briwrap {
+  min-width: 100% !important;
+}
+
+#briwrap .slider {
+  padding-right: 0px !important;
+}
+
+.slider {
+  max-width: unset !important;
+  border-radius: 6px !important;
+  padding: 0 !important;
+}
+
+#fx, #palw, #pcont, #pql, #putil, #segcont, #segutil, #segutil2, .fnd {
+  max-width: unset !important;
+}
+
+#pallist, #fxlist, #pcont {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adjust spacing between items */
+}
+
+#pallist .radiomark, #fxlist .radiomark {
+  display: none;
+}
+
+.lstIcontent {
+  padding: 9px 7px;
+  text-align: left;
+}
+
+.selected {
+  background-color: #7f73f5 !important;
+  border: 1px solid #fff!important;
+}
+
+.lstI {
+  width: calc(50% - 5px); /* Makes each item half-width minus gap */
+  box-sizing: border-box; /* Ensures proper width calculation */
 }
 
 #connind {
@@ -102,19 +150,19 @@ body > .container {
 }
 
 #pcont {
-  display: grid;
+  /* display: grid; */
   margin: 0;
   width: 100%;
   min-width: 100% !important;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-template-rows: auto;
+  /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: auto; */
   align-content: start;
-  gap: 10px;
+  /* gap: 10px; */
 }
 
 #Presets .lstI {
-  margin: 5px !important;
-  position: relative;
+  /* margin: 5px !important;
+  position: relative; */
 }
 #pcont .selected:not([class*="expanded"]) {
   bottom: unset !important;

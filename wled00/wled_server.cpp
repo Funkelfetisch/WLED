@@ -154,55 +154,6 @@ void initServer()
     //request->send_P(200, "text/html", PAGE_liveviewws);
   });
 
-  server.on("/NEBULITE_fannypack_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_fannypack_leds.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_fannypack_leds_png, 37147);
-    }
-  });
-  server.on("/NEBULITE_fannypack_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_fannypack_top.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_fannypack_top_png, 34639);
-    }
-  });
-  server.on("/NEBULITE_backpack_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_backpack_leds.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_backpack_leds_png, 57344);
-    }
-  });
-  server.on("/NEBULITE_backpack_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_backpack_top.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_backpack_top_png, 34166);
-    }
-  });
-  server.on("/NEBULITE_croptop_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_croptop_leds.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_croptop_leds_png, 16221);
-    }
-  });
-  server.on("/NEBULITE_croptop_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_croptop_top.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_croptop_top_png, 136581);
-    }
-  });
-  server.on("/NEBULITE_jacket_leds.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_jacket_leds.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_jacket_leds_png, 74824);
-    }
-  });
-  server.on("/NEBULITE_jacket_top.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!handleFileRead(request, "/NEBULITE_jacket_top.png"))
-    {
-      request->send_P(200, "image/png", NEBULITE_jacket_top_png, 9370);
-    }
-  });
-
   #endif
 #else
   server.on("/liveview", HTTP_GET, [](AsyncWebServerRequest *request){
