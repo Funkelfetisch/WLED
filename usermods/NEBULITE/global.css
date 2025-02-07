@@ -12,11 +12,7 @@
 .lstIname {
   -webkit-filter: unset !important;
   filter: unset !important;
-}
-
-.lstI, #putil .btn-s, #segutil .btn-s, #segutil2 .btn-s, .fnd input[type="text"], .btn, .pres, .seg {
-  /* background-color: black !important;
-  border: 1px solid #7f73f5 !important; */
+  padding-top: 0px;
 }
 
 #Presets .lstI {
@@ -24,18 +20,11 @@
   border: 1px solid #7f73f5;
 }
 
-/* .selected {
-  background-color: black !important;
-  border: 1px solid white !important;
-} */
-
 .wrapper {
-  background-color: black !important;
   border-bottom: 1px solid #7f73f5 !important;
 }
 
 #bot {
-  background-color: black !important;
   border-top: 1px solid #7f73f5 !important;
 }
 
@@ -47,36 +36,32 @@
   background: #9288f2 !important;
 }
 
-/* .slider, #connind {
-  background-color: #7f73f5 !important;
-} */
-
-#briwrap {
-  min-width: 100% !important;
-}
-
-#briwrap .slider {
-  padding-right: 0px !important;
-}
 
 .slider {
   max-width: unset !important;
   border-radius: 6px !important;
-  padding: 0 !important;
+  /* padding: 0 !important; */
+  width: calc(100% - 20px);
+}
+
+#briwrap .slider {
+  margin-left: 35px;
+  margin-right: 10px
 }
 
 #fx, #palw, #pcont, #pql, #putil, #segcont, #segutil, #segutil2, .fnd {
   max-width: unset !important;
+  margin-top: 6px;
+  margin-bottom: 14px;
 }
 
 #pallist, #fxlist, #pcont {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Adjust spacing between items */
 }
 
 #pallist .radiomark, #fxlist .radiomark {
-  display: none;
+  /* display: none; */
 }
 
 .lstIcontent {
@@ -89,14 +74,11 @@
   border: 1px solid #fff!important;
 }
 
-.lstI {
-  width: calc(50% - 5px); /* Makes each item half-width minus gap */
+#pallist .lstI, #fxlist .lstI, #pcont .lstI {
+  width: calc(50% - 10px); /* Makes each item half-width minus gap */
   box-sizing: border-box; /* Ensures proper width calculation */
-}
-
-#connind {
-  bottom: 16px !important;
-  z-index: 10;
+  padding: 6px 7px;
+  margin: 5px 5px;
 }
 
 body {
@@ -106,6 +88,7 @@ body {
 .nebuliteCanvas {
   padding: 8px 39px;
   position: relative;
+  padding-bottom: 0;
 }
 
 .checkmark, .radiomark {
@@ -120,10 +103,6 @@ input[type="number"], input[type="text"] {
 .check:hover input ~ .checkmark, .radio:hover input ~ .radiomark {
   background-color: #574ea6;
 }
-
-/* #filters {
-  visibility: unset !important;
-} */
 
 #namelabel, #psFind {
   display: none !important;
@@ -146,24 +125,16 @@ body > .container {
 
 #Segments {
   order: 4;
-  /* display: none; */
 }
 
 #pcont {
-  /* display: grid; */
   margin: 0;
   width: 100%;
   min-width: 100% !important;
-  /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-template-rows: auto; */
   align-content: start;
-  /* gap: 10px; */
 }
 
-#Presets .lstI {
-  /* margin: 5px !important;
-  position: relative; */
-}
+
 #pcont .selected:not([class*="expanded"]) {
   bottom: unset !important;
   top: unset !important;
@@ -175,10 +146,6 @@ body > .container {
   transform-origin: left;
 }
 
-.pres .lstIcontent, .segin {
-  transform: scale(0.65);
-  transform-origin: left;
-}
 .pid {
   display: none;
 }
@@ -216,6 +183,8 @@ div.c:nth-child(8) {
 
 #Presets .lstI {
   text-align: center;
+  padding: 0 3px;
+  display: block;
 }
 
 #toast {
