@@ -948,6 +948,8 @@ void WLED::initAP(bool resetAP)
   if (apBehavior == AP_BEHAVIOR_BUTTON_ONLY && !resetAP)
     return;
 
+  if (wifiDisabled) return;
+
   if (resetAP) {
     WLED_SET_AP_SSID();
     strcpy_P(apPass, PSTR(WLED_AP_PASS));
@@ -1096,6 +1098,8 @@ void WLED::initConnection()
   #ifdef WLED_ENABLE_WEBSOCKETS
   ws.onEvent(wsEvent);
   #endif
+
+  if (wifiDisabled) return; // can still use ethernet
 
   WiFi.disconnect(true);        // close old connections
 #ifdef ESP8266
@@ -1261,7 +1265,7 @@ void WLED::handleConnection()
   if (now < 2000 && (!WLED_WIFI_CONFIGURED || apBehavior == AP_BEHAVIOR_ALWAYS))
     return;
 
-  if (lastReconnectAttempt == 0) {
+  if (lastReconnectAttempt == 0 && !wifiDisabled) {
     DEBUG_PRINTLN(F("lastReconnectAttempt == 0"));
     initConnection();
     return;
@@ -1369,12 +1373,12 @@ void WLED::handleConnection()
       sendImprovStateResponse(0x03, true);
       improvActive = 2;
     }
-    if (now - lastReconnectAttempt > ((stac) ? 300000 : 18000) && WLED_WIFI_CONFIGURED) {
+    if (now - lastReconnectAttempt > ((stac) ? 300000 : 18000) && WLED_WIFI_CONFIGURED && !wifiDisabled) {
       if (improvActive == 2) improvActive = 3;
       DEBUG_PRINTLN(F("Last reconnect too old."));
       initConnection();
     }
-    if (!apActive && now - lastReconnectAttempt > 12000 && (!wasConnected || apBehavior == AP_BEHAVIOR_NO_CONN)) {
+    if (!apActive && now - lastReconnectAttempt > 12000 && (!wasConnected || apBehavior == AP_BEHAVIOR_NO_CONN) && !wifiDisabled) {
       DEBUG_PRINTLN(F("Not connected AP."));
       initAP();
     }
@@ -1467,4 +1471,13 @@ void WLED::handleStatusLED()
     #endif
   }
   #endif
+}
+
+void WLED::disableWiFi() {
+  wifiDisabled = true;
+  WiFi.disconnect(true);
+}
+
+void WLED::enableWiFi() {
+  wifiDisabled = false;
 }

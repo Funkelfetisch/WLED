@@ -207,6 +207,10 @@
 #include "../usermods/usermod_v2_auto_playlist/usermod_v2_auto_playlist.h"
 #endif
 
+#ifdef USERMOD_BLE_2_JSON
+  #include "../usermods/Ble2Json_v2/usermod_v2_ble2json.h"
+#endif
+
 void registerUsermods()
 {
   /*
@@ -409,5 +413,7 @@ void registerUsermods()
   usermods.add(new AutoPlaylistUsermod(false));
 #endif
 
-
+  #ifdef USERMOD_BLE_2_JSON
+  usermods.add(new Ble2JsonUsermod());
+  #endif
 }

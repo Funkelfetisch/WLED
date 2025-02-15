@@ -925,6 +925,9 @@ WLED_GLOBAL unsigned long powerDown _INIT(0);
 #define W(c) (byte((c) >> 24))
 
 class WLED {
+private:
+  bool wifiDisabled = false;
+
 public:
   WLED();
   static WLED& instance()
@@ -948,5 +951,7 @@ public:
   void handleStatusLED();
   void enableWatchdog();
   void disableWatchdog();
+  void disableWiFi();
+  void enableWiFi();
 };
 #endif        // WLED_H
