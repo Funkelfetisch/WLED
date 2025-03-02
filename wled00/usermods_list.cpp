@@ -211,6 +211,10 @@
   #include "../usermods/Ble2Json_v2/usermod_v2_ble2json.h"
 #endif
 
+#ifdef USERMOD_CHEAPOREMOTO
+#include "../usermods/CheapoRemoto/usermod_cheapo_remoto.h"
+#endif
+
 void registerUsermods()
 {
   /*
@@ -413,7 +417,11 @@ void registerUsermods()
   usermods.add(new AutoPlaylistUsermod(false));
 #endif
 
-  #ifdef USERMOD_BLE_2_JSON
+#ifdef USERMOD_BLE_2_JSON
   usermods.add(new Ble2JsonUsermod());
-  #endif
+#endif
+
+#ifdef USERMOD_CHEAPOREMOTO
+  usermods.add(new CheapoRemoto());
+#endif
 }

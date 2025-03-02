@@ -137,7 +137,8 @@
 #define USERMOD_ID_INTERNAL_TEMPERATURE  42     //Usermod "usermod_internal_temperature.h"
 #define USERMOD_ID_LDR_DUSK_DAWN         43     //Usermod "usermod_LDR_Dusk_Dawn_v2.h"
 //WLEDMM
-#define USERMOD_ID_BLE_2_JSON            88     //Usermod "usermod_v2_ble2json.h"
+#define USERMOD_ID_CHEAPOREMOTO          70     //Usermod "usermod_cheapo_remoto.h"
+#define USERMOD_ID_BLE_2_JSON            71     //Usermod "usermod_v2_ble2json.h"
 #define USERMOD_ID_MCUTEMP               89     //Usermod "usermod_v2_artifx.h"
 #define USERMOD_ID_ARTIFX                90     //Usermod "usermod_v2_artifx.h"
 #define USERMOD_ID_WEATHER               91     //Usermod "usermod_v2_weather.h"
