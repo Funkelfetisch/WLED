@@ -38,28 +38,17 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
   #include <libb64/cencode.h>
 
   unsigned long nebulitePresetRecordingLastRecord = 0;
-  char nebuliteJsonBuffer[7000];
+  char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 2]; // Adjusted size for hex encoding
 
   uint16_t pos = 0;
   // since we have to initialize with constant heap, let's assume we don't have products >50 LEDs :D
-  uint8_t buffer [50 * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION] = {};
+  uint8_t buffer [MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION] = {};
 
   static bool handleRecording() {
     if (presetToSave == 0) return true;
+
     if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
         uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
-        // Serial.print("recordTotalBytes ");
-        // Serial.println(recordTotalBytes);
-        // Serial.print("millis ");
-        // Serial.println(millis());
-        // Serial.print("pos ");
-        // Serial.println(pos);
-        // Serial.print("sizeof buffer ");
-        // Serial.println(sizeof(buffer));
-        // Serial.print("strip.getLengthTotal() ");
-        // Serial.println(strip.getLengthTotal());
-        // Serial.print("pos < (pos + strip.getLengthTotal() * 3) ");
-        // Serial.println(pos < (pos + strip.getLengthTotal() * 3));
 
         if (pos < (pos + strip.getLengthTotal() * 3)) {
           for (uint16_t i = 0; i < strip.getLengthTotal(); i++)
@@ -75,10 +64,10 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
           Serial.print("NEBULITE finished recording at pos ");
           Serial.println(pos);
 
-          base64_encodestate _state;
-          base64_init_encodestate(&_state);
-          int len = base64_encode_block((const char *) buffer, pos, nebuliteJsonBuffer, &_state);
-          len = base64_encode_blockend((nebuliteJsonBuffer + len), &_state);
+          // Hex encoding
+          for (uint16_t i = 0; i < pos; i++) {
+            sprintf(&nebuliteJsonBuffer[i * 2], "%02X", buffer[i]);
+          }
 
           // reset
           nebulitePresetRecordingLastRecord = 0;

@@ -3730,7 +3730,7 @@ function togglePcMode(fromB = false)
 	if (cpick) cpick.resize(pcMode && wW>1023 && wW<1250 ? 230 : 260); // for tablet in landscape
 	if (!fromB && ((wW < 1024 && lastw < 1024) || (wW >= 1024 && lastw >= 1024))) return; // no change in size and called from size()
 	gId('buttonPcm').className = (pcMode) ? "active":"";
-	gId('bot').style.height = (pcMode && !cfg.comp.pcmbot) ? "0":"auto";
+	gId('bot').style.display = (pcMode && !cfg.comp.pcmbot) ? "none":"flex";
 	sCol('--bh', gId('bot').clientHeight + "px");
 	_C.style.width = (pcMode)?'100%':'400%';
 	//WLEDMM resize segmentview
