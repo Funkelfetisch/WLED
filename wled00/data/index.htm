@@ -59,17 +59,15 @@
 </head>
 <body>
 
-<div id="cv" class="overlay">Loading NEBULITE UI...</div>
-<noscript><div class="overlay" style="opacity:1;">Sorry, NEBULITE UI needs JavaScript!</div></noscript>
+<div id="cv" class="overlay">Loading HELIO UI...</div>
+<noscript><div class="overlay" style="opacity:1;">Sorry, HELIO UI needs JavaScript!</div></noscript>
 <div id="bg"></div>
 
 <div class="wrapper" id="top">
 	<div class="tab top">
 		<div class="btnwrap">
 			<div class="logoWrapper">
-				<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="enable-background:new 0 0 280.92 35.69" viewBox="0 0 280.92 35.69">
-					<path d="M26.19 29.34 3.02.13 2.92 0H0v35.14h3.14V5.16l23.77 29.98h2.42V0h-3.14zm76.4-12.33c2.55-1.25 5.21-3.62 5.21-8.1v-.1c0-2.22-.78-4.12-2.32-5.66-2.03-2.03-5.3-3.15-9.2-3.15H81.71v35.14h15.31c7.71 0 12.7-3.82 12.7-9.74v-.1c0-3.97-2.46-6.82-7.13-8.29zm-6.6-1.11H84.96V3.05h11.28c5.1 0 8.27 2.3 8.27 6.01v.1c0 4.16-3.27 6.74-8.52 6.74zm1.13 16.2H84.96V18.95h11.33c6.54 0 10.14 2.26 10.14 6.35v.1c0 4.13-3.57 6.7-9.31 6.7zm50.21-11.62c0 7.76-4.06 12.21-11.13 12.21-7.2 0-11.33-4.54-11.33-12.46V0h-3.24v20.48c0 9.38 5.54 15.21 14.47 15.21s14.47-5.94 14.47-15.5V0h-3.24v20.48zM167.75 0h-3.24v35.14h23.47V32.1h-20.23zm32.49 0h3.24v35.14h-3.24zm15.61 3.05h12.01v32.09h3.24V3.05h12.01V0h-27.26zM42.81 35.14h25.45V32.1H42.81zm3.56-19.24h-3.56v3.05h25.2V15.9zM68.01 3.05V0h-25.2v3.05h3.24zm187.46 32.09h25.45V32.1h-25.45zm3.56-19.24h-3.56v3.05h25.2V15.9zm21.64-12.85V0h-25.2v3.05h3.25z" style="fill:#fff"/>
-				  </svg>
+				  <svg xmlns="http://www.w3.org/2000/svg" id="Ebene_2" viewBox="0 0 283.47 70.87"><defs><style>.cls-1{fill:#fff}</style></defs><g id="Content"><circle cx="27.63" cy="35.43" r="14.93" class="cls-1"/><circle cx="27.63" cy="35.43" r="14.93" class="cls-1"/><path d="M69.76 69.76h46.17V57.32H84.04V41.56h30.04V29.12H84.04V13.55h31.89V1.11H69.76v68.65Zm117.14 0h14.28V1.11H186.9v68.65ZM40.9 19.5c5.25-.58 9.21.39 10.64 3.05 2.23 4.13-2.32 11.13-10.64 17.39v29.84h14.36V1.09H40.9V19.5ZM0 69.78h14.36V51.37c-5.25.58-9.21-.39-10.64-3.05-2.23-4.13 2.32-11.13 10.64-17.39V1.09H0v68.69ZM248.03 0c-19.57 0-35.43 15.86-35.43 35.43s15.86 35.43 35.43 35.43S283.46 55 283.46 35.43 267.6 0 248.03 0Zm0 57.55c-12.22 0-22.12-9.9-22.12-22.12s9.9-22.12 22.12-22.12 22.12 9.9 22.12 22.12-9.9 22.12-22.12 22.12ZM142.84 1.11h-14.28v68.65h46.17V57.32h-31.89V1.11Z" class="cls-1"/></g></svg>
 			</div>
 			<div>
 				<button id="buttonPower" onclick="togglePower()" class="tgl"><i class="icons">&#xe08f;</i><p class="tab-label"></p></button>
@@ -394,8 +392,8 @@
 	<div>
 		<button class="btn infobtn" onclick="requestJson()">Refresh</button>
 		<button class="btn infobtn" onclick="toggleNodes()">Instance List</button>
-		<button class="btn infobtn" onclick="window.open('/update','_self');">Update NEBULITE WLED</button>
-		<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Reboot NEBULITE WLED</button>
+		<button class="btn infobtn" onclick="window.open('/update','_self');">Update HELIO WLED</button>
+		<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Reboot HELIO WLED</button>
 		<button class="btn infobtn" id="genPresets" onclick="genPresets()">Generate presets</button>
 		<button class="btn infobtn" id="savePresetsGen" onclick="savePresetsGen()" hidden="true">Save generated presets</button>
 		<textarea id="presetsGen" hidden="true"></textarea><br>
@@ -403,12 +401,12 @@
 	<br>
 	<span class="h">WLED made with <span id="heart">&#10084;&#xFE0E;</span> by Aircoookie and the <a href="https://wled.discourse.group/" target="_blank">WLED community</a></span><br>
 	<span class="h">WLED MM made with <span id="heartMM">&#10084;&#xFE0E;</span> by Softhack007 &amp; Ewowi and the <a href="https://discord.gg/8P7wGuqT/" target="_blank">WLED 2D &amp; Audio Dev</a> community</span>
-	<span class="h">Heavily modified by Veit Nachtmann for <a href="https://nebulite.berlin/" target="_blank">NEBULITE</a>.</span>
+	<span class="h">Heavily modified by Veit Nachtmann for <a href="https://helio.lighting/" target="_blank">HELIO</a>.</span>
 </div>
 
 <div id="nodes" class="modal">
 	<button class="btn btn-xs close" onclick="toggleNodes()"><i class="icons rot45">&#xe18a;</i></button>
-	<div id="ndlt">NEBULITE / WLED instances</div>
+	<div id="ndlt">HELIO / WLED instances</div>
 	<div id="kn">Loading...</div>
 	<div style="position:sticky;bottom:0;">
 		<button class="btn infobtn" onclick="loadNodes()">Refresh</button>
