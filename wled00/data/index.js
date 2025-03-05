@@ -46,21 +46,8 @@ let sbtglChecked = true; //WLEDMM
 let sbchkChecked = false; //WLEDMM
 
 
-
-let outputType;
+// NEBULITE
 let bytesPerColor = 3;
-  
-function refreshNebulitePreviewKey() {
-	let nebulitePreviewKey = d.title; // should be the name field for this WLED instance
-	if (outputTypes.hasOwnProperty(nebulitePreviewKey)) {
-		console.log("NEBULITE product found: ", nebulitePreviewKey);
-		outputType = outputTypes[nebulitePreviewKey];
-	} else {
-		console.error('Preview function did not find this product: ', nebulitePreviewKey);
-		outputType = outputTypes['croptop'];
-	}
-}
-
 var nebuliteIntervals = new Array(255);
 var nebuliteRecordIterator = new Array(255);
 function nebuliteStartAnimation(preset, base64String) {
@@ -86,12 +73,13 @@ function nebuliteStartAnimation(preset, base64String) {
 		let colors = binArray.slice(nebuliteRecordIterator[preset], nebuliteRecordIterator[preset] + 3 * ledCount + 1); // slice the array
 
 		if (ctx) {
-			outputType.drawFn(ctx, colors);
+			drawFn(ctx, colors, ledCount);
 		}
 
 		nebuliteRecordIterator[preset] += 3 * ledCount;
 	}
 }
+// /NEBULITE
 
 function handleVisibilityChange() {if (!d.hidden && new Date () - lastUpdate > 3000) requestJson();}
 function sCol(na, col) {d.documentElement.style.setProperty(na, col);}
@@ -356,13 +344,14 @@ function handleLocationHash() {
 }
 
 var timeout;
-function showToast(text, error = false, duration = 2900)
+function showToast(text, error = false, duration = 2900, modal = false)
 {
 	if (error) gId('connind').style.backgroundColor = "var(--c-r)";
 	var x = gId('toast');
 	//if (error) text += '<i class="icons btn-icon" style="transform:rotate(45deg);position:absolute;top:10px;right:0px;" onclick="clearErrorToast(100);">&#xe18a;</i>';
 	x.innerHTML = text;
 	x.classList.add(error ? 'error':'show');
+	if (modal) x.classList.add('modal');
 	clearTimeout(timeout);
 	x.style.animation = 'none';
 	timeout = setTimeout(()=>{ x.classList.remove('show'); }, duration);
@@ -638,7 +627,7 @@ function populatePresets(fromls)
 
 		cn += `<div class="pres lstI" id="p${i}o">`;
 		if (cfg.comp.pid) cn += `<div class="pid">${i}</div>`;
-		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="` + outputType.width + `" height="` + outputType.height + `" onclick="setPreset(${i})"></canvas>
+		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="` + NEBULITE_preview_width + `" height="` + NEBULITE_preview_height + `" onclick="setPreset(${i})"></canvas>
 		<div class="pname lstIname" onclick="setPreset(${i})">
 		${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + pName(i)}
 		<i class="icons edit-icon flr" id="p${i}nedit" onclick="tglSegn(${i+100})">&#xe2c6;</i></div>
@@ -699,7 +688,6 @@ function parseInfo(i) {
 //		gId("filterVol").classList.add("hide"); hideModes(" ♪"); // hide volume reactive effects
 //		gId("filterFreq").classList.add("hide"); hideModes(" ♫"); // hide frequency reactive effects
 //	}
-	refreshNebulitePreviewKey();
 }
 
 //https://stackoverflow.com/questions/2592092/executing-script-elements-inserted-with-innerhtml
@@ -3069,7 +3057,7 @@ function saveP(i,pl)
 	obj.psave = pI; obj.n = pN;
 	var pQN = gId(`p${i}ql`).value;
 	if (pQN.length > 0) obj.ql = pQN;
-	showToast("Recording previews for " + pN +" (" + pI + "). This will take ca. 6 seconds. Make rhythmic noise while recording sound-reactive effects!", false, 6000);
+	showToast("Recording previews for " + pN +" (" + pI + "). This will take ca. 6 seconds. Make rhythmic noise while recording sound-reactive effects!", false, 6000, true);
 	requestJson(obj);
 	if (obj.o) {
 		pJson[pI] = obj;

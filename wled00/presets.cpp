@@ -36,16 +36,20 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
 
 #ifdef USERMOD_NEBULITE
   #include <libb64/cencode.h>
-
   unsigned long nebulitePresetRecordingLastRecord = 0;
-  char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 2]; // Adjusted size for hex encoding
+  char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 4 / 3 + 4]; // Adjusted size for base64 encoding
 
   uint16_t pos = 0;
-  // since we have to initialize with constant heap, let's assume we don't have products >50 LEDs :D
-  uint8_t buffer [MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION] = {};
+  uint8_t buffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION] = {};
 
   static bool handleRecording() {
-    if (presetToSave == 0) return true;
+    if (presetToSave == 0 || presetToSave == 250) return true;
+
+    // Save the current brightness
+    uint8_t previousBrightness = bri;
+    // Set brightness to maximum
+    bri = 255;
+    strip.setBrightness(bri);
 
     if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
         uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
@@ -57,6 +61,15 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
             buffer[pos++] = qadd8(W(c), R(c)); //R, add white channel to RGB channels as a simple RGBW -> RGB map
             buffer[pos++] = qadd8(W(c), G(c)); //G
             buffer[pos++] = qadd8(W(c), B(c)); //B
+
+            // Serial.print("LED ");
+            // Serial.print(i);
+            // Serial.print(": R=");
+            // Serial.print(qadd8(W(c), R(c)));
+            // Serial.print(", G=");
+            // Serial.print(qadd8(W(c), G(c)));
+            // Serial.print(", B=");
+            // Serial.println(qadd8(W(c), B(c)));
           }
         }
 
@@ -64,14 +77,31 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
           Serial.print("NEBULITE finished recording at pos ");
           Serial.println(pos);
 
-          // Hex encoding
-          for (uint16_t i = 0; i < pos; i++) {
-            sprintf(&nebuliteJsonBuffer[i * 2], "%02X", buffer[i]);
-          }
+          // // debug output the buffer
+          // for (uint16_t i = 0; i < recordTotalBytes; i++)
+          // { 
+          //   Serial.print(buffer[i]);
+          //   Serial.print(" ");
+          // }  
+          // Serial.println();
+
+          // base64_encodestate _state;
+          // base64_init_encodestate(&_state);
+          // int len = base64_encode_block((const char *) buffer, pos, nebuliteJsonBuffer, &_state);
+          // len = base64_encode_blockend((nebuliteJsonBuffer + len), &_state);
+
+          // debug output the base64 encoded buffer
+          // Serial.print("json buffer: ");
+          // Serial.println(nebuliteJsonBuffer);
 
           // reset
           nebulitePresetRecordingLastRecord = 0;
           pos = 0;
+
+          // Restore the previous brightness
+          bri = previousBrightness;
+          strip.setBrightness(bri);
+
           return true;
         }
 
@@ -105,13 +135,13 @@ static void doSaveState() {
 
   if (quickLoad[0]) sObj[F("ql")] = quickLoad;
   if (saveLedmap >= 0) sObj[F("ledmap")] = saveLedmap;
-/*
+
   #ifdef WLED_DEBUG
     DEBUG_PRINTLN(F("Serialized preset"));
     serializeJson(doc,Serial);
     DEBUG_PRINTLN();
   #endif
-*/
+
   #if defined(ARDUINO_ARCH_ESP32)
   if (!persist) {
     if (tmpRAMbuffer!=nullptr) free(tmpRAMbuffer);

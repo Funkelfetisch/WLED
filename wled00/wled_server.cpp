@@ -136,15 +136,7 @@ void initServer()
     //request->send_P(200, "text/html", PAGE_liveviewws);
   });
   #endif
-  #ifndef WLED_DISABLE_NEBULITE_LIVEPREVIEW
-  server.on("/liveviewNEBULITE", HTTP_GET, [](AsyncWebServerRequest *request){
-    if (handleIfNoneMatchCacheHeader(request)) return;
-    AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", PAGE_liveviewNEBULITE, PAGE_liveviewNEBULITE_length);
-    response->addHeader(FPSTR(s_content_enc),"gzip");
-    setStaticContentCacheHeaders(response);
-    request->send(response);
-    //request->send_P(200, "text/html", PAGE_liveviewws);
-  });
+  #ifdef USERMOD_NEBULITE
   server.on("/previewOutput.js", HTTP_GET, [](AsyncWebServerRequest *request){
     if (handleIfNoneMatchCacheHeader(request)) return;
     AsyncWebServerResponse *response = request->beginResponse_P(200, "application/javascript", NEBULITE_previewOutput_js, NEBULITE_previewOutput_js_length);
