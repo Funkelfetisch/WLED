@@ -35,80 +35,119 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
 }
 
 #ifdef USERMOD_NEBULITE
-  #include <libb64/cencode.h>
+#include <JPEGENC.h>
   unsigned long nebulitePresetRecordingLastRecord = 0;
   char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 4 / 3 + 4]; // Adjusted size for base64 encoding
 
   uint16_t pos = 0;
-  uint8_t buffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION] = {};
+
+  JPEGENC jpgenc;
+  static File myfile;
+
+  void *myOpen(const char *filename) {
+    myfile = WLED_FS.open(filename, FILE_WRITE);
+    return (void *)&myfile;
+  }
+
+  void myClose(JPEGE_FILE *p) {
+    File *f = (File *)p->fHandle;
+    if (f) f->close();
+  }
+
+  int32_t myRead(JPEGE_FILE *p, uint8_t *buffer, int32_t length) {
+    File *f = (File *)p->fHandle;
+    return f->read(buffer, length);
+  }
+
+  int32_t myWrite(JPEGE_FILE *p, uint8_t *buffer, int32_t length) {
+    File *f = (File *)p->fHandle;
+    return f->write(buffer, length);
+  }
+
+  int32_t mySeek(JPEGE_FILE *p, int32_t position) {
+    File *f = (File *)p->fHandle;
+    return f->seek(position);
+  }
+
+  static bool generateJPEGFromNebuliteBuffer(uint16_t ledCount, uint16_t numFrames, const char* outFile) {
+    int rc = jpgenc.open(outFile, myOpen, myClose, myRead, myWrite, mySeek);
+    if (rc != JPEGE_SUCCESS) {
+      Serial.print(F("Could not open ")); Serial.print(outFile); Serial.println(F(" for writing."));
+      return false;
+    }
+
+    JPEGENCODE jpe;
+    rc = jpgenc.encodeBegin(&jpe, ledCount, numFrames, JPEGE_PIXEL_RGB888, JPEGE_SUBSAMPLE_444, JPEGE_Q_HIGH);
+    if (rc != JPEGE_SUCCESS) {
+      Serial.println(F("JPEG encoding failed."));
+      return false;
+    }
+
+    for (int frame = 0; frame < numFrames; frame++) {
+      for (uint16_t i = 0; i < ledCount; i++) {
+        uint32_t c = strip.getPixelColor(i);
+        uint8_t pixelData[3];
+        pixelData[0] = qadd8(W(c), R(c));
+        pixelData[1] = qadd8(W(c), G(c));
+        pixelData[2] = qadd8(W(c), B(c));
+        rc = jpgenc.addFrame(&jpe, pixelData, 3);
+        if (rc != JPEGE_SUCCESS) {
+          Serial.println(F("JPEG addFrame failed."));
+          return false;
+        }
+      }
+    }
+
+    int32_t dataSize = jpgenc.close();
+    Serial.print(F("Wrote JPEG to "));
+    Serial.print(outFile);
+    Serial.print(F(" (size: "));
+    Serial.print(dataSize);
+    Serial.println(F(" bytes)."));
+    return true;
+  }
 
   static bool handleRecording() {
+    Serial.println("NEBULITE recording");
     if (presetToSave == 0 || presetToSave == 250) return true;
 
-    // Save the current brightness
     uint8_t previousBrightness = bri;
-    // Set brightness to maximum
     bri = 255;
     strip.setBrightness(bri);
 
     if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
-        uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+      uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
 
-        if (pos < (pos + strip.getLengthTotal() * 3)) {
-          for (uint16_t i = 0; i < strip.getLengthTotal(); i++)
-          {
-            uint32_t c = strip.getPixelColor(i);
-            buffer[pos++] = qadd8(W(c), R(c)); //R, add white channel to RGB channels as a simple RGBW -> RGB map
-            buffer[pos++] = qadd8(W(c), G(c)); //G
-            buffer[pos++] = qadd8(W(c), B(c)); //B
+      if(pos >= recordTotalBytes) {
+        Serial.print("NEBULITE finished recording at pos ");
+        Serial.println(pos);
 
-            // Serial.print("LED ");
-            // Serial.print(i);
-            // Serial.print(": R=");
-            // Serial.print(qadd8(W(c), R(c)));
-            // Serial.print(", G=");
-            // Serial.print(qadd8(W(c), G(c)));
-            // Serial.print(", B=");
-            // Serial.println(qadd8(W(c), B(c)));
-          }
+        // Generate JPEG
+        uint16_t frames = NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+        bool ok = generateJPEGFromNebuliteBuffer(
+          strip.getLengthTotal(),
+          frames,
+          "/nebRecording.jpg" // pick a unique name if needed
+        );
+
+        // If desired, just store the filename in nebuliteJsonBuffer for JSON
+        if (ok) {
+          strlcpy(nebuliteJsonBuffer, "/nebRecording.jpg", sizeof(nebuliteJsonBuffer));
+        } else {
+          strlcpy(nebuliteJsonBuffer, "JPEGFailed", sizeof(nebuliteJsonBuffer));
         }
 
-        if(pos >= recordTotalBytes) {
-          Serial.print("NEBULITE finished recording at pos ");
-          Serial.println(pos);
-
-          // // debug output the buffer
-          // for (uint16_t i = 0; i < recordTotalBytes; i++)
-          // { 
-          //   Serial.print(buffer[i]);
-          //   Serial.print(" ");
-          // }  
-          // Serial.println();
-
-          // base64_encodestate _state;
-          // base64_init_encodestate(&_state);
-          // int len = base64_encode_block((const char *) buffer, pos, nebuliteJsonBuffer, &_state);
-          // len = base64_encode_blockend((nebuliteJsonBuffer + len), &_state);
-
-          // debug output the base64 encoded buffer
-          // Serial.print("json buffer: ");
-          // Serial.println(nebuliteJsonBuffer);
-
-          // reset
-          nebulitePresetRecordingLastRecord = 0;
-          pos = 0;
-
-          // Restore the previous brightness
-          bri = previousBrightness;
-          strip.setBrightness(bri);
-
-          return true;
-        }
-
-        nebulitePresetRecordingLastRecord = millis();
+        nebulitePresetRecordingLastRecord = 0;
+        pos = 0;
+        bri = previousBrightness;
+        strip.setBrightness(bri);
+        return true;
       }
-      return false;
-  }
+
+      nebulitePresetRecordingLastRecord = millis();
+    }
+    return false;
+}
 #endif
 
 static void doSaveState() {

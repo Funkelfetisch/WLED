@@ -24,6 +24,51 @@ static const char s_content_enc[] PROGMEM = "Content-Encoding";
 static const char s_unlock_ota [] PROGMEM = "Please unlock OTA in security settings!";
 static const char s_unlock_cfg [] PROGMEM = "Please unlock settings using PIN code!";
 
+
+#ifdef USERMOD_NEBULITE
+void handleCombinedJPEGs(AsyncWebServerRequest *request) {
+  AsyncWebServerResponse *response = request->beginChunkedResponse("application/octet-stream", [](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
+    static File f;
+    static int presetIndex = 1;
+    static const char* marker = "\n--JPEG-END--\n";
+    static bool markerSent = false;
+
+    if (index == 0) {
+      presetIndex = 1;
+      markerSent = false;
+    }
+
+    if (markerSent) {
+      markerSent = false;
+      return snprintf((char*)buffer, maxLen, "%s", marker);
+    }
+
+    while (presetIndex <= 250) {
+      char filename[20];
+      snprintf(filename, sizeof(filename), "/rec%d.jpg", presetIndex);
+      if (WLED_FS.exists(filename)) {
+        if (!f) {
+          f = WLED_FS.open(filename, "r");
+        }
+        if (f) {
+          size_t bytesRead = f.read(buffer, maxLen);
+          if (bytesRead < maxLen) {
+            f.close();
+            presetIndex++;
+            markerSent = true;
+          }
+          return bytesRead;
+        }
+      }
+      presetIndex++;
+    }
+    return 0; // No more data
+  });
+
+  request->send(response);
+}
+#endif
+
 //Is this an IP?
 bool isIp(String str) {
   for (size_t i = 0; i < str.length(); i++) {
@@ -145,6 +190,7 @@ void initServer()
     request->send(response);
     //request->send_P(200, "text/html", PAGE_liveviewws);
   });
+  server.on("/combinedjpgs", HTTP_GET, handleCombinedJPEGs);
 
   #endif
 #else
