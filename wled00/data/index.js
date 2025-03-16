@@ -46,20 +46,7 @@ let sbtglChecked = true; //WLEDMM
 let sbchkChecked = false; //WLEDMM
 
 
-
-let outputType;
 let bytesPerColor = 3;
-  
-function refreshNebulitePreviewKey() {
-	let nebulitePreviewKey = d.title; // should be the name field for this WLED instance
-	if (outputTypes.hasOwnProperty(nebulitePreviewKey)) {
-		console.log("NEBULITE product found: ", nebulitePreviewKey);
-		outputType = outputTypes[nebulitePreviewKey];
-	} else {
-		console.error('Preview function did not find this product: ', nebulitePreviewKey);
-		outputType = outputTypes['croptop'];
-	}
-}
 
 var nebuliteIntervals = new Array(255);
 var nebuliteRecordIterator = new Array(255);
@@ -86,7 +73,7 @@ function nebuliteStartAnimation(preset, base64String) {
 		let colors = binArray.slice(nebuliteRecordIterator[preset], nebuliteRecordIterator[preset] + 3 * ledCount + 1); // slice the array
 
 		if (ctx) {
-			outputType.drawFn(ctx, colors);
+			drawFn(ctx, colors);
 		}
 
 		nebuliteRecordIterator[preset] += 3 * ledCount;
@@ -638,7 +625,7 @@ function populatePresets(fromls)
 
 		cn += `<div class="pres lstI" id="p${i}o">`;
 		if (cfg.comp.pid) cn += `<div class="pid">${i}</div>`;
-		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="` + outputType.width + `" height="` + outputType.height + `" onclick="setPreset(${i})"></canvas>
+		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="` + NEBULITE_preview_width + `" height="` + NEBULITE_preview_height + `" onclick="setPreset(${i})"></canvas>
 		<div class="pname lstIname" onclick="setPreset(${i})">
 		${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + pName(i)}
 		<i class="icons edit-icon flr" id="p${i}nedit" onclick="tglSegn(${i+100})">&#xe2c6;</i></div>
@@ -699,7 +686,6 @@ function parseInfo(i) {
 //		gId("filterVol").classList.add("hide"); hideModes(" ♪"); // hide volume reactive effects
 //		gId("filterFreq").classList.add("hide"); hideModes(" ♫"); // hide frequency reactive effects
 //	}
-	refreshNebulitePreviewKey();
 }
 
 //https://stackoverflow.com/questions/2592092/executing-script-elements-inserted-with-innerhtml
@@ -3730,7 +3716,7 @@ function togglePcMode(fromB = false)
 	if (cpick) cpick.resize(pcMode && wW>1023 && wW<1250 ? 230 : 260); // for tablet in landscape
 	if (!fromB && ((wW < 1024 && lastw < 1024) || (wW >= 1024 && lastw >= 1024))) return; // no change in size and called from size()
 	gId('buttonPcm').className = (pcMode) ? "active":"";
-	gId('bot').style.height = (pcMode && !cfg.comp.pcmbot) ? "0":"auto";
+	gId('bot').style.display = (pcMode && !cfg.comp.pcmbot) ? "none":"flex";
 	sCol('--bh', gId('bot').clientHeight + "px");
 	_C.style.width = (pcMode)?'100%':'400%';
 	//WLEDMM resize segmentview
