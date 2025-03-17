@@ -17,8 +17,13 @@ void shortPressAction(uint8_t b)
 {
   if (!macroButton[b]) {
     switch (b) {
-      case 0: toggleOnOff(); stateUpdated(CALL_MODE_BUTTON); break;
-      case 1: ++effectCurrent %= strip.getModeCount(); stateChanged = true; colorUpdated(CALL_MODE_BUTTON); break;
+      case 0: 
+        toggleOnOff(); 
+        stateUpdated(CALL_MODE_BUTTON); 
+        break;
+      case 1: 
+        iteratePreset();
+        break;
     }
   } else {
     unloadPlaylist(); // applying a preset unloads the playlist
@@ -45,7 +50,12 @@ void longPressAction(uint8_t b)
         stateUpdated(CALL_MODE_BUTTON);
         powerDown = millis();
       break;
-      case 1: bri += 8; stateUpdated(CALL_MODE_BUTTON); buttonPressedTime[b] = millis(); break; // repeatable action
+      case 1:
+        applyPreset(1, CALL_MODE_BUTTON_PRESET);
+        stateChanged = true; 
+        colorUpdated(CALL_MODE_BUTTON); 
+        break;
+      // bri += 8; stateUpdated(CALL_MODE_BUTTON); buttonPressedTime[b] = millis(); break; // repeatable action
     }
   } else {
     unloadPlaylist(); // applying a preset unloads the playlist
@@ -67,7 +77,10 @@ void doublePressAction(uint8_t b)
   if (!macroDoublePress[b]) {
     switch (b) {
       //case 0: toggleOnOff(); colorUpdated(CALL_MODE_BUTTON); break; //instant short press on button 0 if no macro set
-      case 1: ++effectPalette %= strip.getPaletteCount(); colorUpdated(CALL_MODE_BUTTON); break;
+      case 1: 
+      // ++effectPalette %= strip.getPaletteCount(); colorUpdated(CALL_MODE_BUTTON); break;
+      iteratePresetReverse();
+      break;
     }
   } else {
     unloadPlaylist(); // applying a preset unloads the playlist

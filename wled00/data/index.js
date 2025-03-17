@@ -73,7 +73,7 @@ function nebuliteStartAnimation(preset, base64String) {
 		let colors = binArray.slice(nebuliteRecordIterator[preset], nebuliteRecordIterator[preset] + 3 * ledCount + 1); // slice the array
 
 		if (ctx) {
-			drawFn(ctx, colors, ledCount);
+			outputType.drawFn(ctx, colors);
 		}
 
 		nebuliteRecordIterator[preset] += 3 * ledCount;
