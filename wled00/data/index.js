@@ -48,6 +48,7 @@ let sbchkChecked = false; //WLEDMM
 
 // NEBULITE
 let bytesPerColor = 3;
+
 var nebuliteIntervals = new Array(255);
 var nebuliteRecordIterator = new Array(255);
 function nebuliteStartAnimation(preset, base64String) {
@@ -73,65 +74,12 @@ function nebuliteStartAnimation(preset, base64String) {
 		let colors = binArray.slice(nebuliteRecordIterator[preset], nebuliteRecordIterator[preset] + 3 * ledCount + 1); // slice the array
 
 		if (ctx) {
-			outputType.drawFn(ctx, colors);
+			drawFn(ctx, colors);
 		}
 
 		nebuliteRecordIterator[preset] += 3 * ledCount;
 	}
 }
-
-function nebuliteStartAnimation(preset, jpgBlob) {
-  nebuliteRecordIterator[preset] = 0;
-
-  const reader = new FileReader();
-  reader.onload = function() {
-    const binArray = new Uint8Array(reader.result);
-    clearInterval(nebuliteIntervals[preset]);
-    nebuliteIntervals[preset] = setInterval(function() { nebuliteAnimate(preset, binArray, nebuliteRecordIterator, ledCount) }, 100);
-  };
-  reader.readAsArrayBuffer(jpgBlob);
-
-  function nebuliteAnimate(preset, binArray, nebuliteRecordIterator, ledCount) {
-    if (binArray.length < (nebuliteRecordIterator[preset] + 3 * ledCount)) nebuliteRecordIterator[preset] = 0; // reset if end of array
-
-    var nebuliteCanvas = document.getElementById("p" + preset + "canv");
-    var ctx = nebuliteCanvas.getContext('2d');
-
-    let colors = binArray.slice(nebuliteRecordIterator[preset], nebuliteRecordIterator[preset] + 3 * ledCount + 1); // slice the array
-
-    if (ctx) {
-      drawFn(ctx, colors, ledCount);
-    }
-
-    nebuliteRecordIterator[preset] += 3 * ledCount;
-  }
-}
-
-async function loadCombinedJPEGs() {
-  const response = await fetch('/combinedjpgs');
-  const blob = await response.blob();
-
-  // Split the blob into individual JPEGs using the marker
-  const marker = "\n--JPEG-END--\n";
-  const reader = new FileReader();
-  reader.onload = function() {
-    const text = reader.result;
-    const parts = text.split(marker);
-    const presets = Object.keys(pJson);
-    for (let i = 0; i < presets.length; i++) {
-      const preset = presets[i];
-      const jpgBlob = new Blob([parts[i]], { type: 'image/jpeg' });
-      nebuliteStartAnimation(preset, jpgBlob);
-    }
-  };
-  reader.readAsText(blob);
-}
-
-// Call loadCombinedJPEGs on page load or when needed
-window.onload = function() {
-  loadCombinedJPEGs();
-};
-// /NEBULITE
 
 function handleVisibilityChange() {if (!d.hidden && new Date () - lastUpdate > 3000) requestJson();}
 function sCol(na, col) {d.documentElement.style.setProperty(na, col);}
@@ -2802,7 +2750,7 @@ function selSegAll(o)
 function selSegEx(s)
 {
 	var obj = {"seg":[]};
-	for (let i=0; i<=lSeg; i++) obj.seg.push({"id":(i==s)});
+	for (let i=0; i<=lSeg; i++) obj.seg.push({"id":i,"sel":(i==s)});
 	obj.mainseg = s;
 	requestJson(obj);
 }

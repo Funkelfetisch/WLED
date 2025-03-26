@@ -15,8 +15,8 @@ if pio_env is None:
 if pio_target is None:
     pio_target = "None"
     # Set default value for PRODUCT_NAME if not set
-    if os.getenv("PRODUCT_NAME") is None:
-        os.environ["PRODUCT_NAME"] = "croptop"
+if os.getenv("PRODUCT_NAME") is None:
+    os.environ["PRODUCT_NAME"] = "croptop"
 # Check if the script is being run by PlatformIO for the "upload" target
 if "UPLOAD_PORT" in os.environ:
     pio_target = "upload"
@@ -30,13 +30,21 @@ if pio_target in ["upload", "build", "None"]:
         env.Exit(1)
 
     source_dir = os.path.join("usermods", "NEBULITE", "configs", product_name)
-    target_dir = os.path.join("wled00", "data")
+    target_dir = os.path.join("", "data")
 
     if not os.path.exists(source_dir):
         print(f"Source directory {source_dir} does not exist!")
         env.Exit(1)
-
+        # Delete all files in the target_dir
+    
+    for filename in os.listdir(target_dir):
+        file_path = os.path.join(target_dir, filename)
+        if os.path.isfile(file_path):
+            print(f"Deleting {file_path}")
+            os.remove(file_path)
     for filename in os.listdir(source_dir):
+        if filename == "previewOutput.js":
+            shutil.copy2(os.path.join(source_dir, filename), os.path.join("wled00", "data", "previewOutput.js"))
         source_file = os.path.join(source_dir, filename)
         target_file = os.path.join(target_dir, filename)
         if os.path.isfile(source_file):

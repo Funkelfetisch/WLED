@@ -459,6 +459,10 @@ void WLED::setup()
   if (!Serial) delay(300);  // just a tiny wait to avoid problems later when acessing serial
 #endif
 
+
+
+// NEBULITE
+
   pinMode(10, INPUT);
   if (digitalRead(10) == HIGH) {
     Serial.println("Battery Controller Rev4 detected.");
@@ -469,6 +473,19 @@ void WLED::setup()
   } else {
     Serial.println("USB Controller detected.");
   }
+
+  Serial.println("@E_        Es     xEEEEEEEEEE      BEEEEEEEEx       B<         B<     ss             <B     sEEEEBBEEEEs     sEEEEEEEEEs");
+  Serial.println("BEB<       Es                      B_       sE      B<         B<     ss             <B          sE                     ");
+  Serial.println("@<_Es      Es                      B_       <B      B<         B<     ss             <B          sE                     ");
+  Serial.println("@<  sE_    Es                      B_      <B<      B<         B<     ss             <B          sE                     ");
+  Serial.println("@<   <B<   Es     xEEEEEEEEEE      BEEEEEEEBs_      B<         B<     ss             <B          sE          sEEEEEEEEEs");
+  Serial.println("@<    _Es  Es                      B_       _Bx     Bx         @_     ss             <B          sE                     ");
+  Serial.println("@<      sE_Es                      B_        sE     EE        <B      ss             <B          sE                     ");
+  Serial.println("@<       <BBs                      B_       <B<      Es_     xB_      ss             <B          sE                     ");
+  Serial.println("B<        _Ex     xEEEEEEEEEE_     EEEEEEEEEx_        xEEEEEEx        sEEEEEEEEE_    <E          ss          sEEEEEEEEEE");
+
+  /// NEBULITE
+
 
   #ifdef ARDUINO_ARCH_ESP32
   #if defined(WLED_DEBUG) && (defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32C3) || ARDUINO_USB_CDC_ON_BOOT)

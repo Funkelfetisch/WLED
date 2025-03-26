@@ -108,7 +108,6 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
   }
 
   static bool handleRecording() {
-    Serial.println("NEBULITE recording");
     if (presetToSave == 0 || presetToSave == 250) return true;
 
     uint8_t previousBrightness = bri;

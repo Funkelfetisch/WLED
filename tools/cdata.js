@@ -219,6 +219,11 @@ function writeChunks(srcDir, specs, resultFile) {
   fs.writeFileSync(resultFile, src);
 }
 
+// Get parameters from command line
+const productName = process.env.PRODUCT_NAME || "croptop";
+const configDir = "../../usermods/NEBULITE/configs/" + productName;
+const previewOutputFile = `${configDir}/previewOutput.js`;
+
 writeHtmlGzipped("wled00/data/index.htm", "wled00/html_ui.h", 'index');
 writeHtmlGzipped("wled00/data/simple.htm", "wled00/html_simple.h", 'simple');
 writeHtmlGzipped("wled00/data/pixart/pixart.htm", "wled00/html_pixart.h", 'pixart');
@@ -438,7 +443,7 @@ const char PAGE_dmxmap[] PROGMEM = R"=====()=====";
     //   filter: "html-minify",
     // },
     {
-      file: "../../usermods/NEBULITE/previewOutput.js",
+      file: previewOutputFile,
       name: "NEBULITE_previewOutput_js",
       method: "gzip",
       filter: "js-minify",
