@@ -47,39 +47,100 @@ let sbchkChecked = false; //WLEDMM
 
 
 // NEBULITE
-let bytesPerColor = 3;
-
 var nebuliteIntervals = new Array(255);
 var nebuliteRecordIterator = new Array(255);
-function nebuliteStartAnimation(preset, base64String) {
-	nebuliteRecordIterator[preset] = 0;
-	var binArray;
-	try {
-		binArray = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
-	} catch (e) {
-		console.error(e);
-		console.error("error decoding NEBULITE JSON", binArray);
-		return;
-	}
 
-	clearInterval(nebuliteIntervals[preset]);
-	nebuliteIntervals[preset] = setInterval(function() { nebuliteAnimate(preset, binArray, nebuliteRecordIterator, ledCount) }, 100);
+// New global variables for rate‐limiting preset image loads
+var presetQueue = [];
+var presetRateLimitDelay = 20; // milliseconds between requests
 
-	function nebuliteAnimate(preset, binArray, nebuliteRecordIterator, ledCount) {
-		if (binArray.length < (nebuliteRecordIterator[preset] + 3 * ledCount)) nebuliteRecordIterator[preset] = 0; // reset if end of array
-
-		var nebuliteCanvas = document.getElementById("p" + preset + "canv");
-		var ctx = nebuliteCanvas.getContext('2d');
-
-		let colors = binArray.slice(nebuliteRecordIterator[preset], nebuliteRecordIterator[preset] + 3 * ledCount + 1); // slice the array
-
-		if (ctx) {
-			drawFn(ctx, colors);
-		}
-
-		nebuliteRecordIterator[preset] += 3 * ledCount;
-	}
+// Enqueue a preset ID for loading
+function enqueuePresetImage(preset) {
+  presetQueue.push(preset);
 }
+
+// Process one preset image from the queue, then schedule the next request
+function processPresetQueue() {
+  if (presetQueue.length === 0) return;
+  let preset = presetQueue.shift();
+  console.log("Rate‑limited fetch for preset", preset);
+  let url = (loc ? `http://${locip}` : '.') + `/rec-${preset}.jpg`;
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+      return res.blob();
+    })
+    .then(blob => {
+      nebuliteStartAnimation(preset, blob);
+    })
+    .catch(err => {
+      console.error("Error loading preset image " + preset, err);
+    });
+  setTimeout(processPresetQueue, presetRateLimitDelay);
+}
+
+function nebuliteStartAnimation(preset, jpgBlob) {
+    nebuliteRecordIterator[preset] = 0;
+  
+    // Decode the JPEG blob into an ImageBitmap
+    createImageBitmap(jpgBlob).then(function(imageBitmap) {
+        // Create an offscreen canvas and draw the image
+        let offCanvas = document.createElement("canvas");
+        offCanvas.width = imageBitmap.width;
+        offCanvas.height = imageBitmap.height;
+        let offCtx = offCanvas.getContext('2d');
+        offCtx.drawImage(imageBitmap, 0, 0);
+        let imageData = offCtx.getImageData(0, 0, imageBitmap.width, imageBitmap.height);
+        const originalData = imageData.data; // RGBA format
+        
+        // Convert RGBA array to an RGB-only array
+        let rgbArray = new Uint8Array(imageBitmap.width * imageBitmap.height * 3);
+        for (let i = 0, j = 0; i < originalData.length; i += 4, j += 3) {
+            rgbArray[j]     = originalData[i];     // R
+            rgbArray[j + 1] = originalData[i + 1]; // G
+            rgbArray[j + 2] = originalData[i + 2]; // B
+        }
+  
+        clearInterval(nebuliteIntervals[preset]);
+        nebuliteIntervals[preset] = setInterval(function() {
+            nebuliteAnimate(preset, rgbArray, nebuliteRecordIterator, ledCount);
+        }, 100);
+    }).catch(function(error) {
+        console.error("Error decoding JPEG:", error);
+    });
+}
+ 
+function nebuliteAnimate(preset, rgbArray, nebuliteRecordIterator, ledCount) {
+    const canvasId = "p" + preset + "canv";
+    const nebuliteCanvas = document.getElementById(canvasId);
+    if (!nebuliteCanvas) {
+        console.error("Canvas element not found: " + canvasId);
+        return;
+    }
+    const ctx = nebuliteCanvas.getContext('2d');
+    if (!ctx) {
+        console.error("Canvas context not available for " + canvasId);
+        return;
+    }
+  
+    // Each LED uses 3 bytes from the RGB array.
+    let nextEnd = nebuliteRecordIterator[preset] + 3 * ledCount;
+    if(nextEnd > rgbArray.length) {
+        nebuliteRecordIterator[preset] = 0;
+        nextEnd = 3 * ledCount;
+    }
+    
+    let colors = rgbArray.slice(nebuliteRecordIterator[preset], nextEnd);
+    if (!colors || colors.length < 3) {
+        console.error("Invalid color data for preset " + preset);
+        return;
+    }
+    
+    // Draw the LED preview using the extracted RGB data
+    drawFn(ctx, colors, ledCount);
+    nebuliteRecordIterator[preset] += 3 * ledCount;
+}
+  // /NEBULITE
 
 function handleVisibilityChange() {if (!d.hidden && new Date () - lastUpdate > 3000) requestJson();}
 function sCol(na, col) {d.documentElement.style.setProperty(na, col);}
@@ -636,7 +697,7 @@ function populatePresets(fromls)
 		</div>`;
 		pNum++;
 
-		nebuliteStartAnimation(i, key[1].r);
+		// nebuliteStartAnimation(i, key[1].r);
 	}
 
 	gId('pcont').innerHTML = cn;
@@ -650,6 +711,16 @@ function populatePresets(fromls)
 	} else { presetError(true); }
 	updatePA();
 	populateQL();
+
+	// NEBULITE
+	for (const preset in pJson) {
+		if (pJson.hasOwnProperty(preset)) {
+		  enqueuePresetImage(preset);
+		}
+	  }
+	// Start processing the queue
+	processPresetQueue();
+	// /NEBULITE
 }
 
 function parseInfo(i) {

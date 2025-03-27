@@ -35,117 +35,120 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
 }
 
 #ifdef USERMOD_NEBULITE
-#include <JPEGENC.h>
-  unsigned long nebulitePresetRecordingLastRecord = 0;
-  char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 4 / 3 + 4]; // Adjusted size for base64 encoding
+#include <eloquent_esp32cam.h>            // Core library
 
-  uint16_t pos = 0;
+unsigned long nebulitePresetRecordingLastRecord = 0;
+char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 4 / 3 + 4]; // Adjusted size for base64 encoding
 
-  JPEGENC jpgenc;
-  static File myfile;
+// Global recording buffer for raw LED data (RGB888)
+static uint8_t* nebuliteFrameBuffer = nullptr;
+uint16_t pos = 0;
 
-  void *myOpen(const char *filename) {
-    myfile = WLED_FS.open(filename, FILE_WRITE);
-    return (void *)&myfile;
-  }
+// Callback that writes JPEG chunks directly to a file.
+static size_t file_writer(void* arg, size_t index, const void* data, size_t len) {
+    File* f = (File*) arg;
+    if (len == 0) return 0;  // encoding finished
+    size_t written = f->write((const uint8_t*)data, len);
+    return written;
+}
 
-  void myClose(JPEGE_FILE *p) {
-    File *f = (File *)p->fHandle;
-    if (f) f->close();
-  }
-
-  int32_t myRead(JPEGE_FILE *p, uint8_t *buffer, int32_t length) {
-    File *f = (File *)p->fHandle;
-    return f->read(buffer, length);
-  }
-
-  int32_t myWrite(JPEGE_FILE *p, uint8_t *buffer, int32_t length) {
-    File *f = (File *)p->fHandle;
-    return f->write(buffer, length);
-  }
-
-  int32_t mySeek(JPEGE_FILE *p, int32_t position) {
-    File *f = (File *)p->fHandle;
-    return f->seek(position);
-  }
-
-  static bool generateJPEGFromNebuliteBuffer(uint16_t ledCount, uint16_t numFrames, const char* outFile) {
-    int rc = jpgenc.open(outFile, myOpen, myClose, myRead, myWrite, mySeek);
-    if (rc != JPEGE_SUCCESS) {
-      Serial.print(F("Could not open ")); Serial.print(outFile); Serial.println(F(" for writing."));
-      return false;
+// New version: generator uses the pre-recorded LED frame data.
+static bool generateJPEGFromNebuliteBuffer(uint16_t ledCount, uint16_t numFrames, const char* outFile, uint8_t* imageBuffer) {
+    // Open file for writing JPEG data.
+    File f = WLED_FS.open(outFile, FILE_WRITE);
+    if (!f) {
+        Serial.print(F("Failed to open file for writing: "));
+        Serial.println(outFile);
+        return false;
     }
-
-    JPEGENCODE jpe;
-    rc = jpgenc.encodeBegin(&jpe, ledCount, numFrames, JPEGE_PIXEL_RGB888, JPEGE_SUBSAMPLE_444, JPEGE_Q_HIGH);
-    if (rc != JPEGE_SUCCESS) {
-      Serial.println(F("JPEG encoding failed."));
-      return false;
+    
+    // Build a temporary camera_fb_t struct wrapping the pre-recorded data.
+    camera_fb_t fb;
+    fb.width  = ledCount;
+    fb.height = numFrames;
+    fb.buf    = imageBuffer;
+    fb.len    = 0;               // to be set by encoder
+    fb.format = PIXFORMAT_RGB888; // Matches our recording
+    
+    uint8_t quality = 90;
+    bool ok = frame2jpg_cb(&fb, quality, file_writer, (void*)&f);
+    f.close();
+    
+    if (!ok) {
+        Serial.print(F("Could not encode JPEG to "));
+        Serial.println(outFile);
+        return false;
     }
-
-    for (int frame = 0; frame < numFrames; frame++) {
-      for (uint16_t i = 0; i < ledCount; i++) {
-        uint32_t c = strip.getPixelColor(i);
-        uint8_t pixelData[3];
-        pixelData[0] = qadd8(W(c), R(c));
-        pixelData[1] = qadd8(W(c), G(c));
-        pixelData[2] = qadd8(W(c), B(c));
-        rc = jpgenc.addFrame(&jpe, pixelData, 3);
-        if (rc != JPEGE_SUCCESS) {
-          Serial.println(F("JPEG addFrame failed."));
-          return false;
-        }
-      }
+    
+    f = WLED_FS.open(outFile, FILE_READ);
+    if (f) {
+        uint32_t dataSize = f.size();
+        f.close();
+        Serial.print(F("Wrote JPEG to "));
+        Serial.print(outFile);
+        Serial.print(F(" (size: "));
+        Serial.print(dataSize);
+        Serial.println(F(" bytes)."));
     }
-
-    int32_t dataSize = jpgenc.close();
-    Serial.print(F("Wrote JPEG to "));
-    Serial.print(outFile);
-    Serial.print(F(" (size: "));
-    Serial.print(dataSize);
-    Serial.println(F(" bytes)."));
     return true;
+}
+
+static bool handleRecording() {
+  if (presetToSave == 0 || presetToSave == 250) return true;
+
+  if (pos == 0) {
+      Serial.println("NEBULITE started recording at pos 0");
+      // Allocate the global recording buffer.
+      uint16_t totalFrames = NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+      uint32_t totalBytes = strip.getLengthTotal() * 3UL * totalFrames;
+      nebuliteFrameBuffer = new uint8_t[totalBytes];
+      if (!nebuliteFrameBuffer) {
+          Serial.println(F("Failed to allocate frame buffer"));
+          return true; // abort recording
+      }
   }
 
-  static bool handleRecording() {
-    if (presetToSave == 0 || presetToSave == 250) return true;
+  if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
+    uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
 
-    uint8_t previousBrightness = bri;
-    bri = 255;
-    strip.setBrightness(bri);
-
-    if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
-      uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
-
-      if(pos >= recordTotalBytes) {
-        Serial.print("NEBULITE finished recording at pos ");
-        Serial.println(pos);
-
-        // Generate JPEG
-        uint16_t frames = NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
-        bool ok = generateJPEGFromNebuliteBuffer(
-          strip.getLengthTotal(),
-          frames,
-          "/nebRecording.jpg" // pick a unique name if needed
-        );
-
-        // If desired, just store the filename in nebuliteJsonBuffer for JSON
-        if (ok) {
-          strlcpy(nebuliteJsonBuffer, "/nebRecording.jpg", sizeof(nebuliteJsonBuffer));
-        } else {
-          strlcpy(nebuliteJsonBuffer, "JPEGFailed", sizeof(nebuliteJsonBuffer));
-        }
-
-        nebulitePresetRecordingLastRecord = 0;
-        pos = 0;
-        bri = previousBrightness;
-        strip.setBrightness(bri);
-        return true;
-      }
-
-      nebulitePresetRecordingLastRecord = millis();
+    // Capture one frame of LED data into nebuliteFrameBuffer.
+    for (uint16_t i = 0; i < strip.getLengthTotal(); i++) {
+      uint32_t c = strip.getPixelColorRestored(i);
+      nebuliteFrameBuffer[pos++] = qadd8(W(c), B(c));
+      nebuliteFrameBuffer[pos++] = qadd8(W(c), G(c));
+      nebuliteFrameBuffer[pos++] = qadd8(W(c), R(c));
     }
-    return false;
+    Serial.print("Recording… pos = ");
+    Serial.println(pos);
+
+    if (pos >= recordTotalBytes) {
+      Serial.print("NEBULITE finished recording at pos ");
+      Serial.println(pos);
+
+      uint16_t frames = NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+      char filename[32];
+      sprintf(filename, "/rec-%d.jpg", presetToSave);
+      bool ok = generateJPEGFromNebuliteBuffer(
+        strip.getLengthTotal(),
+        frames,
+        filename,
+        nebuliteFrameBuffer
+      );
+
+      if (ok)
+        strlcpy(nebuliteJsonBuffer, filename, sizeof(nebuliteJsonBuffer));
+      else
+        strlcpy(nebuliteJsonBuffer, "JPEGFailed", sizeof(nebuliteJsonBuffer));
+      
+      nebulitePresetRecordingLastRecord = 0;
+      pos = 0;
+      delete[] nebuliteFrameBuffer;
+      nebuliteFrameBuffer = nullptr;
+      return true;
+    }
+    nebulitePresetRecordingLastRecord = millis();
+  }
+  return false;
 }
 #endif
 

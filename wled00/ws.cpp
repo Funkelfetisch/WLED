@@ -1,4 +1,6 @@
 #include "wled.h"
+// Ensure you have a base64 encoder available. For example, if you have one declared as:
+// namespace base64 { String encode(const uint8_t* data, size_t len); }
 
 /*
  * WebSockets server for bidirectional communication
@@ -9,100 +11,133 @@ static volatile uint16_t wsLiveClientId = 0;        // WLEDMM added "static"
 static volatile unsigned long wsLastLiveTime = 0;   // WLEDMM
 //uint8_t* wsFrameBuffer = nullptr;
 
-#if !defined(ARDUINO_ARCH_ESP32) || defined(WLEDMM_FASTPATH)   // WLEDMM
-#define WS_LIVE_INTERVAL_MAX 120
-#define WS_LIVE_INTERVAL_MIN 25
-#else
+#if !defined(ARDUINO_ARCH_ESP32) || defined(WLEDMM_FASTPATH)
 #define WS_LIVE_INTERVAL_MAX 80
 #define WS_LIVE_INTERVAL_MIN 40
 #endif
 
+// NEW: Helper function to handle preset image requests by sending binary JPG data
+void handleGetPresetImageBinary(AsyncWebSocketClient * client, JsonObject& root) {
+  if (!root.containsKey("preset")) {
+    client->text(F("{\"error\":\"Missing preset\"}"));
+    return;
+  }
+  
+  uint8_t preset = root["preset"];
+  char filename[32];
+  sprintf(filename, "/rec-%d.jpg", preset);
+  
+  if (!WLED_FS.exists(filename)) {
+    client->text(F("{\"error\":\"File not found\"}"));
+    return;
+  }
+  
+  File file = WLED_FS.open(filename, "r");
+  if (!file) {
+    client->text(F("{\"error\":\"Could not open file\"}"));
+    return;
+  }
+  
+  size_t fileSize = file.size();
+  // We build a message: 1 byte header ('I'), 1 byte preset, then raw JPEG data.
+  size_t bufSize = 1 + 1 + fileSize;
+  uint8_t* buffer = new uint8_t[bufSize];
+  if (!buffer) {
+    file.close();
+    client->text(F("{\"error\":\"Memory allocation failed\"}"));
+    return;
+  }
+  
+  buffer[0] = 'I';       // identifier for preset image binary message
+  buffer[1] = preset;    // include preset id for identification on client side
+  size_t bytesRead = file.read(buffer + 2, fileSize);
+  file.close();
+  
+  if (bytesRead != fileSize) {
+    delete[] buffer;
+    client->text(F("{\"error\":\"File read error\"}"));
+    return;
+  }
+  
+  // Send binary data (the AsyncWebSocketBuffer takes ownership of the data)
+  AsyncWebSocketBuffer wsBuf(reinterpret_cast<const char*>(buffer), bufSize);
+  client->binary(std::move(wsBuf));
+  // Do not delete buffer afterwards as ownership has been transferred.
+}
+
 void wsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)
 {
   if(type == WS_EVT_CONNECT){
-    //client connected
+    // client connected
     DEBUG_PRINTLN(F("WS client connected."));
     sendDataWs(client);
   } else if(type == WS_EVT_DISCONNECT){
-    //client disconnected
+    // client disconnected
     if (client->id() == wsLiveClientId) wsLiveClientId = 0;
     DEBUG_PRINTLN(F("WS client disconnected."));
   } else if(type == WS_EVT_DATA){
     DEBUG_PRINTLN(F("WS event data."));
-    // data packet
     AwsFrameInfo * info = (AwsFrameInfo*)arg;
     if(info->final && info->index == 0 && info->len == len){
-      // the whole message is in a single frame and we got all of its data (max. 1450 bytes)
+      // the whole message is in a single frame and we got all data (max. 1450 bytes)
       if(info->opcode == WS_TEXT)
       {
         if (len > 0 && len < 10 && data[0] == 'p') {
           // application layer ping/pong heartbeat.
-          // client-side socket layer ping packets are unanswered (investigate)
           client->text(F("pong"));
           return;
         }
-
+  
         bool verboseResponse = false;
         if (!requestJSONBufferLock(11)) {
           client->text(F("{\"error\":3}")); // ERR_NOBUF
           return;
         }
-
+  
         DeserializationError error = deserializeJson(doc, data, len);
         JsonObject root = doc.as<JsonObject>();
         if (error || root.isNull()) {
           releaseJSONBufferLock();
           return;
         }
+        if (root.containsKey("action") && strcmp(root["action"], "getPresetImage") == 0) {
+          releaseJSONBufferLock();
+          // Use binary transfer instead of base64 conversion.
+          handleGetPresetImageBinary(client, root);
+          return;
+        }
+  
         if (root["v"] && root.size() == 1) {
-          //if the received value is just "{"v":true}", send only to this client
           verboseResponse = true;
         } else if (root.containsKey("lv")) {
           wsLiveClientId = root["lv"] ? client->id() : 0;
         } else {
           verboseResponse = deserializeState(root);
         }
-        releaseJSONBufferLock(); // will clean fileDoc
-
-        if (!interfaceUpdateCallMode) { // individual client response only needed if no WS broadcast soon
+        releaseJSONBufferLock();
+  
+        if (!interfaceUpdateCallMode) {
           if (verboseResponse) {
             sendDataWs(client);
           } else {
-            // we have to send something back otherwise WS connection closes
             client->text(F("{\"success\":true}"));
           }
-          // force broadcast in 500ms after updating client
-          //lastInterfaceUpdate = millis() - (INTERFACE_UPDATE_COOLDOWN -500); // ESP8266 does not like this
         }
       }
     } else {
-      //message is comprised of multiple frames or the frame is split into multiple packets
-      //if(info->index == 0){
-        //if (!wsFrameBuffer && len < 4096) wsFrameBuffer = new uint8_t[4096];
-      //}
-
-      //if (wsFrameBuffer && len < 4096 && info->index + info->)
-      //{
-
-      //}
-
       if((info->index + len) == info->len){
         if(info->final){
           if(info->message_opcode == WS_TEXT) {
-            client->text(F("{\"error\":9}")); //we do not handle split packets right now
+            client->text(F("{\"error\":9}")); // not handling split packets
           }
         }
       }
       DEBUG_PRINTLN(F("WS multipart message."));
     }
   } else if(type == WS_EVT_ERROR){
-    //error was received from the other end
     USER_PRINTLN(F("WS error."));
-
   } else if(type == WS_EVT_PONG){
-    //pong message was received (in response to a ping request maybe)
     DEBUG_PRINTLN(F("WS pong."));
-
   }
 }
 
