@@ -2,20 +2,20 @@ import os
 import subprocess
 import json
 from SCons.Script import Import
+Import("env")
+import re
 import time
 
-Import("env")
-
-if os.getenv("PRODUCT_NAME") is None:
-    os.environ["PRODUCT_NAME"] = "croptop"
+# Extract PRODUCT_NAME from build_flags in platformio.ini
+product_name = "croptop"  # Default value
+build_flags = os.getenv("BUILD_FLAGS", "")
+match = re.search(r"-D\s*PRODUCT_NAME=([^\s]+)", build_flags)
+if match:
+    product_name = match.group(1)
 
 def merge_firmware_action(target, source, env):
-    # print("Debug: SCons environment variables:")
-    # for key, value in env.items():
-    #     print(f"{key}: {value}")
-    # build_env_name = env.get("PIOENV")
-    build_dir = os.path.join(env["PROJECT_BUILD_DIR"], "WLED_nebulite")
-    product_name = os.environ["PRODUCT_NAME"]
+    variant = env["PIOENV"]
+    build_dir = os.path.join(env["PROJECT_BUILD_DIR"],  variant)
     # Our firmware bin produced by PlatformIO (usually found in the build directory)
 
     # Define the output merged firmware filename
@@ -74,7 +74,7 @@ def merge_firmware_action(target, source, env):
         ]
     }
 
-    manifest_file = os.path.join("build_output", "NEBULITE", os.environ["PRODUCT_NAME"], "manifest.json")
+    manifest_file = os.path.join("build_output", "NEBULITE", product_name, "manifest.json")
     with open(manifest_file, "w") as mf:
         json.dump(manifest, mf, indent=4)
     print(f"Manifest file created: {manifest_file}")

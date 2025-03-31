@@ -412,7 +412,7 @@ function showToast(text, error = false, duration = 2900, modal = false)
 	//if (error) text += '<i class="icons btn-icon" style="transform:rotate(45deg);position:absolute;top:10px;right:0px;" onclick="clearErrorToast(100);">&#xe18a;</i>';
 	x.innerHTML = text;
 	x.classList.add(error ? 'error':'show');
-	if (modal) x.classList.add('modal');
+	x.classList.add(modal ? 'modalDialog':'normalDialog');
 	clearTimeout(timeout);
 	x.style.animation = 'none';
 	timeout = setTimeout(()=>{ x.classList.remove('show'); }, duration);
