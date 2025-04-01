@@ -19,9 +19,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 255, 34, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            255,
+            34,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 9,
         "sx": 128,
@@ -39,41 +54,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Rainbow",
-    "r": "AJplAAX6RwC4lQBq3wAg0iwAq3YAdsUAAAAAAFmkHADhZgCXtQBI/gAAsUsAqZYANOQAAAAAABnkOwDBhgB31AAq3h4AqWsAj7cAAPkEAAAAGQDjZACZrwBO/AABt0YAqpQAP94AANErAAAAOwDBhgB30QAs3h4AqmgAj7cAAPwBAK9OAAAAZACZrwBO+QAEt0YAqpEAP94AANQpAGWYAAAAhAB5zwAu4xkAqmYAmbEAAP4AALRJACTZAAAApgBX8QAMwTsAqokAVdQAANshAHmEDgDuAAAA0AAv5BoAqmUAmrIABf0AALVKACvVNgDIAAAA7wAQxToAq4UAWtIAAOIdAIB/CgD1VwCoAAAA7w8Aq1oAq6UAGvIAAMI8AEC/KgDVdgCJAAAAxToAq4UAYNAAAOIdAIV6CgD1VQCrogBdAAAAq1oAq6UAIO8AAMI8AEW6KgDVdACLwgA9AAAAq4IAZs0AAOcXAIp1BQD6UgCtnQBi6gAVAAAAq6UAIO8AAMU6AEW6JwDXdACLwAA/8g0AAAAAdsUAAO8PAKBfAAX6RwC4lQBq3wAg0iwAAAAAJe0AAMg2AFCvJADabgCRvgBB9wgAq1UAAAAAAO8PAKBfAAr1RwC4kgBt3wAg1SoAq3YAAAAAANAuAGCfGgDkZwCYsgBN/wAAtUoAqpcAAAAAAKBfAAr1RAC6kgBt3QAi1SoAqnQAesIAAAAAAGCfGgDkZQCasgBN/QACtUoAq5UAO+IAAAAAACDfOgDFhQB60gAt4h0Aq2kAlbYAAP0CAAAAGgDkZQCasABP/QACuEcAq5UAQN8AANIsAAAAOgDFhQB60AAv4h0Aq2cAlbYAAP8AALJMAAAAWgClpQBa7wAQwjwAqocAVtUAAN8fAHqFAAAAhQB60AAv5BoAq2cAmrIAAP8AALVKACXaAAAApQBa7wAQxToAqocAWtIAAN8fAIB/DQDyAAAAzQAy5xcAq2IAoLAACvoAALhHADDPNADKAAAA7wAQxToAq4UAWtIAAOIdAIB/CgD1VwCoAAAA7w8Aq1oAq6UAGvIAAMI8AEC/KgDVdgCJAAAAyDYAq4IAZs0AAOQaAIp1CAD3UgCtnwBgAAAAq1oAq6UAIO8AAMI8AEW6KgDVdACLwgA9AAAAq3kAdsUAAO8PAJplAAX6SgC1lQBq4gAdAAAAq6UAIO8AAMU6AEW6JwDXdACLwAA/8g0AAAAAdsUAAO8PAKBfAAX6RwC4lQBq3wAg0iwAAAAAJe0AAMg2AFCvJADabgCRvgBB9wgAq1UAAAAAAO8PAKBfAAr1RwC4kgBt3wAg1SoAq3YAAAAAANAuAGCfGgDkZwCYsgBN/wAAtUoAqpcAAAAAAKVaABDvQgC9jwBw2gAl1ycAq3EAgMAAAAAAAGaZFwDnYgCdsABP+gAFuEcAq5IAQN8AAAAAACDfOgDFhQB60gAt4h0Aq2kAlbYAAP0CAAAAFwDnYgCdrgBR+gAFukQAq5IARd0AANUqAAAANgDIggB9zQAy5BoAqmUAmrIABf0AALVKAAAAYgCdrgBR9wAIukQAqo8ARd0AANcnAGqVAAAAggB9zQAy5xcAqmUAoLAABf0AALhHACvVAAAAogBd7QASyDYAq4UAYNAAAOIdAIV6CgD1AAAAzQAy5xcAq2IAoLAACvoAALhHADDPNADKAAAA7QASyDYAq4IAYNAAAOQaAIV6CAD3VQCrAAAA8g0Aq1cAq6IAIO8AAMU6AEW6JwDXdACLAAAAyDYAq4IAZs0AAOQaAIp1CAD3UgCtnwBgAAAA"
+    "n": "Rainbow"
   },
   "2": {
     "on": true,
@@ -94,9 +170,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 255, 34, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            255,
+            34,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 108,
         "sx": 128,
@@ -114,41 +205,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Sine",
-    "r": "IAEjAwAACQABGAUFfwgcdAMeoQYXSwNDAAAACAAJAAAALgIFKgkKpwkjdgIffgQRKgAmAAAAAwAEHgQEhAoRQxAUqwkkTwEWMQEGAgACAAAAHwAjQwoKtg0YQg4WegcYIgAJBAAAAwADAAAARAJLXQ8Qsg0ZLgkSNQIKAwAABgAAIAAdAAAAYQNqVg0RawcPDgIGAAAACgACQQIITwJHAAAAVwNfNwcLKAIFAAAADwACLQAOewUQYwJZAAAAOAE8FAIDAAAABQACRQMNVAEdngYUWQJRAAAADgAPAAAAGwIEIQcTjgocbAMpgwcSMQErAAAAAAAADgIEVwcPNgsipwwhWQIiTQQKDwANAAAAFgAXOAgQmwwcPwwsfQgYKQEQDQABAQAAAAAANwI6VQsapg0eLwkiQAQMCAADAQAAFwAUAAAAUgNYWwsefQoYGAUTDQECAQAAJAEEOAEyAAAAVgNZPQgVMQQJAgABBwABIAAOZwYNWQJOAAAAPQI+GwMKBQABAgACMgMJQwAgjggRWAJMAAAAGwEbAwABBwABEgMSaQgTXAAtjAgQPgI2AAAAAAAACAEDPgUNLAgulwsaVQAsVQUJFAARAAAACAAIJAQPdAoaOAo+hgkXNgAdIQIDAAAAAAAAKgEqSwcikw0jLgk2SAUMDQAHAAAADQALAAAARgJGWgooeAkdGwQhFgEDAAAAFgECKgElAAAAUgNSSgciRQURCAEKAAAADQAIRgQHRwE9AAAAPQI8IwMRCwEDAAAAIQIFMwEhfgkNUQFGAAAAHwEeBwADAQAADAISUwYNTAEzhggNPgE1AAAABgAGAQAAHwIIHgQvfQoTUAE5ZwYJHwAbAAAAAwADGwIPWQgaLwdPgAsSNgAoKQIDAgACAAAAGAAXOwQiegokLgdQWwcMGAASBAAAAwADAAAAOQE1VAYzbwkjGwQzHQIEAAAADAABHwAbAAAASQFDTAYvRwYWCgEUAAAABwAGNQQEOgEyAAAAQQE8MQIfGgIIAAAADAEBHgAaYwYHSQE/AAAAIgAfDAAIAAAABwAPPgUHPAA3fwkKOwEzAAAACgAJAAAAEQEGFgIxZgkLRgBDaAcHIgAeAAAAAAAADAAJNwUUJARVeQsOOQA4PQQDCgAJAAAAEAAOMQIjYAklKQRmWQkJGgAbCgAAAAAAAAAAKAAiSQI3ZgkpHwJQLQQFBQAGAQAADwANAAAAPQA0TAI7QwYcDAAhBAAAAwADJQIBLAAnAAAAPAAzNgIsHQMNAQADBQAAEwAXTwYDPQA1AAAAKgAjGAAUAwABAQAFIwMDKAAzawkDOgAzAAAADQALAAAACAAEDwAwUwgGOABMZAgDIwAeAAAAAAAABwAGJAMSGwFdaAoHMgBGQAYBDQAMAAAABQAEHwAcQgYiIwB6XAgGIAAtGAIAAAAAAAAAHQAWQAA8UwktHQBpMQQCBwAMAAAACAAHAAAAMAAjTABJQwYmEAA/DgEAAAAAEAEAHAAZAAAANwAnOQA4HgMSAgALAQAACwATPgYAMQAtAAAAKQAdHQAeBgAEAAABFgIAHAAyXAoANAAvAAAAFQAOBgAGAAAABwAgOAUBKQBNZAoAJwAkAAAAAQABAwADFwIPFgBbWAkGLQBOQwgCEAAOAAAAAgABFwEYMwUhHwF8VwkJIAA3HQQCAQABAAAAEQALMgUySAguIQJ6PQYIDgAYAwAAAgACAAAAKwIaRwtHRAgsFAJJFAIDAAAACAEBFgASAAAANwIhPw0+LAUdCAEcAAAABAAHJQYGKgIhAAAA"
+    "n": "Sine"
   },
   "3": {
     "on": true,
@@ -169,9 +321,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 255, 34, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            255,
+            34,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 113,
         "sx": 128,
@@ -189,41 +356,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Washing Machine",
-    "r": "hyIlFIVLE31ZgCEnFZA5D2R5fiEpF5snAAAAbiIrJZoHBj6SbCItKZoCBkGCaCIuL5QBAAAATiQ4XW0BCUlISCQ6ZWcCCko/PyM+ZVwBAAAAJCRGZ0wBCUMZHCNIaEkBCT8bFSNLaEcBAAAADEYWZ0cAHidFC0cbZ00AJyhCC0ohZ08BAAAAClBGV20ATCw0CVBQTXYBUSsxCE9aQ34AAAAACU2WJJUbaS0kEWJ1IY8nbS0iF3NaHoY4AAAAOIcCC1VjWDErRXwBC1ZXTjEvTnQCC1ZNAAAAZ0cBEE8aHjI/Z0IBEE0VGDFAaD8BDkUhAAAAZ0MBITQ9EFEbZ0YBJjU7EFQgZkoBKjU6AAAAMooOWzckCVaOLo0VXTgjEWZxLI0dYDciAAAAC2BmUTsnO4ABDGBdTjsoQ3gBDGFRSjspAAAAEUsgEz02aDQBD0UpEUAyaTIBD0IvD0IvAAAALkAwEWApZE4BM0AuEWIvY1QCN0EtEWQ3AAAAVkEfH3hNL4YkV0EfKYI6K4QwXEEeK4QwAAAAMkUqY1ACE2crL0UrZEsBFGUnKkUtZUIBAAAAEUwpZy0AE0osEk8kZy8AFEgwFFMcZjMAAAAAEm0vWVYANkonEG82U14AOUklD3A7TGUBAAAAP4QSDnVhRkoeP34MCnRiREoeQHkHDHRXAAAAZDwAF2ocIlAoZDkAGGYXIFAqZTgAGGUUAAAAZDQAHFInGWgTZDYAHlMoGWoWYzgAIFInAAAARm0BO1EcDn5LRXIFPVEcDH9VRXkKPlIbAAAADoBIOFUcSGwBD4A/NlQdSWcAEX85NVUdAAAAGmYNFlolZSkAGWIUFVoiZiUAF14ZFlwgAAAAHF0fG3QUYjQAH1wfGncYYDwAIVweGHobAAAAM1sZEYtCTXoMNFoZIokzR30RNloYMIcnAAAAJWEbWkQAGIIcIWEbXzsBGX4YHmEcXzYAAAAAF2YYZR4AGGYWGGYWZR4AF2YYGmkTZSAAAAAAGYIUXzgAHWUZGIYYW0EAIWUaF4gbWEcAAAAAUHkMJ5IlKGQWVnQJFJovKGQWVGsGDpowAAAAXzAAHYMPF2wWYSkAH4ANFW0WYScAIXwLAAAAYh4AFG8VI3kGYSEAFHAVI30HYSMAFHEVAAAAVU8AHWsTEp4bVlQAHmwUEaIfV1wCH2sTAAAAD6geHG0TWloBEaUbHG0TWVMAE6EYGm4TAAAAJX0EFHYPYxkAJHsEFncPYxgAIXoHF3cNAAAAEHsPJYcEYB4AEHoPI4oFXyAAEHgPIY4GAAAAFXQRELMRYV8CFXMRFrARZGoDFnMRLKENAAAAD3kPXTMAHZ8GD3sPXC4AH5sFDnwNXScAAAAAGIIHYg8AIYEEHIEGYw4AH4AEH4AEYw4AAAAAJZYAXR8AC4IJIpoAXSMAC4EKIaABXSoAAAAAWIQAUY8AC3wPYHcAPKAACn0PamoAKLAAAAAAXCEAIpwACoQIXB4AJZgACoYHXhcAJpMAAAAAYgsAHIYCIYYCYQwAGIYDJYYCYQ8AFocFAAAAXTUACX8NGK0AXjsACX8NFbAAYEEACX4OAAAAJaYACn0PZ1sAD7oACX0PZFAAEbUACX4OAAAAI5EBCocIWxYAJY0CC4gJXRUAJYsDC4gIAAAAC4gJJIsFXBQAC4gKJI0DWxUACocJIpEDAAAACH4PEa0AXkYACX0PD7EAYVEACH0PFa0AAAAACH8QXEAAEqkACX8QWjoAFKYACH8OWTUAAAAAEocLXQ4AHogKE4YKXgsAHIcKFocKXgsAAAAA"
+    "n": "Washing Machine"
   },
   "6": {
     "on": true,
@@ -244,9 +472,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [255, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            255,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 0,
         "sx": 128,
@@ -264,41 +507,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Solid Red",
-    "r": "/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/QAA/QAA/QAA/QAA/QAA/QAA/QAA/QAAAAAA/QAA/QAA/QAA/QAA/QAA/QAA/QAA/QAAAAAA/QAA/QAA/QAA/QAA/QAA/QAA/QAA/QAAAAAA/QAA/QAA/QAA/QAA/QAA/QAA/QAA/QAAAAAA/QAA/QAA/QAA/QAA/QAA/QAA/QAA/QAAAAAA/QAA/QAA/QAA/QAA/QAA/QAA/QAA/QAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA"
+    "n": "Solid Red"
   },
   "5": {
     "on": true,
@@ -319,9 +623,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 8, 255, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            8,
+            255,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 0,
         "sx": 128,
@@ -339,41 +658,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Solid Blue",
-    "r": "AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAb9AAb9AAb9AAb9AAb9AAb9AAb9AAb9AAAAAAb9AAb9AAb9AAb9AAb9AAb9AAb9AAb9AAAAAAb9AAb9AAb9AAb9AAb9AAb9AAb9AAb9AAAAAAb9AAb9AAb9AAb9AAb9AAb9AAb9AAb9AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAAAAj/AAj/AAj/AAj/AAj/AAj/AAj/AAj/AAAA"
+    "n": "Solid Blue"
   },
   "7": {
     "on": true,
@@ -394,9 +774,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 8, 255, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            8,
+            255,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 179,
         "sx": 255,
@@ -414,41 +809,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Full Body Rainbow",
-    "r": "rwBQmABomABomABomABomABomABomABoAAAA/AEA8QAM8QAM8QAM8QAM8QAM8QAM8QAMAAAAwTwA0yoA0yoA0yoA0yoA0yoA0yoA0yoAAAAAqoEAqmwAqmwAqmwAqmwAqmwAqmwAqmwAAAAAoK4AqqEAqqEAqqEAqqEAqqEAqqEAqqEAAAAAYM4AdcMAdcMAdcMAdcMAdcMAdcMAdcMAAAAAOuEAQN4AQN4AQN4AQN4AQN4AQN4AQN4AAAAAKukAMOYAMOYAMOYAMOYAMOYAMOYAMOYAAAAAJu0AIe8AIe8AIe8AIe8AIe8AIe8AIe8AAAAANuUAMecAMecAMecAMecAMecAMecAMecAAAAARt0AQd8AQd8AQd8AQd8AQd8AQd8AQd8AAAAAZswAZswAZswAZswAZswAZswAZswAZswAAAAAdsQAa8oAa8oAa8oAa8oAa8oAa8oAa8oAAAAAkbcAhrwAhrwAhrwAhrwAhrwAhrwAhrwAAAAAm7IAm7IAm7IAm7IAm7IAm7IAm7IAm7IAAAAAq6gApqwApqwApqwApqwApqwApqwApqwAAAAAq6IAq50Aq50Aq50Aq50Aq50Aq50Aq50AAAAAq6oAq6gAq6gAq6gAq6gAq6gAq6gAq6gAAAAAlrQAlrQAlrQAlrQAlrQAlrQAlrQAlrQAAAAAi7oAkbcAkbcAkbcAkbcAkbcAkbcAkbcAAAAAdsQAgb8Agb8Agb8Agb8Agb8Agb8Agb8AAAAAYc8AcccAcccAcccAcccAcccAcccAcccAAAAAMecAO+IAO+IAO+IAO+IAO+IAO+IAO+IAAAAAIe8AJu0AJu0AJu0AJu0AJu0AJu0AJu0AAAAAEfcAEfcAEfcAEfcAEfcAEfcAEfcAEfcAAAAAAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAAAABv0AAP0CAP0CAP0CAP0CAP0CAP0CAP0CAAAAIe8AFvUAFvUAFvUAFvUAFvUAFvUAFvUAAAAAS9oAO+IAO+IAO+IAO+IAO+IAO+IAO+IAAAAAhrwAdsQAdsQAdsQAdsQAdsQAdsQAdsQAAAAAq5IAq6gAq6gAq6gAq6gAq6gAq6gAq6gAAAAAr1AAq2oAq2oAq2oAq2oAq2oAq2oAq2oAAAAA9QoA3SIA3SIA3SIA3SIA3SIA3SIA3SIAAAAAwgA92gAl2gAl2gAl2gAl2gAl2gAl2gAlAAAAhQB7nQBjnQBjnQBjnQBjnQBjnQBjnQBjAAAAOwDEVQCrVQCrVQCrVQCrVQCrVQCrVQCrAAAAABvlCAD3CAD3CAD3CAD3CAD3CAD3CAD3AAAAAGaaAEG/AEG/AEG/AEG/AEG/AEG/AEG/AAAAAK9QAJtlAJtlAJtlAJtlAJtlAJtlAJtlAAAAANItAMwzAMwzAMwzAMwzAMwzAMwzAMwzAAAAAN8gANolANolANolANolANolANolANolAAAAANcoAN0iAN0iAN0iAN0iAN0iAN0iAN0iAAAAAMo1AMwzAMwzAMwzAMwzAMwzAMwzAMwzAAAAAKtVALdIALdIALdIALdIALdIALdIALdIAAAAAGuVAIZ6AIZ6AIZ6AIZ6AIZ6AIZ6AIZ6AAAACAD3ABbqABbqABbqABbqABbqABbqABbqAAAAQAC/KwDUKwDUKwDUKwDUKwDUKwDUKwDUAAAAYgCeUwCsUwCsUwCsUwCsUwCsUwCsUwCsAAAAigB2egCGegCGegCGegCGegCGegCGegCGAAAArABTnQBjnQBjnQBjnQBjnQBjnQBjnQBjAAAA"
+    "n": "Full Body Rainbow"
   },
   "8": {
     "on": true,
@@ -469,9 +925,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 255, 200, 0],
-          [255, 0, 255, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            255,
+            200,
+            0
+          ],
+          [
+            255,
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 65,
         "sx": 128,
@@ -489,41 +960,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Barbie & Ken",
-    "r": "JtjRgH/k2Sb3/wD//wD//wD/AP/IAP/IAAAAEuvLa5HfxTfy/gD+/gD+/gD+AP7HAP7HAAAAAP7HVKfZr07t/gD+/gD+/gD+bo/fAP7HAAAAAP7HPr7VmGXo9Qj8/gD+/gD+3h/3AP7HAAAAAP7HKNTQgXrj3h73/gD+/gD+/gD+AP7HAAAAAP7HFejMbo7fyzLz/gD+/gD+/gD+AP7HAAAAAP7HAvvIW6HbuEXv/gD+/gD+/gD+Tq/YAAAAAP/IAP/IQ7zXn1/q+Qb+/wD//wD/zzD1AAAAAP/IAP/IMM/SjHLm5hn6/wD//wD//wD/AAAAAP/IAP/IHOLOeIXi0iz1/wD//wD//wD/AAAAAP/IAP/IA/zJX5/duUbw/wD//wD//wD/AAAAAP/IAP/IAP/ITLPYpVjr/wD//wD//wD/AAAAAP/IAP/IAP/IM8zTjHLm5hn6/wD//wD/AAAAAP/IAP/IAP/IIN/PeIXi0iz1/wD//wD/AAAAD/DLAP/IAP/IDPLLZpnevz/x/wD//wD/AAAAj3DnAP/IAP/IAP/ITLPYpVjr/wD//wD/AAAA7xD8AP/IAP/IAP/IOcXUkmzn7w/8/wD/AAAA/wD/AP/IAP/IAP/II9zPfIPi2Sb3/wD/AAAA/wD/D/DLAP/IAP/IDPLLZpnewjzy/wD/AAAA/wD/b5DgAP/IAP/IAP/IU6zasE/u/wD/AAAA/wD/3yD4AP/IAP/IAP/IPMLVmWbp8wz9AAAA/wD//wD/AP/IAP/IAP/IJtjRgnvk3CP3AAAA/wD//wD/AP/IAP/IAP/IEO/LbJLgxjjzAAAA/wD//wD/X6DcAP/IAP/IAP/IWKbbskzuAAAA/wD//wD/zzD1AP/IAP/IAP/IQ7zXnGLqAAAA/wD//wD//wD/AP/IAP/IAP/ILNLShnnlAAAA/wD//wD//wD/AP/IAP/IAP/IGeXOcovhAAAA/wD//wD//wD/P8DVAP/IAP/IA/zJXKLcAAAA/wD//wD//wD/r1DuAP/IAP/IAP/IRbjXAAAA7BP7/wD//wD//wD/AP/IAP/IAP/IM8zTAAAA1Sn2/wD//wD//wD/AP/IAP/IAP/IHOLOAAAAvELw/wD//wD//wD/P8DVAP/IAP/IA/zJAAAAqVbt/wD//wD//wD/n2DqAP/IAP/IAP/IAAAAlmno7w/8/wD//wD//wD/AP/IAP/IAP/IAAAAfIPi1Sn2/wD//wD//wD/AP/IAP/IAP/IAAAAaZXfwjzy/wD//wD//wD/H+DOAP/IAP/IAAAAVajasE/u/wD//wD//wD/f4DjAP/IAP/IAAAAPMLVlmno7w/8/wD//wD//wD/AP/IAP/IAAAAKdXRgnvk3CP3/wD//wD//wD/AP/IAP/IAAAAE+zMbJLgxjjz/wD//wD//wD/AP/IAP/IAAAAAP/IWKbbskzu/wD//wD//wD/X6DcAP/IAAAAAP/IQ7zXnGLq+Qb+/wD//wD/zzD1AP/IAAAAAP/ILNLShnnl4hz5/wD//wD//wD/AP/IAAAAAP/IGeXOcovhzy/0/wD//wD//wD/AP/IAAAAAP/IAP/IWKbbtUjv/wD//wD//wD/X6DcAAAAAP/IAP/IRbjXo1vr/AP//wD//wD/v0DxAAAAAP/IAP/IM8zTj2/n6Rb6/wD//wD//wD/AAAAAP/IAP/IGeXOdonhzy/0/wD//wD//wD/AAAAAP/IAP/IBvnKY5zdvELw/wD//wD//wD/AAAAAP/IAP/IAP/ISbXXo1vr/AP//wD//wD/AAAA"
+    "n": "Barbie & Ken"
   },
   "9": {
     "on": true,
@@ -544,9 +1076,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 255, 34, 0],
-          [4, 0, 255, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            255,
+            34,
+            0
+          ],
+          [
+            4,
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 74,
         "sx": 35,
@@ -564,41 +1111,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Snowflakes",
-    "r": "VLfHAAAPAAIGJFRbKF5lADeEAA0mAAxRAAAARZqoAAAJAAAAG0VLH01TACtuAAcdAAZCAAAAMHJ9AAAAAAAADzA0ETY7ABtQAAAQAAAtAAAAIlhiG0VMABpIByIlCScrABE8AAAIAAAgAAAAFkNLH1ZfAB5aABYZARseAAksBDJAAAAUAAAACy40KHJ+ACZ3AAsNAA8RAAAcBEFVAAAKAAAAAyElMJCeAC6VAAMFAAcJAAARBFFqAAACAAAAABUZPLbHADm8AAAAAAABAAAJBGaFBDtMAAAAABASS9/zAFD/AAYPAAAAAAAECY23CVJqAAAAAAwOPLfHAEDRAAoWHUVLAAAADbbsDWuKAAAAAAcJLY6aADGiAA8gKmBpAAAADLLcFJS+AAAAAAMFJHR9ACaEABYsOH2JAAo6CJG0HL/0AAAAAAABHF5lAB5rAB46SqGxAA5MBHaSGK7cAAAAAApGE0hNABRRACxRZ97zABZqAFtxEYerAAAAAA5cDzo9ABBBADpqXsvcAB6KAElbDW6LAAAAABR4Cy4xAAw0AEyKTKW0ACmyADpJCVlxAAAAAB6mBiIkAAcmAGq+OoCLADr0ACs3BERWAAAAACnWAhocAAMeAIr0LmhxADXcACIrADdFAAAAACznABITAAAUAHjRIlBWACerABggACg0AAAAACO9AA4PAAAQAGGrGkBFAB+LABIYACAoAAAAABuaAAoLAAAMAE6LEzQ3ABdxAA4SABggAAAAABN3AAUGAAAHADtrDiYoABFWAAkNABEWAAAAAA9gAAECAAADAC9WCh4gAA1FAAUJAA0RAAAAAApJAAAAAAAFACNBBRQWAAg0AAAEAAgMAAAAAAY6AAQKAAAJABs0ARARAAQoAAAAAAQIAAAAAAIuAAgOAAANABQoAAwNAAAgAAAFAAAEAAAAAAAiAA0WAAAUAA8eAAcIAAAWAAAKAAAAAAAAAAAaABIeAAAcAAsWAAMEAAARAAAOBztLAAAAAAATABopAAAmAAcRAAAAAAANAAAUC01iAAAAAAAOACY6AAA2AAIMAAAAAAAIAAAeEGuJAAAAAAAKADJMAABHAAAIAB1LAAAEAAApGIuxAAAAAAAFAEdqAABjAAADACppG0BGAAA6I7/zAAAAAAABAF2KAACBAAAAADiJJFRcAABMIK7cAAAAAAAAAHmyAACnABlBAEqxMG54AABjGI60AAAACUNWAKf0AADlACRcAGfzRZemAACKEW6LAAAADVhwAJncAADnADB4AF7cWsPWAACyDVlxAAAAEnKSAHy0AAC9AECcAEy0aODzAADlCUhbAAAAHJ7JAGCLAACSAFrWADqLUK69AADcBDdFAAAAJsv/AE1xAAB3AGjzAC5xQI6aAAC0ACs3AAAAHJ3HADpWAABbAFC9ACJWMW53AACLACAoAAAAFICiAC5FAABJAECaABpFJllgAABxABggAAAAEGiEACQ3AAA6ADR9ABM3HkhNAABbABIYAAAAC1BlABooAAArACZgAA4oFDc6AABFAA0RAAAAB0BRABMgAAAiAB5NAAogECsuAAA3AAkNAAAAAzRBAA8YAAAaABY9AAYYDCIkAAArAAUJAAAAACYxAAoRAAASABAuAAERBxgaAAAgAAAEAAAAAB4mAAYNAAAOAAwkAAANAxITAAAYAAAAAAAAABYeAAIJAAAKAAgcAAAJAA4PAAASAAxQAAAAABAUAAAEAAAFAAMTAAAEAAkKAAANABJwAAAAAAwQQUFBAAABAAAPAAAAAAUGAAAJABqSAAAA"
+    "n": "Snowflakes"
   },
   "4": {
     "on": true,
@@ -619,9 +1227,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 255, 34, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            0,
+            255,
+            34,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 106,
         "sx": 55,
@@ -639,41 +1262,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Firefly",
-    "r": "EA0Aow8AAwAABAAAiFkCAAAAMwAAbgAAAAAAIxwAlA0AAAAABQAAq3IBAAAAJQAAbQAAAAAANCkAiwwAAAAABgAAvoABAAAAHQAAbAAAAAAASzwBfAwAAAAACAAA1ZIBAAAAFQAAZwAAAAAAY1EDbQsAAAAACQAA46ACAQAADgAAYQAAAAAAeGQGXwsAAQAACwAA76oBAgAACQAAWgAAAAAAk3wLTQkABAAADQAA97IBBAAAAwAAUAAAAAAAqZEPPwgACAAAEAAA/LkCBwAAAgAASAAAAAAAxKoVLAYADQAAEQAA+bsDCAAAAQAAOwAAAAAA1r0bHwQAEQAAEAAA9LkCCgAAAwAAMgAAAAAA48sgFQMAFQAAEAAA6bQCCwAABAAAKQAAAAAA9N4nCAEAHAAAEAAA2aoCDQAADAAAHQAAAAAA+OUrBQAAIQAADwAAx54DDgAAEQAAFQAAAAAA/OwxAgAAJwAADwAAtZACDwAAGQAADwAAAAAA+fA3BAAAMAAADQAAl3wHEQAAJQAABwAAAAAA9Os2CAEANAAADAAAgmoGEQAALgAAAwAAAAAA6OI4EgMAOQAACwAAalgGEgAAOQAAAQAAAAAA2dk8HwYAPwAACQAATkMHFAAARQAAAgAAAAAAx8c3LgkAQAAABwAAPTUFFAAATwAABQAAAAAAAAAAQw4ARQAABQAAJSEEFgAAWQAACwAAAAAAAAAAWRQARgAABAAAGBYDFgAAYQAAEgAAAAAAAAAAaxgARAAAAwAADAsBFAAAZgAAGwAAAAAAAAAAhiABQwAAAQAABQUBFAAAbAAAKAAAAAAAAAAAnigBPwAAAQAAAAAAEwAAbgAANgEAAAAAAAAArSsBOgAAAAAABQUBEAAAcAAAQgEAAAAAAAAAxzUCMwAAAAAACgoCDgAAbQAAUgEAAAAAAAAA1DoBLQAAAAAAFhYFCwAAbAAAXwIAAAAAAAAA5EABJQAAAAAAKCgKCAAAZgAAcAMAAAAAAAAA7EMBHgAAAQAAOjoQBgAAYQAAfAQAAAAAAAAA80cCGAAAAwAAAAAABAAAWgAAhgYAAAAAAAAA8UgCEQAABQAAAAAAAgAAUAAAkAYAAAAAAAAA70kCCwAACAAAAAAAAQAARgAAlwcAAAAAAAAA4kYCBgAADAAAAAAAAAAAOgAAnQgAAAAAAQAA2UUDAwAADwAAAAAAAQAAMAAAnQkAAAAAAQAAxD8DAQAAFAAAAQAAAgAAJQAAnAoAAAAAAgAArDgCAQAAGQAAAQAABQAAGgAAlQoAAAAAAwAAlzIBAwAAHQAAAgAACAAAEgAAjwoAAAAABAAAfywBBwAAIwAAAgAADgAACwAAhAoAAAAABQAAZCMBDQAAKAAAAwAAFAAABQAAdgkAAAAABgAAThwAFAAAKwAABQAAGQAAAgAAagkAAAAABwAANxQAHgAALwAABAAAIQAAAQAAWQgAAAAACQAAJA0AKQAAMAAABQAAKAAABAAASQcAAAAACQAAGAkAMgAAMQAABQAALwAACAAAOwUAAAAACwAACgQAPgAAMQAABQAAOAAAEAAAKwQAAAAADAAABQIARwAAMQAABQAAPgAAGQAAHwMAAAAADQAAAAAAUQAAMAAABQAARAAAJQEAFAIAAAAADQAABgIAWwAALQAABQAASQAANAIACQEAAAAADQAACgQAYgAAKwAABAAATQAAQQMABQAAAAAADQAAGwwAaQAAJQAAAwAAUAAAVAMAAAAAAAAADAAAKBIAbAAAIQAAAgAATgAAYgUABAAAAAAA"
+    "n": "Firefly"
   },
   "250": {
     "mainseg": 0,
@@ -689,9 +1373,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [102, 255, 138, 0],
-          [0, 0, 0, 0],
-          [255, 200, 0, 0]
+          [
+            102,
+            255,
+            138,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            255,
+            200,
+            0,
+            0
+          ]
         ],
         "fx": 35,
         "sx": 128,
@@ -732,9 +1431,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [102, 255, 138, 0],
-          [0, 0, 0, 0],
-          [255, 200, 0, 0]
+          [
+            102,
+            255,
+            138,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            255,
+            200,
+            0,
+            0
+          ]
         ],
         "fx": 133,
         "sx": 41,
@@ -752,41 +1466,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "♪ Rainbow",
-    "r": "dE8YdwD/lTw7rkIO7waXQkoN/wDOZEQjAAAAXFIOcwCxY0QgtD0KwiZVLkYHwgF4ODcQAAAAS1UH4QGCLTIMzzEJhUQpKUkE+Ao9FxoFAAAATlkG0SM1DhYC/hoMQkYPR1YFzyobCRgAAAAAX1gJmj8eCyIA/gokJD0FfEsIqD4SHTcAAAAAp0EOdUsVJTsEzgE3Hz8EqCIeiUUSQkYJAAAAkWEZPR4tG0A0hkkkIyAifl1ZNyg8VWMZAAAAjMIOJgxXMp4fYKMOECNjN89xFjdxYMQSAAAAMP8iEQ2QN/8WXv8EB6NTF9/rCHN3JvuBAAAACs9WBFeODcR/Sv8AWv8XA2PPActZD1bPAAAAAv+nALllH0//MP8BIf8SAMD5AP9CGiD/AAAAAP9cBf8wGQ+oDf8ZBP9CEf9IAP8uBUD/AAAAG/8ZCv8bCijsBNdKAP9ATv8UAPw7AMC1AAAAWP8GCf8UArnvAICGAv8rH/8bAONQGP87AAAAHv4bAP8ZE/8/CS2aGv8GCpNzALRvSf8LAAAADLJfAP4sW/8SGRJ2af8AED+FAIGOGv8bAAAACFKPAL5EJqsNIgZKOrcAHxpcAEurCrVCAAAAGRtpAIKBDMdBJAAlHv8KIggqARrBAl2QAAAAIgpDAFqeBI93IQATCP8ZHgIVAQrFASeuAAAAJQIiASe6AFKhGQAGAP8uFwAGAQK+AQ24AAAAIgASBBC4ACu2EwABAP89FQABAQC6AAS/AAAAHQAJCwanABjADwAAAP9DFQAAAgC5AAfFAAAAHAAGFwCIACK/CQAAAPtGGAACCgCtACu6AAAAIAAIHQBwADe2BQAAAPtGHgAIDwCfAFWlAAAAIwANIwBbAFOoBQAAAP9FJAASFQCQAJOCAAAAJgAfJgA5AI2IBQAAAPBOJgAsHgBwAOdUAAAAJQA6JQAiAI9dBgAAAMpiJABOJQBPAKgrAAAAHgBsHgANAMBKCAAAAHSCEwCKJgAtCdoZAAAADQqdEwAEAOZHEgABAjilBxmlIwAYEP8QAAAABDyeCAAAAOZOHAAIFBeGAlKaGQAKBv8WAAAAAJZ5AQAAAKxzJQAkIQZFAKZyDwACAPA5AAAAAM9dAwAAAGOcIQBTHwEhANRcCwAAAKZvAAAAAPBODgABCSqdDwiPFQANAOxPDgABBE6XAAAAAPVLHgAfHQ1fBGWGBwADANJeHQAPGxpfAAAAANNfEgRsIgQ1AMpaBwAAAImHIQA8HwowAAAAAHiUBH9qIQAZAv8tGQAKBjOjDB+IFAIQAAAAADWzJP8yIgAUBP8cHAA9FRWCBJRpDwAGAAAAARW6SM8OJQAtBf8WCjN1HwhjHP8wGAAHAAAAAAzEFf8fERh/AP8dOe40JAFYdP8IIAA2AAAAACy4BP81DKtVAP8wK/8WHgBxWP8ADSh2AAAAAImHAP8vSf8dAPRDDP9yDBObS/8AFMdFAAAAH/8zGv8KD885AOtNAXnPBqtkef8AJ/8hAAAAWv8OYv8ABVkYAPlHAEW2U/8lhf8AEJumAAAAIIgCI/8UAB4HAP8yABc/IYgIOP8FBDU4AAAAEpIIDbNcAEI2AP8mMUoaDX0nFfklBB16AAAAF/8FC0+MDf81AP8hKtYeA/98CLNjAJDxAAAAaf8AGxttJf8ZAP8bEWl0Bv80AUmjP/9HAAAAM/8HIgpXD5tqAP8bHS1UU/8MCB6nHfQ6AAAAFd08JQNTHEJZAP8eHxIoJ/8RDAylEnZ2AAAACVuPFwCFGRUiAP8wFwQNDZFwBAO5HSg+AAAA"
+    "n": "\u266a Rainbow"
   },
   "11": {
     "on": true,
@@ -807,9 +1582,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [102, 255, 138, 0],
-          [0, 0, 0, 0],
-          [255, 200, 0, 0]
+          [
+            102,
+            255,
+            138,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            255,
+            200,
+            0,
+            0
+          ]
         ],
         "fx": 143,
         "sx": 128,
@@ -827,41 +1617,102 @@
         "si": 0,
         "m12": 2
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "♪ Noisefire",
-    "r": "UVEAZFIAZFcAZEAAZDcAZAAAUgAAAAAAAAAAHBwAHBIAHBQAHBEAHA0AHAAAEQAAAAAAAAAA5uYA5rIA5pQA5oMA5k4A5gAAZQAAAAAAAAAANCoANDMANCEANBwANAQANAAACQAAAAAAAAAAkW0AkWoAkVkAkU8AkQAAkQAAAAAAAAAAAAAASz8ASzIASy0ASykASwAASwAAAAAAAAAAAAAA0roA0ocA0nIA0kcA0gAAxQAAAAAAAAAAAAAAVDwAVDYAVC4AVAsAVAAAOgAAAAAAAAAAAAAA14oA13sA13YA1wAA1wAAbAAAAAAAAAAAAAAAwHwAwGoAwE8AwAAAwAAASQAAAAAAAAAAAAAA8ZQA8YQA8TIA8QAA8QAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbDsAbCwAbAAAbAAASgAAAAAAAAAAAAAAAAAArF0ArC8ArAAArAAAYQAAAAAAAAAAAAAAAAAAe0MAexUAewAAewAARQAAAAAAAAAAAAAAAAAA5HwA5CcA5AAA5AAAZQAAAAAAAAAAAAAAAAAAPiAAPgIAPgAAPgAADwAAAAAAAAAAAAAAAAAAxmUAxgYAxgAAxgAAVwAAAAAAAAAAAAAAAAAAfUAAfQQAfQAAfQAARgAAAAAAAAAAAAAAAAAA64AA6ygA6wAA6wAAogAAAAAAAAAAAAAAAAAAs2EAszEAswAAswAAkgAAAAAAAAAAAAAAAAAAWDAAWC0AWAAAWAAAWAAABQAAAAAAAAAAAAAA/pUA/osA/jQA/gAA/gAAQAAAAAAAAAAAAAAAh1MAh0oAhzcAhwAAhwAAMwAAAAAAAAAAAAAAv3sAv2kAv2kAvwAAvwAAhAAAAAAAAAAAAAAAz4YAz4EAz3EAzxwAzwAAwwAAAAAAAAAAAAAAyqEAyoIAynEAylMAygAAygAADQAAAAAAAAAADw4ADwoADwkADwgADwAADwAAAwAAAAAAAAAAmYEAmWYAmWEAmVMAmQ8AmQAAOgAAAAAAAAAA1JcA1LwA1IgA1HMA1EkA1AAAdwAAAAAAAAAAzrcAzsAAzoUAznYAzmMAzgAAqAAAAAAAAAAA0NAA0JMA0KYA0IEA0HIA0AAA0AAAAAAAAAAATU0AX04AX18AXz0AXzQAXwAAXwAAAAAAAAAAgIAA5csA5dUA5ZMA5X0A5QgA5QAAAAAAAAAACAgAk5MAk3IAk18Ak1IAkxQAkwAAAAAAAAAAAAAAn58An2cAn2oAn10AnysAnwAAAAAAAAAAAAAABAQABAMABAMABAMABAEABAAAAAAAAAAAAAAAFRUAHBgAHBgAHBIAHAwAHAAAAAAAAAAAAAAADg4A9PQA9O4A9JwA9IUA9AAAEAAAAAAAAAAAAAAAl5cAl38Al2EAl1MAlwAAHQAAAAAAAAAAAAAA2toA+qYA+qEA+ogA+gAAXwAAAAAAAAAAAAAAc3MA56kA56QA530A5wAAZgAAAAAAEwAAAAAAEhIAl4AAl3wAl1QAlwAAVQAAAAAAegAAAAAAAAAAi4sAi4UAi1IAiw4AaQAAAAAAEgAAAAAAAAAAEhIAEhEAEgsAEgMADwAAAAAAwAAAAAAAAAAAwMAAwKIAwHoAwDQAtAAAAAAAlgAAAAAAAAAAjIwAlm4AlmEAljgAlgAAAAAAyQAAGgAAAAAAlpYAyYoAyYEAyVIAyQAAAAAAhAkASgAAAAAAOTkAhFsAhFUAhEQAhAAAAAAA6TAAvgAAAAAAOTkA6bAA6ZYA6X8A6QAAAAAA"
+    "n": "\u266a Noisefire"
   },
   "12": {
     "on": true,
@@ -882,9 +1733,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [8, 255, 0, 0],
-          [0, 0, 0, 0],
-          [255, 200, 0, 0]
+          [
+            8,
+            255,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            255,
+            200,
+            0,
+            0
+          ]
         ],
         "fx": 148,
         "sx": 128,
@@ -902,41 +1768,102 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "♪ Emerald Sparkle",
-    "r": "AEEAAEEAAEEAAHoAAEEAAEEAAEEAAEEAAAAAAAAAAC8AAC8AAFsAAAAAAC8AAC8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAADAAADAAADAAADAAADAAAAAAADAAAAAAAD4AABEAAD4AAD4AAD4AABEAABEAABEAAAAAADUAADUAADUAAGUAADUAADUAADUAADUAAAAAAAIAAAAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAABbMABbMAAAAABbMAAAAABbMABbMAAAAAAAAAAAAAAZEAAZEAAZEAAZEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIAAAIAAAIAAAIAAAIAAAIAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4AAC4AAEAAAC4AAC4AAC4AAC4AAC4AAAAAABQAABQAABcAABQAABQAABQAABQAABQAAAAAABUAABUAABUAABUAABUAABUAABUAABUAAAAAAAYAAAYAAAYAAAYAAAYAAAYAAAYAAAYAAAAAAAMAAAMAAAMAAAMAAAMAAAMAAAMAAAMAAAAAAB4AADkAAB4AAB4AAB4AAB4AAB4AAB4AAAAAAAsAAAoAAAoAAAoAAAoAAAoAAAoAAAoAAAAAACsAACsAABQAACsAABQAACsAABQAACsAAAAAAAsAAAsAAAsAAAsAAA4AAAsAAAsAAAsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA68AA68AA68AA68AA68AA68AA68AA68AAAAAAl8AAIYAAl8AAl8AAl8AAIYAAl8AAl8AAAAAACsAACsAACsAACsAACsAACsAACsAACsAAAAAA7UAA7UAA7UAA7UAA7UAA7UAA7UAA7UAAAAAA3UAA3UAA3UAA3UAAEQAAEQAAEQAAEQAAAAAAr8AAr8AAr8AAr8AAr8AADMAADMAAr8AAAAAAHIAAdYAAHIAAHIAAHIAAHIAAHIAAHIAAAAABCUAAYIAApMAApMAApMABCUAApMAApMAAAAAADAAADAAADAAADAAADAAADcAADcAADAAAAAAA/EAA/EAA/EAA/EAA/EAA/EAA/EAA/EAAAAAACcAACcAACcAACcAACcAACcAACcAACcAAAAAABcAABcAABcAABcAABcAABcAABcAABcAAAAAABAAABAAABAAAA8AABAAABAAABAAABAAAAAAAAwAAAwAAAwAAAsAAAwAAAwAAAwAAAwAAAAAAnEAAnEAAnEABNQAAnEAAnEAAnEAAnEAAAAAAAAAAC0AAAAAAC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAMAAAMAAAMAAAMAAAMAAAMAAAMAAAAA"
+    "n": "\u266a Emerald Sparkle"
   },
   "13": {
     "on": true,
@@ -957,9 +1884,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [61, 207, 255, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]
+          [
+            61,
+            207,
+            255,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
         ],
         "fx": 140,
         "sx": 128,
@@ -977,41 +1919,102 @@
         "si": 0,
         "m12": 2
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "♫ Blue Lightning",
-    "r": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADyIOAAAAAAAAAAAAAAAAAAAAAAAAAAAADyIOGVZqAAAAAAAAAAAAAAAAAAAAAAAADyIOGVZqBBAUAAAAAAAAAAAAAAAADyIOGVZqBBAUAAAAAQQFAAAAAAAADyIOGVZqBBAUAAAAAQQFAgcIBxkfAAAADyIOGVZqBBAUAAAAAQQFAgcIBxkfAAAAAAAABBAUAAAAAQQFAgcIBxkfAAAAAAAAAAAAAAAAAAAAAQQFAgcIBxkfAAAAAAAAAAAAAAAAAAAAAgcIBxkfAAAAAAAAAAAAAAAADyIOFEdXAAAAAAAAAAAAAAAAAAAADyIOFEdXAgcIBxshAAAAAAAAAAAAAAAADyIOFEdXAgcIBxshKpK0AAAAAAAADyIOFEdXAgcIBxshKpK0AAEBDyIOAAAADyIOFEdXAgcIBxshKpK0AAEBDyIOCiQsAAAAAgcIBxshKpK0AAEBDyIOCiQsBRIWAAAAAAAAKpK0AAEBDyIOCiQsBRIWAAAAAAAAAAAAAAAAAAEBDyIOCiQsBRIWAAAAAAAAAAAADyIOAAAACiQsBRIWAAAAAAAAAAAADyIOAAMDBRMXAAAABRIWAAAAAAAAAAAADyIOAAMDBRMXAQQFAAAAAAAAAAAADyIOAAMDBRMXAQQFAAAAAAAAAAAAAAAADyIOAAMDBRMXAQQFAAAAAAAAAAAAAAAAAAMDBRMXAQQFAAAAAAAAAAAAAAAAAAAAAAAAAQQFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADyIOAAAAAAAAAAAAAAAAAAAAAAAADyIOLZu/HWR7AAAAAAAAAAAAAAAAAAAADyIOLZu/HWR7CyYuAAAAAAAAAAAADyIOLZu/HWR7CyYuCiUtDyIOAAAADyIOLZu/HWR7CyYuCiUtDyIOAAAAAAAAAAAALZu/HWR7CyYuCiUtDyIOAAAAAAAADyIOAAAACyYuCiUtDyIOAAAAAAAADyIOH22HAwwPAAAACiUtDyIOAAAAAAAADyIOH22HAwwPAAAAAAAAAAAAAAAADyIOH22HAwwPAAAAAAAAAAAAAAAADyIOH22HAwwPAAAAAAAAAAAAAAAAAAAAAAAAH22HAwwPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwwPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADyIOAAAAAAAAAAAAAAAAAAAAAAAADyIOAAAAAAAAAAAAAAAAAAAAAAAAAAAADyIOAAAAAAAADyIOAAAAAAAAAAAADyIOAAAAAAAADyIOHmd/AAAAAAAAAAAADyIOAAAAAAAADyIOHmd/AAAAAAAAAAAAAAAAAAAADyIOHmd/AAAAAAAAAAAADyIOAAAADyIOHmd/AAAAAAAAAAAADyIOUBZWSgE9AAAAHmd/AAAAAAAAAAAADyIOUBZWSgE96CPeAAAAAAAAAAAADyIOUBZWSgE96CPeMazUAAAAAAAA"
+    "n": "\u266b Blue Lightning"
   },
   "14": {
     "on": true,
@@ -1032,9 +2035,24 @@
         "cct": 127,
         "set": 0,
         "col": [
-          [0, 0, 255, 0],
-          [0, 0, 0, 0],
-          [255, 200, 0, 0]
+          [
+            0,
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            255,
+            200,
+            0,
+            0
+          ]
         ],
         "fx": 1,
         "sx": 230,
@@ -1052,40 +2070,101 @@
         "si": 0,
         "m12": 0
       },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 },
-      { "stop": 0 }
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      },
+      {
+        "stop": 0
+      }
     ],
     "ledmap": 0,
-    "n": "Blaulicht",
-    "r": "AAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AAD+AAD+AADhAACCAAAiAAAAAAAAAAAAAAD+AAD+AAD+AADhAACCAAAiAAAAAAAAAAAAAAD+AAD+AAD+AADhAACCAAAiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAAAAD/AAD/AAD/AADiAACDAAAjAAAAAAAAAAAA"
+    "n": "Blaulicht"
   }
 }

@@ -8,10 +8,12 @@ import time
 
 # Extract PRODUCT_NAME from build_flags in platformio.ini
 product_name = "croptop"  # Default value
-build_flags = os.getenv("BUILD_FLAGS", "")
+build_flags = env.get("BUILD_FLAGS", "")
+if isinstance(build_flags, list):
+    build_flags = " ".join(build_flags)
 match = re.search(r"-D\s*PRODUCT_NAME=([^\s]+)", build_flags)
 if match:
-    product_name = match.group(1)
+    product_name = match.group(1).strip('\'"')
 
 def merge_firmware_action(target, source, env):
     variant = env["PIOENV"]

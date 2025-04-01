@@ -3,26 +3,31 @@ import subprocess
 import shutil
 import re
 import sys
+import json
+from SCons.Script import Import, COMMAND_LINE_TARGETS
 
-def print_env_vars():
-    print("Environment variables:")
-    for key, value in os.environ.items():
-        print(f"{key}: {value}")
+Import("env")
+
+print("Pre-build script started...")
 
 def get_env_variables():
-    pio_env = os.getenv("PIOENV", "default_env")
-    pio_target = os.getenv("PIOTARGET", "None")
-    if "UPLOAD_PORT" in os.environ:
-        pio_target = "upload"
-    
+    if not COMMAND_LINE_TARGETS:
+        pio_target = "build"
+    else:
+        pio_target = COMMAND_LINE_TARGETS[0]
+
+    print(f"PIO target: {pio_target}")
+
     # Extract PRODUCT_NAME from build_flags in platformio.ini
     product_name = "croptop"  # Default value
-    build_flags = os.getenv("BUILD_FLAGS", "")
+    build_flags = env.get("BUILD_FLAGS", "")
+    if isinstance(build_flags, list):
+        build_flags = " ".join(build_flags)
     match = re.search(r"-D\s*PRODUCT_NAME=([^\s]+)", build_flags)
     if match:
-        product_name = match.group(1)
-    
-    return pio_env, pio_target, product_name
+        product_name = match.group(1).strip('\'"')
+
+    return pio_target, product_name
 
 def copy_source_to_target(source_dir, target_dir):
     if not os.path.exists(source_dir):
@@ -51,6 +56,7 @@ def run_npm_build(cwd):
         print("npm build failed!")
         sys.exit(1)
 
+
 def process_html_files(is_helio, svg_choice, html_folder):
     for filename in os.listdir(html_folder):
         if filename.lower().endswith('.htm'):
@@ -58,37 +64,71 @@ def process_html_files(is_helio, svg_choice, html_folder):
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
-                # Replace brand strings
-                content = content.replace("nebulite.berlin", "helio.lighting") if is_helio else content.replace("helio.lighting", "nebulite.berlin")
-                content = content.replace("NEBULITE", "HELIO") if is_helio else content.replace("HELIO", "NEBULITE")
+
+                # Function to perform the replacement
+                def replace_text(text):
+                    if is_helio:
+                        return text.replace("NEBULITE", "HELIO")
+                    else:
+                        return text.replace("HELIO", "NEBULITE")
                 
-                # For files with the SVG placeholder, replace content between <div id="imgw"> and </div>
+                # Replace text between tags (visible text)
+                pattern = re.compile(r'>([^<]+)<', re.DOTALL)
+                new_content = pattern.sub(lambda m: ">" + replace_text(m.group(1)) + "<", content)
+
+                # Also replace in <a href="..."> attributes
+                anchor_pattern = re.compile(r'(<a\b[^>]*\bhref=(["\']))(.*?)(\2)', re.IGNORECASE | re.DOTALL)
+                new_content = anchor_pattern.sub(
+                    lambda m: m.group(1) +
+                        (m.group(3).replace("nebulite.berlin", "helio.lighting")
+                                   .replace("NEBULITE", "HELIO")
+                         if is_helio else
+                         m.group(3).replace("helio.lighting", "nebulite.berlin")
+                                   .replace("HELIO", "NEBULITE"))
+                         + m.group(4),
+                    new_content
+                )
+                
+                # Replace the SVG placeholder content for index.htm and settings.htm
                 if filename in ["index.htm", "settings.htm"]:
-                    content, n = re.subn(
-                        r'(<div\s+class="logoWrapper"\s*>).*?(</div>)',
-                        r'\1\n' + svg_choice + r'\n\2',
-                        content,
-                        flags=re.DOTALL | re.IGNORECASE
+                    svg_pattern = re.compile(
+                        r'(<div[^>]*class=["\'][^"\']*logoWrapper[^"\']*["\'][^>]*>)(.*?)(</div>)',
+                        re.DOTALL | re.IGNORECASE
                     )
-                    if n == 0:
-                        print(f"SVG placeholder not found in {filename}")
+                    new_content = svg_pattern.sub(lambda m: m.group(1) + svg_choice + m.group(3), new_content)
+                
                 with open(file_path, "w", encoding="utf-8") as f:
-                    f.write(content)
+                    f.write(new_content)
                 print(f"Processed {filename}")
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
+
+def unprettify_json_files(directory):
+    for filename in os.listdir(directory):
+        if filename.lower().endswith('.json'):
+            file_path = os.path.join(directory, filename)
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                with open(file_path, "w", encoding="utf-8") as f:
+                    json.dump(data, f, separators=(",", ":"))
+                print(f"Unprettified {file_path}")
+            except Exception as e:
+                print(f"Error unprettifying {file_path}: {e}")
+
+
 def main():
-    print_env_vars()
-    pio_env, pio_target, product_name = get_env_variables()
+    pio_target, product_name = get_env_variables()
     
     # Only run npm build and file processing for the intended targets.
-    if pio_target in ["upload", "build", "None"]:
+    if pio_target in ["upload", "build"]:
         print("Running npm build before compiling WLED...")
         
         source_dir = os.path.join("usermods", "NEBULITE", "configs", product_name)
         target_dir = os.path.join("", "data")
         copy_source_to_target(source_dir, target_dir)
+        unprettify_json_files(target_dir)
         
         run_npm_build(cwd=os.path.join("wled00", "data"))
         
@@ -103,5 +143,5 @@ def main():
     else:
         print(f"Skipping npm build for target: {pio_target}")
 
-if __name__ == "__main__":
-    main()
+
+main()

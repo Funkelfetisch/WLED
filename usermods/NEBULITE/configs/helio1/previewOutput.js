@@ -11,7 +11,7 @@ function drawFn(ctx, colors, ledCount) {
 
   const arcDistances = [80.6, 100.8, 110.5, 120.1, 140.2, 130.0, 110.2, 90.1, 150.5, 70.5, 100.5, 115.0, 160.6, 155.7, 130.2, 128.8, 90.4, 85.9, 135.0, 145.3].map(distance => distance * scaleFactor);
   const arcThicknesses = [5.8, 9.8, 4.7, 4.0, 7.1, 5.3, 9.6, 9.4, 4.1, 7.2, 6.9, 5.5, 4.8, 9.9, 4.0, 9.5, 8.4, 8.8, 9.9, 4.5].map(thickness => thickness * scaleFactor);
-  const numArcs = 20;
+  const numArcs = ledCount;
 
   ctx.translate(size / 2, size / 2);
   const stepSize = 360 / ledCount;
@@ -45,7 +45,7 @@ function drawFn(ctx, colors, ledCount) {
 
       for (let j = 0; j < numArcs; j++) {
           let arcRadius = arcDistances[j];
-          let arcLength = Math.PI / 40;
+          let arcLength = (2 * Math.PI * arcRadius) / (numArcs * arcRadius);
           ctx.beginPath();
           ctx.arc(0, arcRadius, arcThicknesses[j] / 2, -arcLength, arcLength);
           ctx.stroke();

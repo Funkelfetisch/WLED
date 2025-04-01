@@ -42,7 +42,7 @@ char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULI
 
 // Global recording buffer for raw LED data (RGB888)
 static uint8_t* nebuliteFrameBuffer = nullptr;
-uint16_t pos = 0;
+uint32_t pos = 0;
 
 // Callback that writes JPEG chunks directly to a file.
 static size_t file_writer(void* arg, size_t index, const void* data, size_t len) {
@@ -109,14 +109,32 @@ static bool handleRecording() {
   }
 
   if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
-    uint16_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+    uint32_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
 
     // Capture one frame of LED data into nebuliteFrameBuffer.
     for (uint16_t i = 0; i < strip.getLengthTotal(); i++) {
       uint32_t c = strip.getPixelColorRestored(i);
-      nebuliteFrameBuffer[pos++] = qadd8(W(c), B(c));
-      nebuliteFrameBuffer[pos++] = qadd8(W(c), G(c));
-      nebuliteFrameBuffer[pos++] = qadd8(W(c), R(c));
+      // Assuming your LED color components are extracted as follows:
+      uint8_t r = R(c);
+      uint8_t g = G(c);
+      uint8_t b = B(c);
+      uint8_t w = W(c);
+
+      // Choose mixing coefficients based on your warm white's characteristics.
+      // Here, warm white boosts red the most, a bit less for green, and even less for blue.
+      const float kR = 0.7;  // Adjust as needed
+      const float kG = 0.5;  // Adjust as needed
+      const float kB = 0.3;  // Adjust as needed
+
+      // Blend white into each channel (using qadd8 to saturate at 255)
+      uint8_t mixedR = qadd8(r, (uint8_t)(w * kR));
+      uint8_t mixedG = qadd8(g, (uint8_t)(w * kG));
+      uint8_t mixedB = qadd8(b, (uint8_t)(w * kB));
+
+      // Write the values in the proper order for PIXFORMAT_RGB888: R, then G, then B.
+      nebuliteFrameBuffer[pos++] = mixedB;
+      nebuliteFrameBuffer[pos++] = mixedG;
+      nebuliteFrameBuffer[pos++] = mixedR;
     }
     Serial.print("Recording… pos = ");
     Serial.println(pos);
@@ -135,10 +153,14 @@ static bool handleRecording() {
         nebuliteFrameBuffer
       );
 
-      if (ok)
-        strlcpy(nebuliteJsonBuffer, filename, sizeof(nebuliteJsonBuffer));
-      else
-        strlcpy(nebuliteJsonBuffer, "JPEGFailed", sizeof(nebuliteJsonBuffer));
+      if (ok) {
+        // Append a cache key (e.g. using millis())
+        char filenameWithHash[64];
+        sprintf(filenameWithHash, "%s?v=%lu", filename, millis());
+        strlcpy(nebuliteJsonBuffer, filenameWithHash, sizeof(nebuliteJsonBuffer));
+      } else {
+          strlcpy(nebuliteJsonBuffer, "JPEGFailed", sizeof(nebuliteJsonBuffer));
+      }
       
       nebulitePresetRecordingLastRecord = 0;
       pos = 0;

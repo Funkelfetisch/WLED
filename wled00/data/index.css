@@ -1714,16 +1714,16 @@ TD .checkmark, TD .radiomark {
 	display: none;
 }
 
-.modalDialog {
+/* .modalDialog {
 	position: fixed;
-	top: 0;
+	top: 40%;
 	left: 0;
 	right: 0;
-	bottom: 0;
+	bottom: 40%;
 	background-color: rgba(0, 0, 0, 0.5);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 10000;
 	pointer-events: all;
-}
+} */

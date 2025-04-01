@@ -61,84 +61,91 @@ function enqueuePresetImage(preset) {
 
 // Process one preset image from the queue, then schedule the next request
 function processPresetQueue() {
-  if (presetQueue.length === 0) return;
-  let preset = presetQueue.shift();
-  console.log("Rate‑limited fetch for preset", preset);
-  let url = (loc ? `http://${locip}` : '.') + `/rec-${preset}.jpg`;
-  fetch(url)
-    .then(res => {
-      if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-      return res.blob();
-    })
-    .then(blob => {
-      nebuliteStartAnimation(preset, blob);
-    })
-    .catch(err => {
-      console.error("Error loading preset image " + preset, err);
-    });
-  setTimeout(processPresetQueue, presetRateLimitDelay);
+    if (presetQueue.length === 0) return;
+    let preset = presetQueue.shift();
+    console.log("Rate‑limited fetch for preset", preset);
+  
+    let url;
+    if (pJson[preset] && pJson[preset].r) {
+        // Use the recorded filename with its cache key from the "r" field
+        url = (loc ? `http://${locip}` : '.') + pJson[preset].r;
+    } else {
+        // Fallback: use the default filename without a cache key
+        url = (loc ? `http://${locip}` : '.') + `/rec-${preset}.jpg`;
+    }
+    
+    fetch(url, { cache: "no-store" })
+      .then(res => {
+          if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+          return res.blob();
+      })
+      .then(blob => {
+          nebuliteStartAnimation(preset, blob);
+      })
+      .catch(err => {
+          console.error("Error loading preset image " + preset, err);
+      });
+    setTimeout(processPresetQueue, presetRateLimitDelay);
 }
 
-function nebuliteStartAnimation(preset, jpgBlob) {
+  function nebuliteStartAnimation(preset, jpgBlob) {
+    // Reset iterator for this preset.
     nebuliteRecordIterator[preset] = 0;
   
-    // Decode the JPEG blob into an ImageBitmap
-    createImageBitmap(jpgBlob).then(function(imageBitmap) {
-        // Create an offscreen canvas and draw the image
-        let offCanvas = document.createElement("canvas");
-        offCanvas.width = imageBitmap.width;
-        offCanvas.height = imageBitmap.height;
-        let offCtx = offCanvas.getContext('2d');
-        offCtx.drawImage(imageBitmap, 0, 0);
-        let imageData = offCtx.getImageData(0, 0, imageBitmap.width, imageBitmap.height);
-        const originalData = imageData.data; // RGBA format
-        
-        // Convert RGBA array to an RGB-only array
-        let rgbArray = new Uint8Array(imageBitmap.width * imageBitmap.height * 3);
-        for (let i = 0, j = 0; i < originalData.length; i += 4, j += 3) {
-            rgbArray[j]     = originalData[i];     // R
-            rgbArray[j + 1] = originalData[i + 1]; // G
-            rgbArray[j + 2] = originalData[i + 2]; // B
-        }
-  
-        clearInterval(nebuliteIntervals[preset]);
-        nebuliteIntervals[preset] = setInterval(function() {
-            nebuliteAnimate(preset, rgbArray, nebuliteRecordIterator, ledCount);
-        }, 100);
-    }).catch(function(error) {
-        console.error("Error decoding JPEG:", error);
-    });
+    createImageBitmap(jpgBlob)
+      .then(imageBitmap => {
+          let offCanvas = document.createElement("canvas");
+          offCanvas.width = imageBitmap.width;
+          offCanvas.height = imageBitmap.height;
+          let offCtx = offCanvas.getContext('2d');
+          offCtx.drawImage(imageBitmap, 0, 0);
+          let imageData = offCtx.getImageData(0, 0, imageBitmap.width, imageBitmap.height);
+          const originalData = imageData.data; // RGBA format
+          
+          // Convert RGBA data to an RGB-only array.
+          let rgbArray = new Uint8Array(imageBitmap.width * imageBitmap.height * 3);
+          for (let i = 0, j = 0; i < originalData.length; i += 4, j += 3) {
+              rgbArray[j]     = originalData[i];     
+              rgbArray[j + 1] = originalData[i + 1]; 
+              rgbArray[j + 2] = originalData[i + 2]; 
+          }
+    
+          // Clear any previous interval and start a new one that now calls nebuliteAnimate without passing the entire iterator array.
+          clearInterval(nebuliteIntervals[preset]);
+          nebuliteIntervals[preset] = setInterval(function() {
+              nebuliteAnimate(preset, rgbArray, ledCount);
+          }, 100);
+      })
+      .catch(function(error) {
+          console.error("Error decoding JPEG:", error);
+      });
 }
  
-function nebuliteAnimate(preset, rgbArray, nebuliteRecordIterator, ledCount) {
+function nebuliteAnimate(preset, rgbArray, ledCount) {
     const canvasId = "p" + preset + "canv";
     const nebuliteCanvas = document.getElementById(canvasId);
     if (!nebuliteCanvas) {
-        console.error("Canvas element not found: " + canvasId);
+        console.error("Canvas not found: " + canvasId);
         return;
     }
     const ctx = nebuliteCanvas.getContext('2d');
-    if (!ctx) {
-        console.error("Canvas context not available for " + canvasId);
-        return;
-    }
+    let iterator = nebuliteRecordIterator[preset] || 0;
   
-    // Each LED uses 3 bytes from the RGB array.
-    let nextEnd = nebuliteRecordIterator[preset] + 3 * ledCount;
-    if(nextEnd > rgbArray.length) {
-        nebuliteRecordIterator[preset] = 0;
+    let nextEnd = iterator + 3 * ledCount;
+    if (nextEnd > rgbArray.length) {
+        iterator = 0;
         nextEnd = 3 * ledCount;
     }
     
-    let colors = rgbArray.slice(nebuliteRecordIterator[preset], nextEnd);
+    let colors = rgbArray.slice(iterator, nextEnd);
     if (!colors || colors.length < 3) {
         console.error("Invalid color data for preset " + preset);
         return;
     }
     
-    // Draw the LED preview using the extracted RGB data
+    // Draw using the new color data.
     drawFn(ctx, colors, ledCount);
-    nebuliteRecordIterator[preset] += 3 * ledCount;
+    nebuliteRecordIterator[preset] = iterator + 3 * ledCount;
 }
   // /NEBULITE
 
@@ -3141,9 +3148,21 @@ function saveP(i,pl)
 		if (obj.win) pJson[pI].win = obj.win;
 		if (obj.ql)  pJson[pI].ql = obj.ql;
 	}
-	populatePresets();
-	resetPUtil();
-	setTimeout(()=>{pmtLast=0; loadPresets();}, 6500); // force reloading of presets
+
+	// NEBULITE
+	// Disable all clicks while the recording is running
+	document.body.style.pointerEvents = 'none';
+
+	// Re-enable clicks after recording (approx. 6.5 seconds)
+	setTimeout(() => {
+		document.body.style.pointerEvents = 'auto';
+		pmtLast=0;
+		
+		loadPresets();
+		populatePresets();
+		resetPUtil();
+	}, 6500); // force reloading of presets and allow clicking again
+	// /NEBULITE
 }
 
 function testPl(i,bt) {
