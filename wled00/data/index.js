@@ -45,6 +45,110 @@ let ibtglChecked = true; //WLEDMM
 let sbtglChecked = true; //WLEDMM
 let sbchkChecked = false; //WLEDMM
 
+
+// NEBULITE
+var nebuliteIntervals = new Array(255);
+var nebuliteRecordIterator = new Array(255);
+
+// New global variables for rate‐limiting preset image loads
+var presetQueue = [];
+var presetRateLimitDelay = 20; // milliseconds between requests
+
+// Enqueue a preset ID for loading
+function enqueuePresetImage(preset) {
+  presetQueue.push(preset);
+}
+
+// Process one preset image from the queue, then schedule the next request
+function processPresetQueue() {
+    if (presetQueue.length === 0) return;
+    let preset = presetQueue.shift();
+    console.log("Rate‑limited fetch for preset", preset);
+  
+    let url;
+    if (pJson[preset] && pJson[preset].r) {
+        // Use the recorded filename with its cache key from the "r" field
+        url = (loc ? `http://${locip}` : '.') + pJson[preset].r;
+    } else {
+        // Fallback: use the default filename without a cache key
+        url = (loc ? `http://${locip}` : '.') + `/rec-${preset}.jpg`;
+    }
+    
+    fetch(url, { cache: "no-store" })
+      .then(res => {
+          if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+          return res.blob();
+      })
+      .then(blob => {
+          nebuliteStartAnimation(preset, blob);
+      })
+      .catch(err => {
+          console.error("Error loading preset image " + preset, err);
+      });
+    setTimeout(processPresetQueue, presetRateLimitDelay);
+}
+
+  function nebuliteStartAnimation(preset, jpgBlob) {
+    // Reset iterator for this preset.
+    nebuliteRecordIterator[preset] = 0;
+  
+    createImageBitmap(jpgBlob)
+      .then(imageBitmap => {
+          let offCanvas = document.createElement("canvas");
+          offCanvas.width = imageBitmap.width;
+          offCanvas.height = imageBitmap.height;
+          let offCtx = offCanvas.getContext('2d');
+          offCtx.drawImage(imageBitmap, 0, 0);
+          let imageData = offCtx.getImageData(0, 0, imageBitmap.width, imageBitmap.height);
+          const originalData = imageData.data; // RGBA format
+          
+          // Convert RGBA data to an RGB-only array.
+          let rgbArray = new Uint8Array(imageBitmap.width * imageBitmap.height * 3);
+          for (let i = 0, j = 0; i < originalData.length; i += 4, j += 3) {
+              rgbArray[j]     = originalData[i];     
+              rgbArray[j + 1] = originalData[i + 1]; 
+              rgbArray[j + 2] = originalData[i + 2]; 
+          }
+    
+          // Clear any previous interval and start a new one that now calls nebuliteAnimate without passing the entire iterator array.
+          clearInterval(nebuliteIntervals[preset]);
+          nebuliteIntervals[preset] = setInterval(function() {
+              nebuliteAnimate(preset, rgbArray, ledCount);
+          }, 100);
+      })
+      .catch(function(error) {
+          console.error("Error decoding JPEG:", error);
+      });
+}
+ 
+function nebuliteAnimate(preset, rgbArray, ledCount) {
+    const canvasId = "p" + preset + "canv";
+    const nebuliteCanvas = document.getElementById(canvasId);
+    if (!nebuliteCanvas) {
+        console.error("Canvas not found: " + canvasId);
+        return;
+    }
+    const ctx = nebuliteCanvas.getContext('2d');
+    let iterator = nebuliteRecordIterator[preset] || 0;
+  
+    let nextEnd = iterator + 3 * ledCount;
+    if (nextEnd > rgbArray.length) {
+        iterator = 0;
+        nextEnd = 3 * ledCount;
+    }
+    
+    let colors = rgbArray.slice(iterator, nextEnd);
+    if (!colors || colors.length < 3) {
+        console.error("Invalid color data for preset " + preset);
+        return;
+    }
+    
+    // Draw using the new color data.
+    drawFn(ctx, colors, ledCount);
+    nebuliteRecordIterator[preset] = iterator + 3 * ledCount;
+}
+  // /NEBULITE
+
 function handleVisibilityChange() {if (!d.hidden && new Date () - lastUpdate > 3000) requestJson();}
 function sCol(na, col) {d.documentElement.style.setProperty(na, col);}
 function gId(c) {return d.getElementById(c);}
@@ -308,16 +412,17 @@ function handleLocationHash() {
 }
 
 var timeout;
-function showToast(text, error = false)
+function showToast(text, error = false, duration = 2900, modal = false)
 {
 	if (error) gId('connind').style.backgroundColor = "var(--c-r)";
 	var x = gId('toast');
 	//if (error) text += '<i class="icons btn-icon" style="transform:rotate(45deg);position:absolute;top:10px;right:0px;" onclick="clearErrorToast(100);">&#xe18a;</i>';
 	x.innerHTML = text;
 	x.classList.add(error ? 'error':'show');
+	x.classList.add(modal ? 'modalDialog':'normalDialog');
 	clearTimeout(timeout);
 	x.style.animation = 'none';
-	timeout = setTimeout(()=>{ x.classList.remove('show'); }, 2900);
+	timeout = setTimeout(()=>{ x.classList.remove('show'); }, duration);
 	if (error) console.log(text);
 }
 
@@ -453,7 +558,7 @@ function loadPresets(callback = null)
 	}
 
 	// afterwards
-	if (!callback && pmt == pmtLast) return;
+	// if (!callback && pmt == pmtLast) return;
 
 	var url = (loc?`http://${locip}`:'') + '/presets.json';
 
@@ -590,13 +695,16 @@ function populatePresets(fromls)
 
 		cn += `<div class="pres lstI" id="p${i}o">`;
 		if (cfg.comp.pid) cn += `<div class="pid">${i}</div>`;
-		//WLEDMM: show ql if defined
-		cn += `<div class="pname lstIname" onclick="setPreset(${i})">${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + pName(i)}
-	<i class="icons edit-icon flr" id="p${i}nedit" onclick="tglSegn(${i+100})">&#xe2c6;</i></div>
-	<i class="icons e-icon flr" id="sege${i+100}" onclick="expand(${i+100})">&#xe395;</i>
-	<div class="presin lstIcontent" id="seg${i+100}"></div>
-</div>`;
+		cn += `<canvas class="nebuliteCanvas" id="p${i}canv" width="` + NEBULITE_preview_width + `" height="` + NEBULITE_preview_height + `" onclick="setPreset(${i})"></canvas>
+		<div class="pname lstIname" onclick="setPreset(${i})">
+		${isPlaylist(i)?"<i class='icons btn-icon'>&#xe139;</i>":""}${(pJson[i].ql?pJson[i].ql+' ':'') + pName(i)}
+		<i class="icons edit-icon flr" id="p${i}nedit" onclick="tglSegn(${i+100})">&#xe2c6;</i></div>
+		<i class="icons e-icon flr" id="sege${i+100}" onclick="expand(${i+100})">&#xe395;</i>
+		<div class="presin lstIcontent" id="seg${i+100}"></div>
+		</div>`;
 		pNum++;
+
+		// nebuliteStartAnimation(i, key[1].r);
 	}
 
 	gId('pcont').innerHTML = cn;
@@ -610,6 +718,16 @@ function populatePresets(fromls)
 	} else { presetError(true); }
 	updatePA();
 	populateQL();
+
+	// NEBULITE
+	for (const preset in pJson) {
+		if (pJson.hasOwnProperty(preset)) {
+		  enqueuePresetImage(preset);
+		}
+	  }
+	// Start processing the queue
+	processPresetQueue();
+	// /NEBULITE
 }
 
 function parseInfo(i) {
@@ -1392,7 +1510,7 @@ function updateTrail(e)
 	if (sd && getComputedStyle(sd).getPropertyValue("--bg").trim() !== "none") { // trim() for Safari
 		var max = e.hasAttribute('max') ? e.attributes.max.value : 255;
 		var perc = Math.round(e.value * 100 / max);
-		if (perc < 50) perc += 2;
+		// if (perc < 50) perc += 2;
 		var val = `linear-gradient(90deg, var(--bg) ${perc}%, var(--c-6) ${perc}%)`;
 		sd.style.backgroundImage = val;
 	}
@@ -2176,7 +2294,7 @@ function requestJson(command=null)
 {
 	gId('connind').style.backgroundColor = "var(--c-y)";
 	if (command && !reqsLegal) return; // stop post requests from chrome onchange event on page restore
-	if (!jsonTimeout) jsonTimeout = setTimeout(()=>{if (ws) ws.close(); ws=null; showErrorToast()}, 3000);
+	if (!jsonTimeout) jsonTimeout = setTimeout(()=>{if (ws) ws.close(); ws=null; showErrorToast()}, 6000);
 	var req = null;
 	var url = (loc?`http://${locip}`:'') + '/json/si';
 	var useWs = (ws && ws.readyState === WebSocket.OPEN);
@@ -2307,11 +2425,36 @@ function toggleLiveview()
 		gId(lvID).style.display = (isLv) ? "block":"none";
 		var url = (loc?`http://${locip}`:'') + "/" + lvID;
 		gId(lvID).src = (isLv) ? url:"about:blank";
+		// merge this?? commented out for now
+		// gId('buttonSr').className = (isLv) ? "active":"";
+		// if (!isLv && ws && ws.readyState === WebSocket.OPEN) ws.send('{"lv":false}');
 		size();
 	}
 
 	gId('buttonSr').className = (isLv) ? "active":"";
 	if (ws && ws.readyState === WebSocket.OPEN) ws.send(`{"lv":${isLv}}`);
+}
+
+
+function toggleLiveviewNEBULITE()
+{
+	//WLEDMM adding liveview2D support
+	if (isInfo && isM) toggleInfo();
+	if (isNodes && isM) toggleNodes();
+	isLv = !isLv;
+
+	var lvID = "liveviewNEBULITE"
+	if (isLv) {
+	var cn = '<iframe id="liveviewNEBULITE" src="about:blank" allowtransparency="true" scrolling="no" seamless></iframe>';
+	d.getElementById('kliveviewNEBULITE').innerHTML = cn;
+	}
+
+	gId(lvID).style.display = (isLv) ? "inline-block":"none";
+	var url = (loc?`http://${locip}`:'') + "/liveviewNEBULITE";
+	gId(lvID).src = (isLv) ? url:"about:blank";
+	gId('buttonSr').className = (isLv) ? "active":"";
+	if (!isLv && ws && ws.readyState === WebSocket.OPEN) ws.send('{"lv":false}');
+	size();
 }
 
 //WLEDMM create and delete iFrame for peek (isLv is true if create)
@@ -2992,8 +3135,7 @@ function saveP(i,pl)
 	obj.psave = pI; obj.n = pN;
 	var pQN = gId(`p${i}ql`).value;
 	if (pQN.length > 0) obj.ql = pQN;
-
-	showToast("Saving " + pN +" (" + pI + ")");
+	showToast("Recording previews for " + pN +" (" + pI + "). This will take ca. 6 seconds. Make rhythmic noise while recording sound-reactive effects!", false, 6000, true);
 	requestJson(obj);
 	if (obj.o) {
 		pJson[pI] = obj;
@@ -3006,9 +3148,21 @@ function saveP(i,pl)
 		if (obj.win) pJson[pI].win = obj.win;
 		if (obj.ql)  pJson[pI].ql = obj.ql;
 	}
-	populatePresets();
-	resetPUtil();
-	setTimeout(()=>{pmtLast=0; loadPresets();}, 750); // force reloading of presets
+
+	// NEBULITE
+	// Disable all clicks while the recording is running
+	document.body.style.pointerEvents = 'none';
+
+	// Re-enable clicks after recording (approx. 6.5 seconds)
+	setTimeout(() => {
+		document.body.style.pointerEvents = 'auto';
+		pmtLast=0;
+		
+		loadPresets();
+		populatePresets();
+		resetPUtil();
+	}, 6500); // force reloading of presets and allow clicking again
+	// /NEBULITE
 }
 
 function testPl(i,bt) {
@@ -3654,12 +3808,15 @@ function togglePcMode(fromB = false)
 	if (cpick) cpick.resize(pcMode && wW>1023 && wW<1250 ? 230 : 260); // for tablet in landscape
 	if (!fromB && ((wW < 1024 && lastw < 1024) || (wW >= 1024 && lastw >= 1024))) return; // no change in size and called from size()
 	gId('buttonPcm').className = (pcMode) ? "active":"";
-	gId('bot').style.height = (pcMode && !cfg.comp.pcmbot) ? "0":"auto";
+	gId('bot').style.display = (pcMode && !cfg.comp.pcmbot) ? "none":"flex";
 	sCol('--bh', gId('bot').clientHeight + "px");
 	_C.style.width = (pcMode)?'100%':'400%';
 	//WLEDMM resize segmentview
 	console.log("drawSegmentView","togglePCMode");
 	if (isM) drawSegmentView();
+
+	if (pcMode) document.body.classList.add("pcMode");
+	if (!pcMode) document.body.classList.remove("pcMode");
 }
 
 function mergeDeep(target, ...sources)

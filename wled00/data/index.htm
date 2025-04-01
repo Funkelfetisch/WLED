@@ -3,8 +3,10 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 	<meta charset="utf-8">
-	<meta name="theme-color" content="#222222">
+	<meta name="theme-color" content="#111111">
+	<meta name="color-scheme" content="dark">
 	<meta content="yes" name="apple-mobile-web-app-capable">
+	<!-- <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'> -->
 	<link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAGACGAAAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAE1JREFUOI1j/P//PwOxgNGeAUMxE9G6cQCKDWAhpADZ2f8PMjBS3QW08QK20KaZC2gfC9hCnqouoNgARgY7zMxAyNlUdQHlXiAlO2MDAD63EVqNHAe0AAAAAElFTkSuQmCC"/>
 	<script src="peek.js"></script> <!--WLEDMM-->
 	<title>WLED</title>
@@ -53,374 +55,384 @@
 	</script>
 	<link rel="stylesheet" href="index.css">
 	<link rel="stylesheet" href="../../usermods/artifx/artifx.css"> <!--WLEDMM ARTIFX -->
+	<script src="previewOutput.js"></script>
+	<link rel="stylesheet" href="../../usermods/NEBULITE/global.css">
 </head>
 <body>
 
-<div id="cv" class="overlay">Loading WLED UI...</div>
-<noscript><div class="overlay" style="opacity:1;">Sorry, WLED UI needs JavaScript!</div></noscript>
-<div id="bg"></div>
-
-<div class="wrapper" id="top">
-	<div class="tab top">
-		<div class="btnwrap">
-			<button id="buttonPower" onclick="togglePower()" class="tgl"><i class="icons">&#xe08f;</i><p class="tab-label">Power</p></button>
-			<button id="buttonNl" onclick="toggleNl()"><i class="icons">&#xe2a2;</i><p class="tab-label">Timer</p></button>
-			<button id="buttonSync" onclick="toggleSync()"><i class="icons">&#xe116;</i><p class="tab-label">Sync</p></button>
-			<button id="buttonSr" onclick="toggleLiveview()"><i class="icons">&#xe410;</i><p class="tab-label">GFX</p></button>
-			<button id="buttonI" onclick="toggleInfo()"><i class="icons">&#xe066;</i><p class="tab-label">Info</p></button>
-			<button id="buttonNodes" onclick="toggleNodes()"><i class="icons">&#xe22d;</i><p class="tab-label">Nodes</p></button>
-			<button onclick="window.location.href='/settings';"><i class="icons">&#xe0a2;</i><p class="tab-label">Config</p></button>
-			<button id="buttonPcm" onclick="togglePcMode(true)"><i class="icons">&#xe23d;</i><p class="tab-label">PC Mode</p></button>
-		</div>
-		<div id="briwrap">
-			<p class="hd">Brightness</p>
-			<div class="slider" style="padding-right:32px;">
-				<i class="icons slider-icon" onclick="tglTheme()" style="transform: translate(-32px,5px);">&#xe2a6;</i>
-				<div class="sliderwrap il">
-					<input id="sliderBri" onchange="setBri()" oninput="updateTrail(this)" max="255" min="1" type="range" value="128" />
-					<div class="sliderdisplay"></div>
+	<div id="cv" class="overlay">Loading NEBULITE UI...</div>
+	<noscript><div class="overlay" style="opacity:1;">Sorry, NEBULITE UI needs JavaScript!</div></noscript>
+	<div id="bg"></div>
+	
+	<div class="wrapper" id="top">
+		<div class="tab top">
+			<div class="btnwrap">
+				<div class="logoWrapper"><svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="enable-background:new 0 0 280.92 35.69" viewBox="0 0 280.92 35.69"><path d="M26.19 29.34 3.02.13 2.92 0H0v35.14h3.14V5.16l23.77 29.98h2.42V0h-3.14zm76.4-12.33c2.55-1.25 5.21-3.62 5.21-8.1v-.1c0-2.22-.78-4.12-2.32-5.66-2.03-2.03-5.3-3.15-9.2-3.15H81.71v35.14h15.31c7.71 0 12.7-3.82 12.7-9.74v-.1c0-3.97-2.46-6.82-7.13-8.29zm-6.6-1.11H84.96V3.05h11.28c5.1 0 8.27 2.3 8.27 6.01v.1c0 4.16-3.27 6.74-8.52 6.74zm1.13 16.2H84.96V18.95h11.33c6.54 0 10.14 2.26 10.14 6.35v.1c0 4.13-3.57 6.7-9.31 6.7zm50.21-11.62c0 7.76-4.06 12.21-11.13 12.21-7.2 0-11.33-4.54-11.33-12.46V0h-3.24v20.48c0 9.38 5.54 15.21 14.47 15.21s14.47-5.94 14.47-15.5V0h-3.24v20.48zM167.75 0h-3.24v35.14h23.47V32.1h-20.23zm32.49 0h3.24v35.14h-3.24zm15.61 3.05h12.01v32.09h3.24V3.05h12.01V0h-27.26zM42.81 35.14h25.45V32.1H42.81zm3.56-19.24h-3.56v3.05h25.2V15.9zM68.01 3.05V0h-25.2v3.05h3.24zm187.46 32.09h25.45V32.1h-25.45zm3.56-19.24h-3.56v3.05h25.2V15.9zm21.64-12.85V0h-25.2v3.05h3.25z" style="fill:#fff"/></svg></div>
+				<div>
+					<button id="buttonPower" onclick="togglePower()" class="tgl"><i class="icons">&#xe08f;</i><p class="tab-label"></p></button>
+					<button class="hide" id="buttonNl" onclick="toggleNl()"><i class="icons">&#xe2a2;</i><p class="tab-label hide">Timer</p></button>
+					<button id="buttonSync" onclick="toggleSync()"><i class="icons">&#xe116;</i><p class="tab-label"></p></button>
+					<button id="buttonSr" class="hide" onclick="toggleLiveview()"><i class="icons">&#xe410;</i><p class="tab-label hide">Peek</p></button>
+					<button id="buttonI" class="hide" onclick="toggleInfo()"><i class="icons">&#xe066;</i><p class="tab-label hide">Info</p></button>
+					<button id="buttonNodes" class="hide" onclick="toggleNodes()"><i class="icons">&#xe22d;</i><p class="tab-label hide">Nodes</p></button>
+					<button onclick="window.location.href=('/settings');"><i class="icons">&#xe0a2;</i><p class="tab-label"></p></button>
+					<button id="buttonPcm" class="hide" onclick="togglePcMode(true)"><i class="icons">&#xe23d;</i><p class="tab-label hide">PC Mode</p></button>
 				</div>
-				<output class="sliderbubble"></output>
 			</div>
+			<div id="briwrap">
+				<!-- <p class="hd">Brightness</p> -->
+				<div class="slider">
+					<i class="icons slider-icon" onclick="tglTheme()" style="transform: translate(-32px,5px);">&#xe2a6;</i>
+					<div class="sliderwrap il">
+						<input id="sliderBri" onchange="setBri()" oninput="updateTrail(this)" max="255" min="1" type="range" value="128" />
+						<div class="sliderdisplay"></div>
+					</div>
+					<output class="sliderbubble"></output>
+				</div>
+			</div>
+	
+			<div id="kliveviewNEBULITE"></div>
+	
+			<iframe id="liveview" src="about:blank"></iframe>
 		</div>
-		<iframe id="liveview" src="about:blank"></iframe>
 	</div>
-</div>
-
-<div class ="container">
-	<div id="Colors" class="tabcontent">
-		<div id="colorGFX">
-			<br> <!--WLEDMM: instead of padding-top:18 in css-->
-			<div id="picker" class="noslide"></div>
-			<div id="hwrap" class="slider">
-				<div class="sliderwrap il">
-					<input id="sliderH" class="noslide" oninput="fromH()" onchange="setColor(0)" max="359" min="0" type="range" value="0" step="any">
-					<div class="sliderdisplay" style="background: linear-gradient(90deg, #f00 2%, #ff0 19%, #0f0 35%, #0ff 52%, #00f 68%, #f0f 85%, #f00)"></div>
-				</div>
-				<span class="tooltiptext">Hue</span>
-			</div>
-			<div id="swrap" class="slider">
-				<div class="sliderwrap il">
-					<input id="sliderS" class="noslide" oninput="fromS()" onchange="setColor(0)" max="100" min="0" type="range" value="100" step="any">
-					<div class="sliderdisplay" style="background: linear-gradient(90deg, #aaa 0%, #f00)"></div>
-				</div>
-				<span class="tooltiptext">Saturation</span>
-			</div>
-			<div id="vwrap" class="slider">
-				<div class="sliderwrap il">
-					<input id="sliderV" class="noslide" oninput="fromV()" onchange="setColor(0)" max="100" min="0" type="range" value="100" step="any" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<span class="tooltiptext">Value/Brightness</span>
-			</div>
-			<div id="kwrap" class="slider">
-				<div class="sliderwrap il">
-					<input id="sliderK" class="noslide" oninput="fromK()" onchange="setColor(0)" max="10091" min="1900" type="range" value="6550" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<span class="tooltiptext">Kelvin/Temperature</span>
-			</div>
-			<div id="rgbwrap">
-				<!--p class="labels hd">RGB color</p-->
-				<div id="rwrap" class="slider">
+	
+	<div class ="container">
+		<div id="Colors" class="tabcontent">
+			<div id="colorGFX">
+				<br> <!--WLEDMM: instead of padding-top:18 in css-->
+				<div id="picker" class="noslide"></div>
+				<div id="hwrap" class="slider">
+				<p class="label">Hue</p>
 					<div class="sliderwrap il">
-						<input id="sliderR" class="noslide" oninput="fromRgb()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
+						<input id="sliderH" class="noslide" oninput="fromH()" onchange="setColor(0)" max="359" min="0" type="range" value="0" step="any">
+						<div class="sliderdisplay" style="background: linear-gradient(90deg, #f00 2%, #ff0 19%, #0f0 35%, #0ff 52%, #00f 68%, #f0f 85%, #f00)"></div>
+					</div>
+				</div>
+				<div id="swrap" class="slider">
+				<p class="label">Saturation</p>
+					<div class="sliderwrap il">
+						<input id="sliderS" class="noslide" oninput="fromS()" onchange="setColor(0)" max="100" min="0" type="range" value="100" step="any">
+						<div class="sliderdisplay" style="background: linear-gradient(270deg, #FFA800 0%, #796340 100%);"></div>
+					</div>
+				</div>
+				<div id="vwrap" class="slider">
+					<p class="label">Brightness</p>
+					<div class="sliderwrap il">
+						<input id="sliderV" class="noslide" oninput="fromV()" onchange="setColor(0)" max="100" min="0" type="range" value="100" step="any" />
+						<div class="sliderdisplay" style="background: linear-gradient(90deg, #000 0%, #FFF 100%);"></div>
+					</div>
+				</div>
+				<div id="kwrap" class="slider">
+				<p class="label">Color Temperature</p>
+					<div class="sliderwrap il">
+						<input id="sliderK" class="noslide" oninput="fromK()" onchange="setColor(0)" max="10091" min="1900" type="range" value="6550" />
+						<div class="sliderdisplay" style="background: linear-gradient(90deg, #EC9B00 0%, #EC9B00 0.01%, #FFF 100%);"></div>
+					</div>
+				</div>
+				<div id="rgbwrap">
+					<!--p class="labels hd">RGB color</p-->
+					<div id="rwrap" class="slider">
+					<p class="label">Red</p>
+						<div class="sliderwrap il">
+							<input id="sliderR" class="noslide" oninput="fromRgb()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
+							<div class="sliderdisplay"></div>
+						</div>
+					</div>
+					<div id="gwrap" class="slider">
+						<p class="label">Green</p>
+						<div class="sliderwrap il">
+							<input id="sliderG" class="noslide" oninput="fromRgb()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
+							<div class="sliderdisplay"></div>
+						</div>
+					</div>
+					<div id="bwrap" class="slider">
+						<p class="label">Blue</p>
+						<div class="sliderwrap il">
+							<input id="sliderB" class="noslide" oninput="fromRgb()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
+							<div class="sliderdisplay"></div>
+						</div>
+					</div>
+				</div>
+				<div id="wwrap" class="slider">
+					<p class="label">White channel</p>
+					<!--p class="labels hd">White channel</p-->
+					<div id="whibri" class="sliderwrap il">
+						<input id="sliderW" class="noslide" oninput="fromW()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
 						<div class="sliderdisplay"></div>
 					</div>
-					<span class="tooltiptext">Red channel</span>
 				</div>
-				<div id="gwrap" class="slider">
+				<div id="wbal" class="slider">
+					<p class="label">White balance</p>
+					<!--p class="labels hd">White balance</p-->
 					<div class="sliderwrap il">
-						<input id="sliderG" class="noslide" oninput="fromRgb()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
+						<input id="sliderA" class="noslide" onchange="setBalance(this.value)" max="255" min="0" type="range" value="128" />
 						<div class="sliderdisplay"></div>
 					</div>
-					<span class="tooltiptext">Green channel</span>
 				</div>
-				<div id="bwrap" class="slider">
+				<div id="qcs-w">
+					<div class="qcs" onclick="pC('#ff0000');" title="Red" style="background-color:#ff0000;"></div>
+					<div class="qcs" onclick="pC('#ffa000');" title="Orange" style="background-color:#ffa000;"></div>
+					<div class="qcs" onclick="pC('#ffc800');" title="Yellow" style="background-color:#ffc800;"></div>
+					<!-- <div class="qcs" onclick="pC('#ffe0a0');" title="Warm White" style="background-color:#ffe0a0;"></div> -->
+					<!-- <div class="qcs" onclick="pC('#ffffff');" title="White" style="background-color:#ffffff;"></div> -->
+					<!-- <div class="qcs" onclick="pC('#000000');" title="Black" style="background-color:#000000;"></div> -->
+					<div class="qcs" onclick="pC('#ff00ff');" title="Pink" style="background-color:#ff00ff;"></div>
+					<div class="qcs" onclick="pC('#0000ff');" title="Blue" style="background-color:#0000ff;"></div>
+					<div class="qcs" onclick="pC('#00ffc8');" title="Cyan" style="background-color:#00ffc8;"></div>
+					<div class="qcs" onclick="pC('#08ff00');" title="Green" style="background-color:#08ff00;"></div>
+					<div class="qcs" onclick="pC('rnd');" title="Random" style="background:linear-gradient(to right, red, orange, yellow, green, blue, purple);transform: translateY(-11px);">R</div>
+				</div>
+				<div id="csl">
+					<button id="csl0" class="btn xxs cl" onclick="selectSlot(0);" data-r="0" data-g="0" data-b="0" data-w="0">1</button>
+					<button id="csl1" class="btn xxs cl" onclick="selectSlot(1);" data-r="0" data-g="0" data-b="0" data-w="0">2</button>
+					<button id="csl2" class="btn xxs cl" onclick="selectSlot(2);" data-r="0" data-g="0" data-b="0" data-w="0">3</button>
+				</div>
+				<p class="labels h" id="cslLabel"></p>
+				<div id="hexw">
+					<i class="icons sel-icon" onclick="tglRgb()">&#xe22d;</i>
+					<input id="hexc" type="text" class="noslide" onkeydown="hexEnter()" autocomplete="off" maxlength="8" />
+					<button id="hexcnf" class="btn btn-xs" onclick="fromHex();"><i class="icons btn-icon">&#xe390;</i></button>
+				</div>
+			</div> <!--colorGFX-->
+			<p class="labels" id="pall"><i class="icons sel-icon" onclick="tglHex()">&#xe2b3;</i> Color palette</p>
+			<div id="palw" class="il">
+				<div class="staytop fnd">
+					<input type="text" placeholder="Search" oninput="search(this,'pallist')" onfocus="search(this,'pallist')" />
+					<i class="icons clear-icon" onclick="clean(this)">&#xe38f;</i>
+					<i class="icons search-icon">&#xe0a1;</i>
+				</div>
+				<div id="pallist" class="list">
+					<div class="lstI">
+						<label class="radio schkl" onclick="loadPalettes()"> 
+							<div class="lstIcontent">
+								<span class="lstIname">
+									Loading...
+								</span>
+							</div>
+						</label>
+					</div>
+				</div>
+				<div style="padding-bottom: 10px;">
+					<button class="btn btn-xs" type="button" onclick="window.location.href=(loc?'http://'+locip:'')+'/cpal.htm'"><i class="icons btn-icon">&#xe18a;</i></button>
+					<button class="btn btn-xs" type="button" onclick="palettesData=null;localStorage.removeItem('wledPalx');requestJson({rmcpal:true});setTimeout(loadPalettes,250,loadPalettesData);"><i class="icons btn-icon">&#xe037;</i></button>
+				</div>
+			</div>
+		</div>
+	
+		<div id="Effects" class="tabcontent">
+			<div id="effectGFX" hidden="true"> <!--WLEDMM-->
+				<!-- <p class="labels hd">Peek ☾ <button class="btn infobtn btn-xs" onclick="eandp(this,gId('canvasPeek'));">v</button></p> -->
+				<br>
+				<canvas id="canvasPeek" onclick="bigPeek(true)"></canvas><br>
+				<br>
+			</div>
+			<div id="fx">
+				<p class="labels hd" id="modeLabel">Effect mode</p>
+				<div class="staytop fnd" id="fxFind">
+					<input type="text" placeholder="Search" oninput="search(this,'fxlist')" onfocus="search(this,'fxlist');gId('filters').classList.add('fade');" onblur="gId('filters').classList.remove('fade')"/>
+					<i class="icons clear-icon" onclick="clean(this);">&#xe38f;</i>
+					<i class="icons search-icon" onclick="gId('filters').classList.toggle('hide');" style="cursor:pointer;">&#xe0a1;</i>
+				</div>
+				<div id="fxlist" class="list">
+					<div class="lstI">
+						<label class="radio schkl" onclick="loadFX()"> 
+							<div class="lstIcontent">
+								<span class="lstIname">
+									Loading...
+								</span>
+							</div>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div id="sliders">
+				<div id="filters" class="filter">
+					<label id="filterPal" class="check fchkl">&#x1F3A8;
+						<input type="checkbox" data-flt="&#x1F3A8;" onchange="filterFx(this)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="filter0D" class="check fchkl hide">&#8226;
+						<input type="checkbox" data-flt="&#8226;" onchange="filterFx(this)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="filter1D" class="check fchkl">&#8942;
+						<input type="checkbox" data-flt="&#8942;" onchange="filterFx(this)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="filter2D" class="check fchkl">&#9638;
+						<input type="checkbox" data-flt="&#9638;" onchange="filterFx(this)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="filterVol" class="check fchkl">&#9834;
+						<input type="checkbox" data-flt="&#9834;" onchange="filterFx(this)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="filterFreq" class="check fchkl">&#9835;
+						<input type="checkbox" data-flt="&#9835;" onchange="filterFx(this)">
+						<span class="checkmark"></span>
+					</label>
+				</div>
+				<div id="slider0" class="slider">
+					<i class="icons slider-icon" onclick="tglFreeze()">&#xe325;</i>
 					<div class="sliderwrap il">
-						<input id="sliderB" class="noslide" oninput="fromRgb()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
+						<input id="sliderSpeed" class="noslide" onchange="setSpeed()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
 						<div class="sliderdisplay"></div>
 					</div>
-					<span class="tooltiptext">Blue channel</span>
+					<output class="sliderbubble"></output>
+					<span id="sliderLabel0" class="tooltiptext">Effect speed</span>
+				</div>
+				<div id="slider1" class="slider">
+					<i class="icons slider-icon" onclick="tglLabels()">&#xe409;</i>
+					<div class="sliderwrap il">
+						<input id="sliderIntensity" class="noslide" onchange="setIntensity()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
+						<div class="sliderdisplay"></div>
+					</div>
+					<output class="sliderbubble"></output>
+					<span class="tooltiptext" id="sliderLabel1">Effect intensity</span>
+				</div>
+				<div id="slider2" class="slider hide">
+					<i class="icons slider-icon">&#xe410;</i>
+					<div class="sliderwrap il">
+						<input id="sliderC1" class="noslide" onchange="setCustom(1)" oninput="updateTrail(this)" max="255" min="0" type="range" value="0" />
+						<div class="sliderdisplay"></div>
+					</div>
+					<output class="sliderbubble"></output>
+					<span class="tooltiptext" id="sliderLabel2">Custom 1</span>
+				</div>
+				<div id="slider3" class="slider hide">
+					<i class="icons slider-icon">&#xe0a2;</i>
+					<div class="sliderwrap il">
+						<input id="sliderC2" class="noslide" onchange="setCustom(2)" oninput="updateTrail(this)" max="255" min="0" type="range" value="0" />
+						<div class="sliderdisplay"></div>
+					</div>
+					<output class="sliderbubble"></output>
+					<span class="tooltiptext" id="sliderLabel3">Custom 2</span>
+				</div>
+				<div id="slider4" class="slider hide">
+					<i class="icons slider-icon">&#xe0e8;</i>
+					<div class="sliderwrap il">
+						<input id="sliderC3" class="noslide" onchange="setCustom(3)" oninput="updateTrail(this)" max="31" min="0" type="range" value="0" />
+						<div class="sliderdisplay"></div>
+					</div>
+					<output class="sliderbubble"></output>
+					<span class="tooltiptext" id="sliderLabel4">Custom 3</span>
+				</div>
+				<div id="fxopt" class="option fade">
+					<label id="opt0" class="check ochkl hide"><i class="icons">&#xe2b3;</i><span class="tooltiptext" id="optLabel0">Check 1</span>
+						<input id="checkO1" type="checkbox" onchange="setOption(1, this.checked)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="opt1" class="check ochkl hide"><i class="icons">&#xe34b;</i><span class="tooltiptext" id="optLabel1">Check 2</span>
+						<input id="checkO2" type="checkbox" onchange="setOption(2, this.checked)">
+						<span class="checkmark"></span>
+					</label>
+					<label id="opt2" class="check ochkl hide"><i class="icons">&#xe04c;</i><span class="tooltiptext" id="optLabel2">Check 3</span>
+						<input id="checkO3" type="checkbox" onchange="setOption(3, this.checked)">
+						<span class="checkmark"></span>
+					</label>
 				</div>
 			</div>
-			<div id="wwrap" class="slider">
-				<!--p class="labels hd">White channel</p-->
-				<div id="whibri" class="sliderwrap il">
-					<input id="sliderW" class="noslide" oninput="fromW()" onchange="setColor(0)" max="255" min="0" type="range" value="128" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<span class="tooltiptext">White channel</span>
+		</div>
+	
+		<div id="Segments" class="tabcontent">
+			<div id="segGFX" hidden="true"> <!--WLEDMM-->
+				<br>
+				<canvas id="canvasSegments"></canvas><br>
+				<br>
 			</div>
-			<div id="wbal" class="slider">
-				<!--p class="labels hd">White balance</p-->
-				<div class="sliderwrap il">
-					<input id="sliderA" class="noslide" onchange="setBalance(this.value)" max="255" min="0" type="range" value="128" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<span class="tooltiptext">White balance</span>
+			<p class="labels" id="modeLabel">Segments</p>
+			<div id="segcont">
+				Loading...
 			</div>
-			<div id="qcs-w">
-				<div class="qcs" onclick="pC('#ff0000');" title="Red" style="background-color:#ff0000;"></div>
-				<div class="qcs" onclick="pC('#ffa000');" title="Orange" style="background-color:#ffa000;"></div>
-				<div class="qcs" onclick="pC('#ffc800');" title="Yellow" style="background-color:#ffc800;"></div>
-				<div class="qcs" onclick="pC('#ffe0a0');" title="Warm White" style="background-color:#ffe0a0;"></div>
-				<div class="qcs" onclick="pC('#ffffff');" title="White" style="background-color:#ffffff;"></div>
-				<div class="qcs qcsb" onclick="pC('#000000');" title="Black" style="background-color:#000000;"></div><br>
-				<div class="qcs" onclick="pC('#ff00ff');" title="Pink" style="background-color:#ff00ff;"></div>
-				<div class="qcs" onclick="pC('#0000ff');" title="Blue" style="background-color:#0000ff;"></div>
-				<div class="qcs" onclick="pC('#00ffc8');" title="Cyan" style="background-color:#00ffc8;"></div>
-				<div class="qcs" onclick="pC('#08ff00');" title="Green" style="background-color:#08ff00;"></div>
-				<div class="qcs" onclick="pC('rnd');" title="Random" style="background:linear-gradient(to right, red, orange, yellow, green, blue, purple);transform: translateY(-11px);">R</div>
+			<div class="labels hd" id="MD"></div> <!-- WLEDMM Matrix dimensions -->
+			<div id="segutil" class="staybot">
 			</div>
-			<div id="csl">
-				<button id="csl0" class="btn xxs cl" onclick="selectSlot(0);" data-r="0" data-g="0" data-b="0" data-w="0">1</button>
-				<button id="csl1" class="btn xxs cl" onclick="selectSlot(1);" data-r="0" data-g="0" data-b="0" data-w="0">2</button>
-				<button id="csl2" class="btn xxs cl" onclick="selectSlot(2);" data-r="0" data-g="0" data-b="0" data-w="0">3</button>
+			<div id="segutil2">
+				<button class="btn btn-s" id="rsbtn" onclick="rSegs()">Reset segments</button>
 			</div>
-			<p class="labels h" id="cslLabel"></p>
-			<div id="hexw">
-				<i class="icons sel-icon" onclick="tglRgb()">&#xe22d;</i>
-				<input id="hexc" type="text" class="noslide" onkeydown="hexEnter()" autocomplete="off" maxlength="8" />
-				<button id="hexcnf" class="btn btn-xs" onclick="fromHex();"><i class="icons btn-icon">&#xe390;</i></button>
+			<p>Transition: <input id="tt" type="number" min="0" max="65.5" step="0.1" value="0.7">&nbsp;s</p>
+			<p id="ledmap" class="hide"></p>
+		</div>
+	
+		<div id="Presets" class="tabcontent">
+			<div id="pql">
 			</div>
-		</div> <!--colorGFX-->
-		<p class="labels" id="pall"><i class="icons sel-icon" onclick="tglHex()">&#xe2b3;</i> Color palette</p>
-		<div id="palw" class="il">
-			<div class="staytop fnd">
-				<input type="text" placeholder="Search" oninput="search(this,'pallist')" onfocus="search(this,'pallist')" />
-				<i class="icons clear-icon" onclick="clean(this)">&#xe38f;</i>
+			<p class="labels hd">Presets</p>
+			<div class="staytop fnd" id="psFind">
+				<input type="text" placeholder="Search" oninput="search(this,'pcont')" onfocus="search(this,'pcont')" />
+				<i class="icons clear-icon" onclick="clean(this);">&#xe38f;</i>
 				<i class="icons search-icon">&#xe0a1;</i>
 			</div>
-			<div id="pallist" class="list">
-				<div class="lstI">
-					<label class="radio schkl" onclick="loadPalettes()"> 
-						<div class="lstIcontent">
-							<span class="lstIname">
-								Loading...
-							</span>
-						</div>
-					</label>
-				</div>
+			<div id="pcont" class="list">
+				<span onclick="loadPresets()">Loading...</span>
 			</div>
-			<div style="padding-bottom: 10px;">
-				<button class="btn btn-xs" type="button" onclick="window.location.href=(loc?'http://'+locip:'')+'/cpal.htm'"><i class="icons btn-icon">&#xe18a;</i></button>
-				<button class="btn btn-xs" type="button" onclick="palettesData=null;localStorage.removeItem('wledPalx');requestJson({rmcpal:true});setTimeout(loadPalettes,250,loadPalettesData);"><i class="icons btn-icon">&#xe037;</i></button>
+			<div id="putil" class="staybot">
 			</div>
 		</div>
 	</div>
-
-	<div id="Effects" class="tabcontent">
-		<div id="effectGFX" hidden="true"> <!--WLEDMM-->
-			<!-- <p class="labels hd">Peek ☾ <button class="btn infobtn btn-xs" onclick="eandp(this,gId('canvasPeek'));">v</button></p> -->
-			<br>
-			<canvas id="canvasPeek" onclick="bigPeek(true)"></canvas><br>
-			<br>
-		</div>
-		<div id="fx">
-			<p class="labels hd" id="modeLabel">Effect mode</p>
-			<div class="staytop fnd" id="fxFind">
-				<input type="text" placeholder="Search" oninput="search(this,'fxlist')" onfocus="search(this,'fxlist');gId('filters').classList.add('fade');" onblur="gId('filters').classList.remove('fade')"/>
-				<i class="icons clear-icon" onclick="clean(this);">&#xe38f;</i>
-				<i class="icons search-icon" onclick="gId('filters').classList.toggle('hide');" style="cursor:pointer;">&#xe0a1;</i>
-			</div>
-			<div id="fxlist" class="list">
-				<div class="lstI">
-					<label class="radio schkl" onclick="loadFX()"> 
-						<div class="lstIcontent">
-							<span class="lstIname">
-								Loading...
-							</span>
-						</div>
-					</label>
-				</div>
-			</div>
-		</div>
-		<div id="sliders">
-			<div id="filters" class="filter">
-				<label id="filterPal" class="check fchkl">&#x1F3A8;
-					<input type="checkbox" data-flt="&#x1F3A8;" onchange="filterFx(this)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="filter0D" class="check fchkl hide">&#8226;
-					<input type="checkbox" data-flt="&#8226;" onchange="filterFx(this)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="filter1D" class="check fchkl">&#8942;
-					<input type="checkbox" data-flt="&#8942;" onchange="filterFx(this)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="filter2D" class="check fchkl">&#9638;
-					<input type="checkbox" data-flt="&#9638;" onchange="filterFx(this)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="filterVol" class="check fchkl">&#9834;
-					<input type="checkbox" data-flt="&#9834;" onchange="filterFx(this)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="filterFreq" class="check fchkl">&#9835;
-					<input type="checkbox" data-flt="&#9835;" onchange="filterFx(this)">
-					<span class="checkmark"></span>
-				</label>
-			</div>
-			<div id="slider0" class="slider">
-				<i class="icons slider-icon" onclick="tglFreeze()">&#xe325;</i>
-				<div class="sliderwrap il">
-					<input id="sliderSpeed" class="noslide" onchange="setSpeed()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<output class="sliderbubble"></output>
-				<span id="sliderLabel0" class="tooltiptext">Effect speed</span>
-			</div>
-			<div id="slider1" class="slider">
-				<i class="icons slider-icon" onclick="tglLabels()">&#xe409;</i>
-				<div class="sliderwrap il">
-					<input id="sliderIntensity" class="noslide" onchange="setIntensity()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<output class="sliderbubble"></output>
-				<span class="tooltiptext" id="sliderLabel1">Effect intensity</span>
-			</div>
-			<div id="slider2" class="slider hide">
-				<i class="icons slider-icon">&#xe410;</i>
-				<div class="sliderwrap il">
-					<input id="sliderC1" class="noslide" onchange="setCustom(1)" oninput="updateTrail(this)" max="255" min="0" type="range" value="0" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<output class="sliderbubble"></output>
-				<span class="tooltiptext" id="sliderLabel2">Custom 1</span>
-			</div>
-			<div id="slider3" class="slider hide">
-				<i class="icons slider-icon">&#xe0a2;</i>
-				<div class="sliderwrap il">
-					<input id="sliderC2" class="noslide" onchange="setCustom(2)" oninput="updateTrail(this)" max="255" min="0" type="range" value="0" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<output class="sliderbubble"></output>
-				<span class="tooltiptext" id="sliderLabel3">Custom 2</span>
-			</div>
-			<div id="slider4" class="slider hide">
-				<i class="icons slider-icon">&#xe0e8;</i>
-				<div class="sliderwrap il">
-					<input id="sliderC3" class="noslide" onchange="setCustom(3)" oninput="updateTrail(this)" max="31" min="0" type="range" value="0" />
-					<div class="sliderdisplay"></div>
-				</div>
-				<output class="sliderbubble"></output>
-				<span class="tooltiptext" id="sliderLabel4">Custom 3</span>
-			</div>
-			<div id="fxopt" class="option fade">
-				<label id="opt0" class="check ochkl hide"><i class="icons">&#xe2b3;</i><span class="tooltiptext" id="optLabel0">Check 1</span>
-					<input id="checkO1" type="checkbox" onchange="setOption(1, this.checked)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="opt1" class="check ochkl hide"><i class="icons">&#xe34b;</i><span class="tooltiptext" id="optLabel1">Check 2</span>
-					<input id="checkO2" type="checkbox" onchange="setOption(2, this.checked)">
-					<span class="checkmark"></span>
-				</label>
-				<label id="opt2" class="check ochkl hide"><i class="icons">&#xe04c;</i><span class="tooltiptext" id="optLabel2">Check 3</span>
-					<input id="checkO3" type="checkbox" onchange="setOption(3, this.checked)">
-					<span class="checkmark"></span>
-				</label>
-			</div>
-		</div>
+	
+	<div class="tab bot" id="bot">
+		<button class="tablinks" onclick="openTab(0)"><i class="icons">&#xe04c;</i><p class="tab-label">Presets</p></button>
+		<button class="tablinks" onclick="openTab(1)"><i class="icons">&#xe2b3;</i><p class="tab-label">Colors</p></button>
+		<button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe23d;</i><p class="tab-label">Effects</p></button>
+		<button class="tablinks" onclick="openTab(3)" style="width:10%; gap: 0"><i class="icons">&#xe34b;</i></button>
 	</div>
-
-	<div id="Segments" class="tabcontent">
-		<div id="segGFX" hidden="true"> <!--WLEDMM-->
-			<br>
-			<canvas id="canvasSegments"></canvas><br>
-			<br>
+	
+	<div id="connind">🛜</div> <!-- WLEDMM add moon -->
+	<div id="toast" onclick="clearErrorToast(100);"></div>
+	<div id="namelabel" onclick="toggleNodes()"></div>
+	<div id="info" class="modal">
+		<button class="btn btn-xs close" onclick="toggleInfo()"><i class="icons rot45">&#xe18a;</i></button>
+		<div id="imgw">
+			<img id="img" src="about:blank" alt="WLED logo" />
+		</div>	
+		<div id="kv">Loading...</div><br>
+		<div>
+			<button class="btn infobtn" onclick="requestJson()">Refresh</button>
+			<button class="btn infobtn" onclick="toggleNodes()">Instance List</button>
+			<button class="btn infobtn" onclick="window.open('/update','_self');">Update NEBULITE WLED</button>
+			<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Reboot NEBULITE WLED</button>
+			<button class="btn infobtn" id="genPresets" onclick="genPresets()">Generate presets</button>
+			<button class="btn infobtn" id="savePresetsGen" onclick="savePresetsGen()" hidden="true">Save generated presets</button>
+			<textarea id="presetsGen" hidden="true"></textarea><br>
 		</div>
-		<p class="labels" id="modeLabel">Segments</p>
-		<div id="segcont">
-			Loading...
-		</div>
-		<div class="labels hd" id="MD"></div> <!-- WLEDMM Matrix dimensions -->
-		<div id="segutil" class="staybot">
-		</div>
-		<div id="segutil2">
-			<button class="btn btn-s" id="rsbtn" onclick="rSegs()">Reset segments</button>
-		</div>
-		<p>Transition: <input id="tt" type="number" min="0" max="65.5" step="0.1" value="0.7">&nbsp;s</p>
-		<p id="ledmap" class="hide"></p>
+		<br>
+		<span class="h">WLED made with <span id="heart">&#10084;&#xFE0E;</span> by Aircoookie and the <a href="https://wled.discourse.group/" target="_blank">WLED community</a></span><br>
+		<span class="h">WLED MM made with <span id="heartMM">&#10084;&#xFE0E;</span> by Softhack007 &amp; Ewowi and the <a href="https://discord.gg/8P7wGuqT/" target="_blank">WLED 2D &amp; Audio Dev</a> community</span>
+		<span class="h">Heavily modified by Veit Nachtmann for <a href="https://nebulite.berlin/" target="_blank">NEBULITE</a>.</span>
 	</div>
-
-	<div id="Presets" class="tabcontent">
-		<div id="pql">
-		</div>
-		<p class="labels hd">Presets</p>
-		<div class="staytop fnd" id="psFind">
-			<input type="text" placeholder="Search" oninput="search(this,'pcont')" onfocus="search(this,'pcont')" />
-			<i class="icons clear-icon" onclick="clean(this);">&#xe38f;</i>
-			<i class="icons search-icon">&#xe0a1;</i>
-		</div>
-		<div id="pcont" class="list">
-			<span onclick="loadPresets()">Loading...</span>
-		</div>
-		<div id="putil" class="staybot">
-		</div>
+	
+	<div id="nodes" class="modal">
+		<button class="btn btn-xs close" onclick="toggleNodes()"><i class="icons rot45">&#xe18a;</i></button>
+		<div id="ndlt">NEBULITE / WLED instances</div>
+		<div id="kn">Loading...</div>
+		<div style="position:sticky;bottom:0;">
+			<button class="btn infobtn" onclick="loadNodes()">Refresh</button>
+		</div>	
 	</div>
-</div>
-
-<div class="tab bot" id="bot">
-	<button class="tablinks" onclick="openTab(0)"><i class="icons">&#xe2b3;</i><p class="tab-label">Colors</p></button>
-	<button class="tablinks" onclick="openTab(1)"><i class="icons">&#xe23d;</i><p class="tab-label">Effects</p></button>
-	<button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe34b;</i><p class="tab-label">Segments</p></button>
-	<button class="tablinks" onclick="openTab(3)"><i class="icons">&#xe04c;</i><p class="tab-label">Presets</p></button>
-</div>
-
-<div id="connind">&#9790;</div> <!-- WLEDMM add moon -->
-<div id="toast" onclick="clearErrorToast(100);"></div>
-<div id="namelabel" onclick="toggleNodes()"></div>
-<div id="info" class="modal">
-	<button class="btn btn-xs close" onclick="toggleInfo()"><i class="icons rot45">&#xe18a;</i></button>
-	<div id="imgw">
-		<img class="wi" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAFCAYAAAC5Fuf5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABbSURBVChTlY9bDoAwDMNW7n9nwCipytQN4Z8tbrTHmDmF4oPzyldwRqp1SSdnV/NuZuzqerAByxXznBw3igkeFEfXyUuhK/yFM0CxJfyqXZEOc6/Sr9/bf7uIC5Nwd7orMvAPAAAAAElFTkSuQmCC" />
+	
+	<!-- WLEDMM ARTIFX -->
+	<div id="ceEditor" class="modal">
+		<div id="kceEditor">Loading...</div><br>
 	</div>
-	<div id="kv">Loading...</div><br>
-	<div>
-		<button class="btn infobtn" onclick="requestJson()">Refresh</button>
-		<button class="btn infobtn" onclick="toggleNodes()">Instance List</button>
-		<button class="btn infobtn" onclick="window.open('/update','_self');">Update WLED</button>
-		<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Reboot WLED</button>
-		<button class="btn infobtn" id="genPresets" onclick="genPresets()">Generate presets ☾</button>
-		<button class="btn infobtn" id="savePresetsGen" onclick="savePresetsGen()" hidden="true">Save generated presets</button>
-		<textarea id="presetsGen" hidden="true"></textarea><br>
+	
+	<div id="mliveview2D" class="modal">
+		<div id="kliveview2D" style="width:100%; height:100%">Loading...</div><br>
 	</div>
-	<br>
-	<span class="h">WLED made with <span id="heart">&#10084;&#xFE0E;</span> by Aircoookie and the <a href="https://wled.discourse.group/" target="_blank">WLED community</a></span><br>
-	<span class="h">WLED MM made with <span id="heartMM">&#10084;&#xFE0E;</span> by Softhack007 &amp; Ewowi and the <a href="https://discord.gg/8P7wGuqT/" target="_blank">WLED 2D &amp; Audio Dev</a> community</span>
-</div>
-
-<div id="nodes" class="modal">
-	<button class="btn btn-xs close" onclick="toggleNodes()"><i class="icons rot45">&#xe18a;</i></button>
-	<div id="ndlt">WLED instances</div>
-	<div id="kn">Loading...</div>
-	<div style="position:sticky;bottom:0;">
-		<button class="btn infobtn" onclick="loadNodes()">Refresh</button>
-	</div>	
-</div>
-
-<!-- WLEDMM ARTIFX -->
-<div id="ceEditor" class="modal">
-	<div id="kceEditor">Loading...</div><br>
-</div>
-
-<div id="mliveview2D" class="modal">
-	<div id="kliveview2D" style="width:100%; height:100%">Loading...</div><br>
-</div>
-
-<div id="rover" class="modal">
-	<i class="icons huge">&#xe410;</i><br>
-	<div id="lv">?</div><br><br>
-	To use built-in effects, use an override button below.<br>
-	You can return to realtime mode by pressing the star in the top left corner.<br>
-	<button class="btn" onclick="setLor(1)">Override once</button>
-	<button class="btn" onclick="setLor(2)">Override until reboot</button><br>
-	<span class="h">For best performance, it is recommended to turn off the streaming source when not in use.</span>
-</div>
-<i id="roverstar" class="icons huge" onclick="setLor(0)">&#xe410;</i><br>
-<script src="index.js"></script>
-<script src="../../usermods/artifx/artifx.js"></script> <!--WLEDMM ARTIFX-->
-</body>
-</html>
+	
+	<div id="rover" class="modal">
+		<i class="icons huge">&#xe410;</i><br>
+		<div id="lv">?</div><br><br>
+		To use built-in effects, use an override button below.<br>
+		You can return to realtime mode by pressing the star in the top left corner.<br>
+		<button class="btn" onclick="setLor(1)">Override once</button>
+		<button class="btn" onclick="setLor(2)">Override until reboot</button><br>
+		<span class="h">For best performance, it is recommended to turn off the streaming source when not in use.</span>
+	</div>
+	<i id="roverstar" class="icons huge" onclick="setLor(0)">&#xe410;</i><br>
+	<script src="index.js"></script>
+	<script src="../../usermods/artifx/artifx.js"></script> <!--WLEDMM ARTIFX-->
+	</body>
+	</html>
+	

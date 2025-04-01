@@ -237,6 +237,8 @@ inline bool applyTemporaryPreset() {return applyPreset(255);};
 void savePreset(byte index, const char* pname = nullptr, JsonObject saveobj = JsonObject());
 inline void saveTemporaryPreset() {savePreset(255);};
 void deletePreset(byte index);
+void iteratePreset();
+void iteratePresetReverse();
 bool getPresetName(byte index, String& name);
 
 //remote.cpp

@@ -4,7 +4,7 @@
 }
 
 :root {
-	--c-1: #111;
+	--c-1: #1B1B1B !important;
 	--c-f: #fff;
 	--c-2: #222;
 	--c-3: #333;
@@ -17,12 +17,14 @@
 	--c-e: #eee;
 	--c-d: #ddd;
 	--c-r: #c32;
-	--c-g: #2c1;
-	--c-l: #48a;
+	--c-g: #33A938 !important;
+	--c-l: #0866FF !important;
 	--c-y: #a90;
+	--c-hover: #2E3032 !important;
+	--c-input: #282A2C !important;
 	--t-b: 0.5;
 	--c-o: rgba(34, 34, 34, 0.9);
-	--c-tb : rgba(34, 34, 34, var(--t-b));
+	--c-tb : rgba(40, 42, 44, var(--t-b)) !important;
 	--c-tba: rgba(102, 102, 102, var(--t-b));
 	--c-tbh: rgba(51, 51, 51, var(--t-b));
 	/*following are internal*/
@@ -63,6 +65,7 @@ body {
 	width: 100%;
 	position: fixed;
 	overscroll-behavior: none;
+    overscroll-behavior-y: contain;
 }
 
 #bg {
@@ -116,7 +119,7 @@ button {
 	top: 0;
 	left: 0;
 	right: 0;
-	background: var(--c-tb);
+	background: var(--c-input);
 	z-index: 1;
 }
 
@@ -134,7 +137,7 @@ button {
 
 .off {
 	color: var(--c-6) !important;
-	cursor: default !important;
+	/* cursor: default !important; */
 }
 
 .top .icons, .bot .icons {
@@ -171,12 +174,6 @@ button {
 
 .valtd i {
 	font-size: small;
-}
-
-.slider-icon {
-	position: absolute;
-	left: 8px;
-	bottom: 5px;
 }
 
 .sel-icon {
@@ -223,7 +220,7 @@ button {
 .search-icon {
 	position: absolute;
 	top: 8px;
-	left: 12px;
+	left: 18px;
 	width: 24px;
 	height: 24px;
 }
@@ -328,6 +325,7 @@ button {
 	margin-top: var(--tp);
 	transform: translate(calc(var(--i, 0)/var(--n)*-100%));
 	overscroll-behavior: none;
+    overscroll-behavior-y: contain;
 }
 
 .tabcontent {
@@ -340,6 +338,7 @@ button {
 	overflow: auto;
 	height: 100%;
 	overscroll-behavior: none;
+    overscroll-behavior-y: contain;
 	padding: 0 4px;
 	-webkit-overflow-scrolling: touch;
 }
@@ -352,7 +351,7 @@ button {
 
 #putil, #segutil, #segutil2 {
 	min-height: 42px;
-	margin: 0 auto;
+	margin: 13px auto 0;
 }
 
 #segutil .segin {
@@ -410,6 +409,9 @@ button {
 	position: -webkit-sticky;
 	position: sticky;
 	bottom: 0;
+	background-color: #282a2c;;
+	/* padding-top: 18px; */
+	border-top: 1px solid #3b4147;
 }
 
 /* WLEDMM */
@@ -425,28 +427,25 @@ button {
 }
 
 .slider {
-	max-width: 300px;
+	/*max-width: 300px;*/
 	/* margin: 5px auto; add 5px; if you want some vertical space but looks ugly */
 	border-radius: 24px;
 	position: relative;
-	padding-bottom: 2px;
+	/* padding-bottom: 2px; */
+	padding: 5px 5px 5px 0 !important;
 }
 
 /* Slider wrapper div */
 .sliderwrap {
 	height: 30px;
-	width: 230px;
-	max-width: 230px;
 	position: relative;
 	z-index: 0;
-}
-
-#sliders .slider, #info .slider {
-	background-color: var(--c-2);
+	width: 100%;
+	/* margin: 5px; */
 }
 
 #sliders .sliderwrap, .sbs .sliderwrap {
-	left: 16px; /* offset for icon */
+	/* left: 32px; offset for icon */
 }
 
 .filter, .option {
@@ -466,50 +465,20 @@ button {
 	overflow: hidden;
 }
 
+#filters {
+	display: none;
+}
+
 /* Tooltip text */
 .slider .tooltiptext, .option .tooltiptext {
-	visibility: hidden;
-	background-color: var(--c-5);
-	/*border: 2px solid var(--c-2);*/
-	box-shadow: 4px 4px 10px 4px var(--c-1);
-	color: var(--c-f);
-	text-align: center;
-	padding: 4px 8px;
-	border-radius: 6px;
-
-	/* Position the tooltip text */
-	width: 160px;
 	position: absolute;
-	z-index: 1;
-	bottom: 80%;
-	left: 50%;
-	margin-left: -92px;
-
-	/* Ensure tooltip goes away when mouse leaves control */
-	pointer-events: none;
-
-	/* Fade in tooltip */
-	opacity: 0;
-	transition: opacity 0.75s;
+	bottom: 85%;
+	left: 0;
+	font-size: 14px;
 }
 .option .tooltiptext {
-	bottom: 120%;
-}
-/* Tooltip arrow */
-.slider .tooltiptext::after, .option .tooltiptext::after {
-	content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
-	margin-left: -5px;
-	border-width: 5px;
-	border-style: solid;
-	border-color: var(--c-5) transparent transparent transparent;
-}
-/* Show the tooltip text when you mouse over the tooltip container */
-.slider:hover .tooltiptext, .option .check:hover .tooltiptext {
-	visibility: visible;
-	opacity: 1;
+	bottom: 110%;
+	width: 200px;
 }
 
 .fade {
@@ -563,7 +532,7 @@ button {
 	transform: translateY(100%);
 	transition: transform 0.4s;
 	padding: 8px;
-	font-size: 18px; /* WLEDMM: smaller is better (was 20px)*/
+	font-size: 20px;
 	overflow: auto;
 }
 
@@ -594,13 +563,17 @@ button {
 }
 
 #connind {
-	position: fixed;
-	bottom: calc(var(--bh) + 5px);
-	left: 4px;
-	padding: 5px;
-	border-radius: 5px;
+	border-radius: 6px;
 	background-color: #a90;
-	z-index: -2;
+	height: 25px;
+	bottom: 0 !important;
+	z-index: 10;
+	font-size: 15px;
+	position: fixed;
+	left: 0px;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 3px;
 }
 
 #info .slider {
@@ -613,23 +586,12 @@ button {
 	width: 200px;
 }
 
-#info table {
+#info table, #nodes table {
 	table-layout: fixed;
 	width: 100%;
 }
 
-/*WLEDMM nodes table auto*/
-#nodes table {
-	table-layout: auto;
-	width: 100%;
-}
-
-/*WLEDMM split info and nodes table font attributes*/
-#info td {
-	padding-bottom: 8px;
-}
-#nodes td {
-	font-size: 12px; /*WLEDMM small table cells (nodes popup) */
+#info td, #nodes td {
   padding-bottom: 8px;
 }
 
@@ -639,14 +601,8 @@ button {
 #info table .btn, #nodes table .btn {
 	margin: 0;
 }
-#info div {
+#info div, #nodes div {
 	max-width: 490px;
-	margin: 0 auto;
-}
-
-/*WLEDMM nodes div width must be bigger*/
-#nodes div {
-	max-width: 980px;
 	margin: 0 auto;
 }
 
@@ -663,12 +619,6 @@ button {
 	transition: color 0.9s;
 	font-size: 16px;
 	color: #f00;
-}
-
-#heartMM {
-	transition: color 0.9s;
-	font-size: 16px;
-	color: #0f0;
 }
 
 img {
@@ -715,19 +665,15 @@ img {
 
 .sliderbubble {
 	width: 24px;
-	position: relative;
+	position: absolute;
 	display: inline-block;
-	border-radius: 10px;
-	background: var(--c-3);
-	color: var(--c-f);
-	padding: 2px 4px;
 	font-size: 14px;
-	right: 3px;
-	transition: visibility 0.25s ease, opacity 0.25s ease;
-	opacity: 0;
-	visibility: hidden;
-	left: 8px;
-}
+	right: 6px;
+	transition: visibility .25s ease,opacity .25s ease;
+	opacity: 1;
+	visibility: visible;
+	top: -7px;
+  }
 
 output.sliderbubbleshow {
 	visibility: visible;
@@ -739,6 +685,7 @@ input[type=range] {
 	width: 100%;
 	padding: 0;
 	margin: 0;
+	height: 12px;
 	background-color: transparent;
 	cursor: pointer;
 }
@@ -753,8 +700,8 @@ input[type=range]::-webkit-slider-runnable-track {
 	background: transparent;
 }
 input[type=range]::-webkit-slider-thumb {
-	height: 16px;
-	width: 16px;
+	height: 24px;
+	width: 24px;
 	border-radius: 50%;
 	background: var(--c-f);
 	cursor: pointer;
@@ -768,15 +715,15 @@ input[type=range]::-moz-range-track {
 }
 input[type=range]::-moz-range-thumb {
 	border: 0px solid rgba(0, 0, 0, 0);
-	height: 16px;
-	width: 16px;
+	height: 24px;
+	width: 24px;
 	border-radius: 50%;
 	background: var(--c-f);
 	transform: translateY(5px);
 }
 #Colors input[type=range]::-webkit-slider-thumb {
-	height: 18px;
-	width: 18px;
+	height: 24px;
+	width: 24px;
 	border: 2px solid var(--c-1);
 	margin-top: 5px;
 }
@@ -797,6 +744,7 @@ input[type=range]::-moz-range-thumb {
 	min-width: 267px;
 	float: right;
 	margin-top: var(--bmt);
+	width: 100%;
 }
 
 #picker {
@@ -1034,7 +982,7 @@ textarea {
 	width: 50px !important;
 }
 
-.segname, .pname {
+.segname, .pname, .bname {
 	white-space: nowrap;
 	text-align: center;
 	overflow: hidden;
@@ -1044,15 +992,18 @@ textarea {
 	max-width: 170px;
 	position: relative;
 }
+.bname {
+	padding: 0 24px;
+}
 
 .segname .flr, .pname .flr {
 	transform: rotate(0deg);
-	right: 4px;
+	right: -6px;
 }
 
 /* segment power wrapper */
 .sbs {
-	padding: 1px 0 1px 20px;
+	/*padding: 1px 0 1px 20px;*/
 	display: var(--sgp);
 	width: 100%;
 	position: relative;
@@ -1141,6 +1092,10 @@ textarea {
 	cursor: pointer;
 }
 
+.radio.schkl {
+	width: 100%;
+}
+
 .revchkl {
 	padding: 4px 0px 0px 35px;
 	margin-bottom: 0px;
@@ -1171,9 +1126,13 @@ TD .revchkl {
 	border: 1px solid var(--c-2);
 }
 
+.list .radiomark {
+	left: unset;
+	right: 8px;
+}
+
 .radiomark {
 	top: 8px;
-	left: 8px;
 	height: 22px;
 	width: 22px;
 	border-radius: 50%;
@@ -1263,8 +1222,6 @@ TD .checkmark, TD .radiomark {
 	text-align: left;
 	line-height: 24px;
 	vertical-align: middle;
-	-webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-	filter: grayscale(100%);
 }
 
 .lbl-l {
@@ -1337,22 +1294,17 @@ TD .checkmark, TD .radiomark {
 	box-shadow: 0px 0px 10px 4px var(--c-1);
 }
 
-.lstI .flr:hover {
-    background: var(--c-6);
-    border-radius: 100%;
-}
-
 #pcont .selected:not([class*="expanded"]) {
 	bottom: 52px;
 	top: 42px;
 }
 
 #fxlist .lstI.selected {
-	top: 84px;
+	top: 56px;
 }
 
 #fxlist .lstI.sticky {
-	top: 42px;
+	top: 56px;
 }
 
 #pallist .lstI.selected {
@@ -1360,7 +1312,7 @@ TD .checkmark, TD .radiomark {
 }
 
 #pallist .lstI.sticky {
-	top: 42px;
+	top: 56px;
 }
 
 /* list item content */
@@ -1373,8 +1325,7 @@ TD .checkmark, TD .radiomark {
 .lstIname {
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	-webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-	filter: grayscale(100%);
+	font-size: 14px;
 }
 
 /* list item palette preview */
@@ -1394,7 +1345,7 @@ TD .checkmark, TD .radiomark {
 
 .fnd input[type="text"] {
 	display: block;
-	width: 100%;
+	width: calc(100% - 10px);
 	box-sizing: border-box;
     padding: 8px 40px 8px 44px;
     margin: 5px auto 0;
@@ -1490,6 +1441,168 @@ TD .checkmark, TD .radiomark {
 	background: var(--c-sbh);
 }
 
+
+
+
+
+.btnwrap {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 15px;
+	height: 60px;
+	border-bottom: 1px solid #393A3B;
+	
+}
+
+.top #briwrap {
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 3px;
+}
+
+.logoWrapper {
+	display: block;
+	width: 46%;
+	text-align: left;
+}
+
+.logoWrapper svg {
+	max-height: 30px;
+}
+
+.tab div button {
+	width: 37px;
+	height: 37px;
+	min-width: 37px;
+	margin-right: 15px;
+}
+.top .tab-label,
+.top .icons {
+	color: var(--c-f);
+}
+
+.tab div button.active,
+.tab div button:hover {
+	border-radius: 50px;
+	background: var(--c-hover);
+	color: var(--c-g);
+}
+
+.tabcontent {
+	padding-top: 8px;
+}
+
+.label {
+	font-weight: 600;
+	text-align: left;
+	font-size: 0.8em;
+	margin-bottom: -5px;
+}
+
+#segutil, #segutil2, #segcont, #putil, #pcont, #pql, #fx, #palw, .fnd {
+	max-width: 90vw;
+	display: block;
+	margin: 0 auto;
+}
+.lstI,
+.fnd input[type="text"] {
+	border-radius: 8px;
+	border: none;
+	display: flex;
+	padding: 16px 46px;
+}
+
+.clear-icon,
+.search-icon {
+	top: 16px;
+}
+
+.top button {
+	padding: 0px !important;
+}
+.top .icons {
+	margin: 0px;
+}
+
+.qcs {
+	position: relative;
+}
+.qcs::after {
+    content: "";
+    width: 22px;
+    height: 22px;
+    background-color: var(--c-1);
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-radius: 50px;
+}
+
+#buttonNl {
+	display: none !important;
+}
+
+
+.hide {
+	display: none !important;
+}
+
+.bot button {
+	width: 30%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	padding: 10px 0px;
+	border-radius: 50px;
+}
+
+.bot {
+	display: flex;
+	justify-content: space-around;
+	padding: 10px 0px;
+}
+
+.bot .icons,
+.bot .tab-label,
+.bot .button.active {
+	margin: 0px;
+	padding: 0px;
+	color: var(--c-f);
+}
+
+
+
+.bot button.active {
+	background-color: var(--c-input) !important;
+}
+
+.slider-icon {
+	top: 2px;
+	position: absolute;
+	left: 4px;
+}
+
+.tab div button.active .icons {
+	/* color: var(--c-g); */
+	color: white;
+}
+
+#sliders .slider-icon {
+	display: none;
+}
+
+#sliders .slider {
+	padding-right: 0;
+	margin: 20px auto 3px auto;
+}
+
+
+/* Responsive */
+
 @media not all and (hover: none) {
 	.sliderwrap:hover + output.sliderbubble {
 		visibility: visible;
@@ -1505,12 +1618,6 @@ TD .checkmark, TD .radiomark {
 	#buttonPcm {
 		display: none;
 	}
-}
-
-@media all and (max-width: 335px) {
-	.sliderbubble {
-    	display: none;
-  	}
 }
 
 @media all and (max-width: 550px) and (min-width: 374px) {
@@ -1536,10 +1643,20 @@ TD .checkmark, TD .radiomark {
 		width: 16.6%;
 		padding: 8px 0 4px 0;
 	}
-	#briwrap {
+	/* #briwrap {
 		margin: 0 auto !important;
 		float: none;
 		display: inline-block;
+	} */
+	.slider {
+		width: 90vw;
+	}
+	.top .slider {
+		width: 85vw;
+	}
+	.sliderwrap {
+		width: 100%;
+		max-width: 100%;
 	}
 	.hd {
 		display: none !important;
@@ -1563,7 +1680,6 @@ TD .checkmark, TD .radiomark {
 @media all and (min-width: 1024px) and (max-width: 1249px) {
 	#segutil, #segutil2, #segcont, #putil, #pcont, #pql, #fx, #palw, #psFind, #sliders {
 		width: 100%;
-		max-width: 280px;
 		font-size: 18px;
 	}
 	#picker {
@@ -1571,15 +1687,6 @@ TD .checkmark, TD .radiomark {
 	}
 	#putil .btn-s {
 		width: 114px;
-	}
-	#sliders .sliderbubble {
-		display: none;
-	}
-	.sliderwrap {
-		width: calc(100% - 28px);
-	}
-	#sliders .sliderwrap {
-		left: 12px;
 	}
 	.segname {
 		max-width: calc(100% - 110px);
@@ -1602,3 +1709,21 @@ TD .checkmark, TD .radiomark {
 		overflow-x: clip;
 	}
 }
+
+#buttonPcm {
+	display: none;
+}
+
+/* .modalDialog {
+	position: fixed;
+	top: 40%;
+	left: 0;
+	right: 0;
+	bottom: 40%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 10000;
+	pointer-events: all;
+} */

@@ -8,7 +8,6 @@
 .pioenvs
 .piolibdeps
 .vscode
-
 esp01-update.sh
 platformio_override.ini
 replace_fs.py
@@ -26,3 +25,6 @@ compile_commands.json
 /wled00/Release
 /wled00/wled00.ino.cpp
 /wled00/html_*.h
+
+/data/
+gitserver.key

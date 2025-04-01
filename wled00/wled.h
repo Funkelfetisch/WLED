@@ -825,6 +825,9 @@ WLED_GLOBAL StaticJsonDocument<JSON_BUFFER_SIZE> doc;
 #endif // WLEDMM end
 WLED_GLOBAL volatile uint8_t jsonBufferLock _INIT(0);
 
+// power down
+WLED_GLOBAL unsigned long powerDown _INIT(0);
+
 // enable additional debug output
 //WLEDMM: switch between netdebug and serial
 // cannot do this on -S2, due to buggy USBCDC serial driver: canUseSerial
