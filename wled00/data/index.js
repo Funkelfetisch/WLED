@@ -41,8 +41,8 @@ var ctx = null; // WLEDMM
 var ledmapNr = -1; //WLEDMM
 var ledmapFileNames = []; //WLEDMM
 let nodesData = []; //WLEDMM
-let ibtglChecked = true; //WLEDMM
-let sbtglChecked = true; //WLEDMM
+let ibtglChecked = false; //WLEDMM
+let sbtglChecked = false; //WLEDMM
 let sbchkChecked = false; //WLEDMM
 
 
@@ -52,14 +52,13 @@ var nebuliteRecordIterator = new Array(255);
 
 // New global variables for rate‐limiting preset image loads
 var presetQueue = [];
-var presetRateLimitDelay = 20; // milliseconds between requests
+var presetRateLimitDelay = 10; // milliseconds between requests
 
 // Enqueue a preset ID for loading
 function enqueuePresetImage(preset) {
   presetQueue.push(preset);
 }
 
-// Process one preset image from the queue, then schedule the next request
 function processPresetQueue() {
     if (presetQueue.length === 0) return;
     let preset = presetQueue.shift();
@@ -70,17 +69,25 @@ function processPresetQueue() {
         // Use the recorded filename with its cache key from the "r" field
         url = (loc ? `http://${locip}` : '.') + pJson[preset].r;
     } else {
-        // Fallback: use the default filename without a cache key
         url = (loc ? `http://${locip}` : '.') + `/rec-${preset}.jpg`;
     }
     
-    fetch(url, { cache: "no-store" })
+    fetch(url, {})
       .then(res => {
-          if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+          if (!res.ok) {
+              // If a 404 is returned, trigger saveP to overwrite this preset.
+              if (res.status === 404) {
+                  throw new Error("404");
+              } else {
+                  throw new Error(`HTTP Error: ${res.status}`);
+              }
+          }
           return res.blob();
       })
       .then(blob => {
           nebuliteStartAnimation(preset, blob);
+          // Process next preset normally after short delay.
+          setTimeout(processPresetQueue, presetRateLimitDelay);
       })
       .catch(err => {
           console.error("Error loading preset image " + preset, err);
@@ -88,33 +95,45 @@ function processPresetQueue() {
     setTimeout(processPresetQueue, presetRateLimitDelay);
 }
 
-  function nebuliteStartAnimation(preset, jpgBlob) {
+function nebuliteStartAnimation(preset, jpgBlob) {
     // Reset iterator for this preset.
     nebuliteRecordIterator[preset] = 0;
   
     createImageBitmap(jpgBlob)
       .then(imageBitmap => {
+          // Determine desired dimensions.
+          let targetWidth = ledCount; // scale width to match number of LEDs
+          let targetHeight = imageBitmap.height; // keep the original height
+  
           let offCanvas = document.createElement("canvas");
-          offCanvas.width = imageBitmap.width;
-          offCanvas.height = imageBitmap.height;
+          offCanvas.width = targetWidth;
+          offCanvas.height = targetHeight;
           let offCtx = offCanvas.getContext('2d');
-          offCtx.drawImage(imageBitmap, 0, 0);
-          let imageData = offCtx.getImageData(0, 0, imageBitmap.width, imageBitmap.height);
+  
+          // Draw the original image scaled to the new width (height unchanged)
+          offCtx.drawImage(
+              imageBitmap,                      // source image
+              0, 0, imageBitmap.width, imageBitmap.height,  // source rectangle
+              0, 0, targetWidth, targetHeight   // destination rectangle
+          );
+  
+          let imageData = offCtx.getImageData(0, 0, targetWidth, targetHeight);
           const originalData = imageData.data; // RGBA format
           
           // Convert RGBA data to an RGB-only array.
-          let rgbArray = new Uint8Array(imageBitmap.width * imageBitmap.height * 3);
+          let rgbArray = new Uint8Array(targetWidth * targetHeight * 3);
           for (let i = 0, j = 0; i < originalData.length; i += 4, j += 3) {
               rgbArray[j]     = originalData[i];     
               rgbArray[j + 1] = originalData[i + 1]; 
               rgbArray[j + 2] = originalData[i + 2]; 
           }
     
-          // Clear any previous interval and start a new one that now calls nebuliteAnimate without passing the entire iterator array.
+          // Clear any previous interval and start a new one with the generated rgbArray.
           clearInterval(nebuliteIntervals[preset]);
-          nebuliteIntervals[preset] = setInterval(function() {
-              nebuliteAnimate(preset, rgbArray, ledCount);
-          }, 100);
+		  console.log("Starting animation for preset:", preset);
+		  nebuliteIntervals[preset] = setInterval(function() {
+			  nebuliteAnimate(preset, rgbArray, ledCount);
+		  }, 100);
       })
       .catch(function(error) {
           console.error("Error decoding JPEG:", error);
@@ -766,6 +785,13 @@ function parseInfo(i) {
 //		gId("filterVol").classList.add("hide"); hideModes(" ♪"); // hide volume reactive effects
 //		gId("filterFreq").classList.add("hide"); hideModes(" ♫"); // hide frequency reactive effects
 //	}
+
+	/// NEBULITE
+    // Use the locally stored expert mode flag if present.
+    expertMode = localStorage.getItem("expertMode") === "true" || (i.expert === true);
+    document.querySelectorAll('.expert-option').forEach(el => {
+        el.style.display = expertMode ? '' : 'none';
+    });
 }
 
 //https://stackoverflow.com/questions/2592092/executing-script-elements-inserted-with-innerhtml
@@ -3152,10 +3178,12 @@ function saveP(i,pl)
 	// NEBULITE
 	// Disable all clicks while the recording is running
 	document.body.style.pointerEvents = 'none';
+	document.body.style.opacity = 0.5;
 
 	// Re-enable clicks after recording (approx. 6.5 seconds)
 	setTimeout(() => {
 		document.body.style.pointerEvents = 'auto';
+		document.body.style.opacity = 1;
 		pmtLast=0;
 		
 		loadPresets();

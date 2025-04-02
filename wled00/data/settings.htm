@@ -111,10 +111,28 @@
 <p>&nbsp;</p>
 <p>Beyond here be dragons. You can lock yourself out if you're not careful with the WiFi Setup!</p>
 
-
-
-
 <button type=submit id="b" onclick="window.location='/'">Back</button>
+
+<button id="expertToggleBtn" onclick="toggleExpertModeSetting()">Expert Mode: OFF</button>
+<script>
+	// Retrieve saved expert mode state from local storage (defaults to false)
+	let expertMode = localStorage.getItem("expertMode") === "true";
+  
+	// Update the button text on page load
+	document.addEventListener('DOMContentLoaded', () => {
+	  document.getElementById("expertToggleBtn").innerText =
+		expertMode ? "Expert Mode: ON" : "Expert Mode: OFF";
+	});
+  
+	function toggleExpertModeSetting() {
+	  // Toggle expert mode and update local storage
+	  expertMode = !expertMode;
+	  localStorage.setItem("expertMode", expertMode);
+	  document.getElementById("expertToggleBtn").innerText =
+		expertMode ? "Expert Mode: ON" : "Expert Mode: OFF";
+	}
+  </script>
+
 <button type="submit" onclick="window.location='./settings/wifi'">Wi-Fi Setup</button>
 <button type="submit" onclick="window.location='./settings/leds'">LED Preferences</button>
 <button id="2dbtn" style="display:none;" type="submit" onclick="window.location='./settings/2D'">2D Configuration</button>

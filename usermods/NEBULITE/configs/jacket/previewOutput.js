@@ -1,10 +1,10 @@
 const NEBULITE_preview_width = 200;
 const NEBULITE_preview_height = 200;
 
-// Base64-encoded WebP images
+// PNG image URLs hosted on the server
 const imageData = {
-  "jacket_leds": "data:image/webp;base64,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",
-  "jacket_top": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACwDQCdASrIAMgAP3G42WW0ryunIEgCkC4JaQDYzK+wCe16KuEGOTMzMZmZnBGZmYzMzOCMzMxmZmcEZmZjMzM4IzMzGZmZwRmZmMzMzgjMzMZmZnBGZmYzMzOCMzMxmZmcEZmZjMzM4IzMzGZmZwRmZmMzMzMAAP7uPAAAAAAAAAAA",
+  "jacket_leds": "/jacket_leds.png",
+  "jacket_top": "/jacket_top.png",
 };
 
 // Create image elements and draw them into canvases
@@ -20,12 +20,11 @@ for (let key in imageData) {
     canvases[key] = canvas;
   };
   img.src = imageData[key];
-}
+};
 
 
 function radialGradient(c, x, y, r1, r2, r, g, b) {
   var gradient = c.createRadialGradient(x, y, r1, x, y, r2);
-
   gradient.addColorStop(0, "rgba(" + r + "," + g + "," + b +",1)");
   gradient.addColorStop(0.5, "rgba(" + r + "," + g + "," + b +",.3)");
   gradient.addColorStop(1, "rgba(0,0,0,0)");
@@ -35,17 +34,13 @@ function radialGradient(c, x, y, r1, r2, r, g, b) {
 function colorsRGB(colors, offset) {
   // Calculate the actual offset needed (correcting for zero index and N bytes per pixel)
   var adjustedOffset = (offset - 1) * 3;
-
   // Adjust the offset to wrap around in sets of 3 (for RGB)
   adjustedOffset = adjustedOffset % (colors.length - colors.length % 3);
-
   // Extract color components
   var r = colors[adjustedOffset % colors.length];
   var g = colors[(adjustedOffset + 1) % colors.length];
   var b = colors[(adjustedOffset + 2) % colors.length];
-
   var color = "rgb(" + r + "," + g + "," + b + ")";
-  // console.log("converted color: ", color);
   return color;
 }
 

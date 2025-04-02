@@ -111,6 +111,8 @@ def unprettify_json_files(directory):
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
+                if "ap" in data:
+                    del data["ap"]
                 with open(file_path, "w", encoding="utf-8") as f:
                     json.dump(data, f, separators=(",", ":"))
                 print(f"Unprettified {file_path}")

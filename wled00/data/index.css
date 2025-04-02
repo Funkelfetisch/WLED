@@ -465,10 +465,6 @@ button {
 	overflow: hidden;
 }
 
-#filters {
-	display: none;
-}
-
 /* Tooltip text */
 .slider .tooltiptext, .option .tooltiptext {
 	position: absolute;

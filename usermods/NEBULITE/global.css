@@ -32,10 +32,9 @@
   background-color: #7f73f5 !important;
 }
 
-.filter, .option {
+.option {
   background: #9288f2 !important;
 }
-
 
 .slider {
   max-width: unset !important;
@@ -93,11 +92,12 @@ body {
 
 .checkmark, .radiomark {
   border: 1px solid #7f73f5;
+  background: transparent;
 }
 
-input[type="number"], input[type="text"] {
-  background: transparent;
-  border: 1px solid #7f73f5;
+input[type="number"], input[type="text"], select, .c button {
+  background: transparent !important;
+  border: 1px solid #7f73f5 !important;
 }
 
 .check:hover input ~ .checkmark, .radio:hover input ~ .radiomark {
@@ -149,10 +149,10 @@ body > .container {
 .pid {
   display: none;
 }
-div.c:nth-child(8) {
+/* div.c:nth-child(8) {
   display: initial !important;
-}
-.c, .h, .po2, .po1 {
+} */
+.h, .po2 {
   display: none !important;
 }
 .tablinks {
@@ -193,4 +193,20 @@ div.c:nth-child(8) {
 
 input[type="number"]:focus, input[type="text"]:focus {
   background: #27234d;
+}
+
+.fnd input[type=text] {
+  -webkit-filter: unset;
+  filter: unset;
+}
+
+.filter {
+  background-color: var(--c-2);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  padding: 6px 24px;
+}
+
+#fxFind {
+  margin-bottom: 6px
 }
