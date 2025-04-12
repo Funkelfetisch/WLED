@@ -26,6 +26,7 @@ def get_env_variables():
     match = re.search(r"-D\s*PRODUCT_NAME=([^\s]+)", build_flags)
     if match:
         product_name = match.group(1).strip('\'"')
+        os.environ["PRODUCT_NAME"] = product_name
 
     return pio_target, product_name
 

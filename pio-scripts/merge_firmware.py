@@ -6,6 +6,8 @@ Import("env")
 import re
 import time
 
+print("Running merge_firmware.py")
+
 # Extract PRODUCT_NAME from build_flags in platformio.ini
 product_name = "croptop"  # Default value
 build_flags = env.get("BUILD_FLAGS", "")
@@ -15,13 +17,17 @@ match = re.search(r"-D\s*PRODUCT_NAME=([^\s]+)", build_flags)
 if match:
     product_name = match.group(1).strip('\'"')
 
+print(f"Extracted PRODUCT_NAME: {product_name}")
+
 def merge_firmware_action(target, source, env):
     variant = env["PIOENV"]
     build_dir = os.path.join(env["PROJECT_BUILD_DIR"],  variant)
     # Our firmware bin produced by PlatformIO (usually found in the build directory)
-
+    # Ensure the output directory exists
+    output_dir = os.path.join(env["PROJECT_DIR"], "build_output", "NEBULITE", product_name)
+    os.makedirs(output_dir, exist_ok=True)
     # Define the output merged firmware filename
-    merged_bin = os.path.join(env["PROJECT_DIR"], "build_output", "NEBULITE", product_name, "merged-firmware.bin")
+    merged_bin = os.path.join(output_dir, "merged-firmware.bin")
 
     # Define the component firmware files.
     # Use the build directory for the current environment for component firmware files.
@@ -30,7 +36,7 @@ def merge_firmware_action(target, source, env):
     bootloader = os.path.join(build_dir, "bootloader.bin")
     boot_app0 = os.path.join(env["PROJECT_DIR"], "tools", "updater", "boot_app0.bin")
     partitions = os.path.join(build_dir, "partitions.bin")
-    userdata = os.path.join(env["PROJECT_DIR"], "build_output", "NEBULITE", product_name, "userdata.bin")
+    userdata = os.path.join(build_dir, "littlefs.bin")
 
     cmd = [
         "esptool",

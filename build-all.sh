@@ -30,8 +30,12 @@ fi
 envs=$(grep -Eo '^\[env:[^]]+\]' platformio_override.ini | sed -E 's/^\[env:(.+)\]$/\1/')
 
 for env in $envs; do
-  # Derive a product name: take last underscore-part as a simple approach
-  PRODUCT_NAME=$(echo "$env" | awk -F'_' '{print $NF}')
+  # Derive a product name by removing a leading "WLED_" if present
+  if [[ $env =~ ^WLED_(.*)$ ]]; then
+    PRODUCT_NAME="${BASH_REMATCH[1]}"
+  else
+    PRODUCT_NAME="$env"
+  fi
   echo "Building for $PRODUCT_NAME ($env)"
   mkdir -p build_output/NEBULITE/"$PRODUCT_NAME"
   
@@ -45,6 +49,6 @@ for env in $envs; do
   "${ZIP_CMD[@]}" -r build_output/NEBULITE/"$PRODUCT_NAME"/files.zip ./data/*
   
   cd build_output/NEBULITE/"$PRODUCT_NAME"
-  "${ZIP_CMD[@]}" ../"$PRODUCT_NAME"/combined.zip firmware.bin userdata.bin files.zip
+  "${ZIP_CMD[@]}" combined.zip firmware.bin userdata.bin files.zip
   cd - > /dev/null
 done

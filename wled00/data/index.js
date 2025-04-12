@@ -3213,18 +3213,23 @@ function stopPl() {
 }
 
 function delP(i) {
-	var bt = gId(`p${i}del`);
-	if (bt.dataset.cnf == 1) {
-		var obj = {"pdel": i};
-		requestJson(obj);
-		delete pJson[i];
-		populatePresets();
-		gId('putil').classList.add('staybot');
-	} else {
-		bt.style.color = "var(--c-r)";
-		bt.innerHTML = "<i class='icons btn-icon'>&#xe037;</i>Delete!";
-		bt.dataset.cnf = 1;
-	}
+    var bt = gId(`p${i}del`);
+    if (bt.dataset.cnf == 1) {
+        // Stop nebulite animation for preset i
+        if (nebuliteIntervals[i]) {
+            clearInterval(nebuliteIntervals[i]);
+            nebuliteIntervals[i] = null;
+        }
+        var obj = {"pdel": i};
+        requestJson(obj);
+        delete pJson[i];
+        populatePresets();
+        gId('putil').classList.add('staybot');
+    } else {
+        bt.style.color = "var(--c-r)";
+        bt.innerHTML = "<i class='icons btn-icon'>&#xe037;</i>Delete!";
+        bt.dataset.cnf = 1;
+    }
 }
 
 function selectSlot(b)
