@@ -5,9 +5,16 @@ from SCons.Script import Import
 Import("env")
 import re
 import time
+import sys
 
-print("Running merge_firmware.py")
-
+if 'buildfs' in COMMAND_LINE_TARGETS:
+    print("Skipping merge_firmware.py as target is 'buildfs'")
+else:
+    print("Running merge_firmware.py")
+    if env.get("PIOENV", "").startswith("WLED_nebulite_esp32_"):
+        print("Skipping merge_firmware.py as environment starts with 'WLED_nebulite_esp32_'")
+        sys.exit(0)
+        
 # Extract PRODUCT_NAME from build_flags in platformio.ini
 product_name = "croptop"  # Default value
 build_flags = env.get("BUILD_FLAGS", "")

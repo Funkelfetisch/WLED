@@ -134,7 +134,6 @@ def main():
         unprettify_json_files(target_dir)
         
         run_npm_build(cwd=os.path.join("wled00", "data"))
-        
         is_helio = product_name.lower().startswith("helio")
         # Define your SVG blocks (update with the actual SVG content)
         svg_helio = '''<svg xmlns="http://www.w3.org/2000/svg" id="Ebene_2" viewBox="0 0 283.47 70.87"><defs><style>.cls-1{fill:#fff}</style></defs><g id="Content"><circle cx="27.63" cy="35.43" r="14.93" class="cls-1"/><circle cx="27.63" cy="35.43" r="14.93" class="cls-1"/><path d="M69.76 69.76h46.17V57.32H84.04V41.56h30.04V29.12H84.04V13.55h31.89V1.11H69.76v68.65Zm117.14 0h14.28V1.11H186.9v68.65ZM40.9 19.5c5.25-.58 9.21.39 10.64 3.05 2.23 4.13-2.32 11.13-10.64 17.39v29.84h14.36V1.09H40.9V19.5ZM0 69.78h14.36V51.37c-5.25.58-9.21-.39-10.64-3.05-2.23-4.13 2.32-11.13 10.64-17.39V1.09H0v68.69ZM248.03 0c-19.57 0-35.43 15.86-35.43 35.43s15.86 35.43 35.43 35.43S283.46 55 283.46 35.43 267.6 0 248.03 0Zm0 57.55c-12.22 0-22.12-9.9-22.12-22.12s9.9-22.12 22.12-22.12 22.12 9.9 22.12 22.12-9.9 22.12-22.12 22.12ZM142.84 1.11h-14.28v68.65h46.17V57.32h-31.89V1.11Z" class="cls-1"/></g></svg>'''
@@ -143,6 +142,12 @@ def main():
         
         html_folder = os.path.join("wled00", "data")
         process_html_files(is_helio, svg_choice, html_folder)
+        
+        if pio_target != "buildfs":
+            result = subprocess.run(["pio", "run", "--target", "buildfs"], shell=True)
+            if result.returncode != 0:
+                print("pio run --target=buildfs failed!")
+                sys.exit(1)
     else:
         print(f"Skipping npm build for target: {pio_target}")
 

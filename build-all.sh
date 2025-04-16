@@ -43,7 +43,7 @@ for env in $envs; do
   cp .pio/build/"$env"/firmware.bin build_output/NEBULITE/"$PRODUCT_NAME"/firmware.bin
   cp .pio/build/"$env"/bootloader.bin build_output/NEBULITE/"$PRODUCT_NAME"/bootloader.bin
   
-  pio run --target=buildfs -e "$env"
+  # pio run --target=buildfs -e "$env"
   cp .pio/build/"$env"/littlefs.bin build_output/NEBULITE/"$PRODUCT_NAME"/userdata.bin
   
   "${ZIP_CMD[@]}" -r build_output/NEBULITE/"$PRODUCT_NAME"/files.zip ./data/*
