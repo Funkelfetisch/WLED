@@ -10,6 +10,12 @@ Import("env")
 
 print("Pre-build script started...")
 
+# Ensure ./data and ./wled00/data exist
+for d in ["data", os.path.join("wled00", "data")]:
+    if not os.path.isdir(d):
+        print(f"Creating directory {d}")
+        os.makedirs(d, exist_ok=True)
+
 def get_env_variables():
     if not COMMAND_LINE_TARGETS:
         pio_target = "build"
@@ -144,7 +150,7 @@ def main():
         process_html_files(is_helio, svg_choice, html_folder)
         
         if pio_target != "buildfs":
-            result = subprocess.run(["pio", "run", "--target", "buildfs"], shell=True)
+            result = subprocess.run(["pio", "run", "--target", "buildfs", "-e", env["PIOENV"]], shell=True)
             if result.returncode != 0:
                 print("pio run --target=buildfs failed!")
                 sys.exit(1)
