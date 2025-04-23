@@ -26,5 +26,6 @@ compile_commands.json
 /wled00/wled00.ino.cpp
 /wled00/html_*.h
 
+/wled00/data/previewOutput.js
 /data/
 gitserver.key
