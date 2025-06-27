@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Nebulite Animation Test</title>
+    <style>
+        body { background: #000; color: #ddd; font-family: sans-serif; text-align: center; }
+        canvas { display: block; margin: 20px auto; image-rendering: pixelated; }
+    </style>
+</head>
+<body>
+<script src="previewOutput.js"></script>
+<h1>Nebulite Animation</h1>
+<canvas id="p1canv" style="width:200; height:200"></canvas>
+
+<script>
+    // configuration
+    const ledCount = 62;
+    const nebuliteRecordIterator = {};
+    const nebuliteIntervals = {};
+
+    function nebuliteStartAnimation(preset, jpgBlob) {
+        nebuliteRecordIterator[preset] = 0;
+        createImageBitmap(jpgBlob)
+            .then(imageBitmap => {
+                // scale width to ledCount, keep original height
+                const targetWidth  = ledCount;
+                const targetHeight = imageBitmap.height;
+
+                // set canvas to match
+                const canv = document.getElementById(`p${preset}canv`);
+                canv.width  = 200;
+                canv.height = 200;
+                const off = document.createElement('canvas');
+                off.width  = targetWidth;
+                off.height = targetHeight;
+                const offCtx = off.getContext('2d');
+
+                // draw scaled image into off‑screen canvas
+                offCtx.drawImage(
+                    imageBitmap,
+                    0,0, imageBitmap.width, imageBitmap.height,
+                    0,0, targetWidth, targetHeight
+                );
+
+                const imgData = offCtx.getImageData(0, 0, targetWidth, targetHeight);
+                const d = imgData.data; // RGBA
+                const rgb = new Uint8Array(targetWidth * targetHeight * 3);
+                for (let i = 0, j = 0; i < d.length; i += 4, j += 3) {
+                    rgb[j]   = d[i];
+                    rgb[j+1] = d[i+1];
+                    rgb[j+2] = d[i+2];
+                }
+
+                clearInterval(nebuliteIntervals[preset]);
+                nebuliteIntervals[preset] = setInterval(() => {
+                    nebuliteAnimate(preset, rgb, ledCount);
+                }, 100);
+            })
+            .catch(err => console.error('JPEG decode error:', err));
+    }
+
+    function nebuliteAnimate(preset, rgbArray, ledCount) {
+        const canvasId = `p${preset}canv`;
+        const c = document.getElementById(canvasId);
+        if (!c) return console.error('Canvas not found:', canvasId);
+        const ctx = c.getContext('2d');
+        let itr = nebuliteRecordIterator[preset] || 0;
+        let end = itr + 3 * ledCount;
+        if (end > rgbArray.length) {
+            itr = 0;
+            end = 3 * ledCount;
+        }
+        const slice = rgbArray.slice(itr, end);
+        drawFn(ctx, slice, ledCount);
+        nebuliteRecordIterator[preset] = itr + 3 * ledCount;
+    }
+
+    // on load, grab rec-3.jpg and kick off preset #1
+    window.addEventListener('load', () => {
+        fetch('rec-3.jpg')
+            .then(r => r.blob())
+            .then(blob => nebuliteStartAnimation(1, blob))
+            .catch(console.error);
+    });
+</script>
+
+</body>
+</html>

@@ -34,6 +34,146 @@ bool presetsActionPending(void) {  // WLEDMM true if presetToApply, presetToSave
   return(false);
 }
 
+#ifdef USERMOD_NEBULITE
+#include <eloquent_esp32cam.h>            // Core library
+
+unsigned long nebulitePresetRecordingLastRecord = 0;
+char nebuliteJsonBuffer[MAX_LEDS * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION * 4 / 3 + 4]; // Adjusted size for base64 encoding
+
+// Global recording buffer for raw LED data (RGB888)
+static uint8_t* nebuliteFrameBuffer = nullptr;
+uint32_t pos = 0;
+
+// Callback that writes JPEG chunks directly to a file.
+static size_t file_writer(void* arg, size_t index, const void* data, size_t len) {
+    File* f = (File*) arg;
+    if (len == 0) return 0;  // encoding finished
+    size_t written = f->write((const uint8_t*)data, len);
+    return written;
+}
+
+// New version: generator uses the pre-recorded LED frame data.
+static bool generateJPEGFromNebuliteBuffer(uint16_t ledCount, uint16_t numFrames, const char* outFile, uint8_t* imageBuffer) {
+    // Open file for writing JPEG data.
+    File f = WLED_FS.open(outFile, FILE_WRITE);
+    if (!f) {
+        Serial.print(F("Failed to open file for writing: "));
+        Serial.println(outFile);
+        return false;
+    }
+    
+    // Build a temporary camera_fb_t struct wrapping the pre-recorded data.
+    camera_fb_t fb;
+    fb.width  = ledCount;
+    fb.height = numFrames;
+    fb.buf    = imageBuffer;
+    fb.len    = 0;               // to be set by encoder
+    fb.format = PIXFORMAT_RGB888; // Matches our recording
+    
+    uint8_t quality = 90;
+    bool ok = frame2jpg_cb(&fb, quality, file_writer, (void*)&f);
+    f.close();
+    
+    if (!ok) {
+        Serial.print(F("Could not encode JPEG to "));
+        Serial.println(outFile);
+        return false;
+    }
+    
+    f = WLED_FS.open(outFile, FILE_READ);
+    if (f) {
+        uint32_t dataSize = f.size();
+        f.close();
+        Serial.print(F("Wrote JPEG to "));
+        Serial.print(outFile);
+        Serial.print(F(" (size: "));
+        Serial.print(dataSize);
+        Serial.println(F(" bytes)."));
+    }
+    return true;
+}
+
+static bool handleRecording() {
+  if (presetToSave == 0 || presetToSave == 250) return true;
+
+  if (pos == 0) {
+      Serial.println("NEBULITE started recording at pos 0");
+      // Allocate the global recording buffer.
+      uint16_t totalFrames = NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+      uint32_t totalBytes = strip.getLengthTotal() * 3UL * totalFrames;
+      nebuliteFrameBuffer = new uint8_t[totalBytes];
+      if (!nebuliteFrameBuffer) {
+          Serial.println(F("Failed to allocate frame buffer"));
+          return true; // abort recording
+      }
+  }
+
+  if (nebulitePresetRecordingLastRecord < millis() - (1000 / NEBULITE_PRESET_RECORD_FRAMERATE)) {
+    uint32_t recordTotalBytes = strip.getLengthTotal() * 3 * NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+
+    // Capture one frame of LED data into nebuliteFrameBuffer.
+    for (uint16_t i = 0; i < strip.getLengthTotal(); i++) {
+      uint32_t c = strip.getPixelColorRestored(i);
+      // Assuming your LED color components are extracted as follows:
+      uint8_t r = R(c);
+      uint8_t g = G(c);
+      uint8_t b = B(c);
+      uint8_t w = W(c);
+
+      // Choose mixing coefficients based on your warm white's characteristics.
+      // Here, warm white boosts red the most, a bit less for green, and even less for blue.
+      const float kR = 0.7;  // Adjust as needed
+      const float kG = 0.5;  // Adjust as needed
+      const float kB = 0.3;  // Adjust as needed
+
+      // Blend white into each channel (using qadd8 to saturate at 255)
+      uint8_t mixedR = qadd8(r, (uint8_t)(w * kR));
+      uint8_t mixedG = qadd8(g, (uint8_t)(w * kG));
+      uint8_t mixedB = qadd8(b, (uint8_t)(w * kB));
+
+      // Write the values in the proper order for PIXFORMAT_RGB888: R, then G, then B.
+      nebuliteFrameBuffer[pos++] = mixedB;
+      nebuliteFrameBuffer[pos++] = mixedG;
+      nebuliteFrameBuffer[pos++] = mixedR;
+    }
+    Serial.print("Recording… pos = ");
+    Serial.println(pos);
+
+    if (pos >= recordTotalBytes) {
+      Serial.print("NEBULITE finished recording at pos ");
+      Serial.println(pos);
+
+      uint16_t frames = NEBULITE_PRESET_RECORD_FRAMERATE * NEBULITE_PRESET_RECORD_DURATION;
+      char filename[32];
+      sprintf(filename, "/rec-%d.jpg", presetToSave);
+      bool ok = generateJPEGFromNebuliteBuffer(
+        strip.getLengthTotal(),
+        frames,
+        filename,
+        nebuliteFrameBuffer
+      );
+
+      if (ok) {
+        // Append a cache key (e.g. using millis())
+        char filenameWithHash[64];
+        sprintf(filenameWithHash, "%s?v=%lu", filename, millis());
+        strlcpy(nebuliteJsonBuffer, filenameWithHash, sizeof(nebuliteJsonBuffer));
+      } else {
+          strlcpy(nebuliteJsonBuffer, "JPEGFailed", sizeof(nebuliteJsonBuffer));
+      }
+      
+      nebulitePresetRecordingLastRecord = 0;
+      pos = 0;
+      delete[] nebuliteFrameBuffer;
+      nebuliteFrameBuffer = nullptr;
+      return true;
+    }
+    nebulitePresetRecordingLastRecord = millis();
+  }
+  return false;
+}
+#endif
+
 static void doSaveState() {
   bool persist = (presetToSave < 251);
   const char *filename = getFileName(persist);
@@ -51,15 +191,20 @@ static void doSaveState() {
     serializeState(sObj, true, includeBri, segBounds, selectedOnly);
   }
   sObj["n"] = saveName;
+
+  #ifdef USERMOD_NEBULITE
+    sObj["r"] = (String) nebuliteJsonBuffer;
+  #endif
+
   if (quickLoad[0]) sObj[F("ql")] = quickLoad;
   if (saveLedmap >= 0) sObj[F("ledmap")] = saveLedmap;
-/*
+
   #ifdef WLED_DEBUG
     DEBUG_PRINTLN(F("Serialized preset"));
     serializeJson(doc,Serial);
     DEBUG_PRINTLN();
   #endif
-*/
+
   #if defined(ARDUINO_ARCH_ESP32)
   if (!persist) {
     if (tmpRAMbuffer!=nullptr) free(tmpRAMbuffer);
@@ -146,6 +291,9 @@ void applyPresetWithFallback(uint8_t index, uint8_t callMode, uint8_t effectID, 
 void handlePresets()
 {
   if (presetToSave) {
+    #ifdef USERMOD_NEBULITE
+    if (handleRecording())
+    #endif
     doSaveState();
     return;
   }
@@ -159,70 +307,6 @@ void handlePresets()
   JsonObject fdo;
   const char *filename = getFileName(tmpPreset < 255);
 
-/*
- * The following code is no longer needed as handlePreset() is never run from
- * network callback.
- * **************************************************************************
- * 
-  //crude way to determine if this was called by a network request
-  uint8_t core = 1;
-  #ifdef ARDUINO_ARCH_ESP32
-    #if !defined(CONFIG_IDF_TARGET_ESP32C3) && !defined(CONFIG_IDF_TARGET_ESP32S2)
-    // this does not make sense on single core
-    core = xPortGetCoreID();
-    // begin WLEDMM specific
-	  //      loopTask (arduino main loop) sometimes runs on core #1
-	  if ((core == 1) && (strncmp(pcTaskGetTaskName(NULL), "loopTask", 8) == 0)) {
-		  DEBUG_PRINTF("[applyPreset] called from loopTask on core %d; forcing core = 0\n", (int)core); 
-		  core = 0;
-	  }
-	  //      async_tcp (network requests) sometimes runs on core #0
-	  if ((core == 0) && (strncmp(pcTaskGetTaskName(NULL), "async_tcp", 9) == 0)) {
-		  DEBUG_PRINTF("[applyPreset] called from async_tcp on core %d; forcing core = 1\n", (int)core); 
-		  core = 1;
-	  }
-	  // end WLEDMM specific
-    #endif
-  #endif
-  //only allow use of fileDoc from the core responsible for network requests (AKA HTTP JSON API)
-  //do not use active network request doc from preset called by main loop (playlist, schedule, ...)
-  if (fileDoc && core && force && tmpPreset < 255) {
-    DEBUG_PRINT(F("Force applying preset: "));
-    DEBUG_PRINTLN(presetToApply);
-
-    presetToApply     = 0; //clear request for preset
-    callModeToApply   = 0;
-
-    // this will overwrite doc with preset content but applyPreset() is the last in such case and content of doc is no longer needed
-    errorFlag = readObjectFromFileUsingId(filename, tmpPreset, fileDoc) ? ERR_NONE : ERR_FS_PLOAD;
-
-    JsonObject fdo = fileDoc->as<JsonObject>();
-
-    //HTTP API commands
-    const char* httpwin = fdo["win"];
-    if (httpwin) {
-      String apireq = "win"; // reduce flash string usage
-      apireq += F("&IN&"); // internal call
-      apireq += httpwin;
-      handleSet(nullptr, apireq, false); // may call applyPreset() via PL=
-      setValuesFromFirstSelectedSeg(); // fills legacy values
-      changePreset = true;
-    } else {
-      if (!fdo["seg"].isNull()) unloadPlaylist(); // if preset contains "seg" we must unload playlist
-      if (!fdo["seg"].isNull() || !fdo["on"].isNull() || !fdo["bri"].isNull() || !fdo["ps"].isNull() || !fdo[F("playlist")].isNull()) changePreset = true;
-      fdo.remove("ps"); //remove load request for presets to prevent recursive crash
-
-      deserializeState(fdo, tmpMode, tmpPreset);  // may call applyPreset() which will overwrite presetToApply
-    }
-
-    if (!errorFlag && changePreset) presetCycCurr = currentPreset = tmpPreset;
-
-    colorUpdated(tmpMode);
-    return;
-  }
-
-  if (force) return; // something went wrong with force option (most likely WS request), quit and wait for async load
-*/
   // allocate buffer
   if (!requestJSONBufferLock(9)) return;  // will also assign fileDoc
 
@@ -343,4 +427,27 @@ void deletePreset(byte index) {
   writeObjectToFileUsingId(getFileName(), index, &empty);
   presetsModifiedTime = toki.second(); //unix time
   updateFSInfo();
+}
+
+
+static uint8_t presetIndex = 1;
+void iteratePreset() {
+  String name = "";
+  if (!getPresetName(++presetIndex, name)) {
+    presetIndex = 1;
+  }
+  Serial.println("Applying preset: " + name);
+  applyPreset(presetIndex, CALL_MODE_BUTTON_PRESET);
+  stateChanged = true; 
+  colorUpdated(CALL_MODE_BUTTON); 
+}
+void iteratePresetReverse() {
+  String name = "";
+  if (!getPresetName(--presetIndex, name)) {
+    presetIndex = 1;
+  }
+  Serial.println("Applying preset: " + name);
+  applyPreset(presetIndex, CALL_MODE_BUTTON_PRESET);
+  stateChanged = true; 
+  colorUpdated(CALL_MODE_BUTTON); 
 }

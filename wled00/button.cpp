@@ -5,11 +5,11 @@
  */
 
 #define WLED_DEBOUNCE_THRESHOLD      50 // only consider button input of at least 50ms as valid (debouncing)
-#define WLED_LONG_PRESS             600 // long press if button is released after held for at least 600ms
+#define WLED_LONG_PRESS             3000 // long press if button is released after held for at least 600ms
 #define WLED_DOUBLE_PRESS           350 // double press if another press within 350ms after a short press
 #define WLED_LONG_REPEATED_ACTION   300 // how often a repeated action (e.g. dimming) is fired on long press on button IDs >0
-#define WLED_LONG_AP               5000 // how long button 0 needs to be held to activate WLED-AP
-#define WLED_LONG_FACTORY_RESET   10000 // how long button 0 needs to be held to trigger a factory reset
+#define WLED_LONG_AP              12000 // how long button 0 needs to be held to activate WLED-AP
+#define WLED_LONG_FACTORY_RESET   18000 // how long button 0 needs to be held to trigger a factory reset
 
 static const char _mqtt_topic_button[] PROGMEM = "%s/button/%d";  // optimize flash usage
 
@@ -17,8 +17,13 @@ void shortPressAction(uint8_t b)
 {
   if (!macroButton[b]) {
     switch (b) {
-      case 0: toggleOnOff(); stateUpdated(CALL_MODE_BUTTON); break;
-      case 1: ++effectCurrent %= strip.getModeCount(); stateChanged = true; colorUpdated(CALL_MODE_BUTTON); break;
+      case 0: 
+        toggleOnOff(); 
+        stateUpdated(CALL_MODE_BUTTON); 
+        break;
+      case 1: 
+        iteratePreset();
+        break;
     }
   } else {
     unloadPlaylist(); // applying a preset unloads the playlist
@@ -39,8 +44,18 @@ void longPressAction(uint8_t b)
 {
   if (!macroLongPress[b]) {
     switch (b) {
-      case 0: setRandomColor(col); colorUpdated(CALL_MODE_BUTTON); break;
-      case 1: bri += 8; stateUpdated(CALL_MODE_BUTTON); buttonPressedTime[b] = millis(); break; // repeatable action
+      case 0:
+        Serial.println("powering down...");
+        toggleOnOff(); 
+        stateUpdated(CALL_MODE_BUTTON);
+        powerDown = millis();
+      break;
+      case 1:
+        applyPreset(1, CALL_MODE_BUTTON_PRESET);
+        stateChanged = true; 
+        colorUpdated(CALL_MODE_BUTTON); 
+        break;
+      // bri += 8; stateUpdated(CALL_MODE_BUTTON); buttonPressedTime[b] = millis(); break; // repeatable action
     }
   } else {
     unloadPlaylist(); // applying a preset unloads the playlist
@@ -62,7 +77,10 @@ void doublePressAction(uint8_t b)
   if (!macroDoublePress[b]) {
     switch (b) {
       //case 0: toggleOnOff(); colorUpdated(CALL_MODE_BUTTON); break; //instant short press on button 0 if no macro set
-      case 1: ++effectPalette %= strip.getPaletteCount(); colorUpdated(CALL_MODE_BUTTON); break;
+      case 1: 
+      // ++effectPalette %= strip.getPaletteCount(); colorUpdated(CALL_MODE_BUTTON); break;
+      iteratePresetReverse();
+      break;
     }
   } else {
     unloadPlaylist(); // applying a preset unloads the playlist
@@ -250,7 +268,7 @@ void handleButton()
       continue;
     }
 
-    // button is not momentary, but switch. This is only suitable on pins whose on-boot state does not matter (NOT gpio0)
+    //button is not momentary, but switch. This is only suitable on pins whose on-boot state does not matter (NOT gpio0)
     if (buttonType[b] == BTN_TYPE_SWITCH || buttonType[b] == BTN_TYPE_PIR_SENSOR) {
       handleSwitch(b);
       continue;
@@ -281,6 +299,7 @@ void handleButton()
       }
 
     } else if (!isButtonPressed(b) && buttonPressedBefore[b]) { //released
+
       long dur = now - buttonPressedTime[b];
 
       // released after rising-edge short press action

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jacket Preview Test</title>
+    <style>
+        /* Ensure the canvas is shown with no border/margin */
+        body { margin: 0; padding: 0; background: #333; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        canvas { background: #222; }
+    </style>
+</head>
+<body>
+    <!-- The preview canvas: 200x200; our preview code uses NEBULITE_preview_width/height -->
+    <canvas id="previewCanvas" width="200" height="200"></canvas>
+
+    <!-- Include the jacket previewOutput.js script -->
+    <script src="../croptop/previewOutput.js"></script>
+    
+    <script>
+    // Create dummy image canvases expected by previewOutput.js.
+    // (jacket preview is assumed to check for 'jacket_leds' and 'jacket_top').
+    var dummyLed = document.createElement('canvas');
+    dummyLed.width = 200;
+    dummyLed.height = 200;
+    var dLedCtx = dummyLed.getContext('2d');
+    // Fill with a semi-transparent white pattern.
+    dLedCtx.fillStyle = "rgba(255,255,255,0.5)";
+    dLedCtx.fillRect(0, 0, 200, 200);
+    
+    var dummyTop = document.createElement('canvas');
+    dummyTop.width = 200;
+    dummyTop.height = 200;
+    var dTopCtx = dummyTop.getContext('2d');
+    // Fill with a semi-transparent blue pattern.
+    dTopCtx.fillStyle = "rgba(0,0,255,0.5)";
+    dTopCtx.fillRect(0, 0, 200, 200);
+    
+    // The previewOutput.js code expects these canvases in the global 'canvases' object.
+    // (If the jacket version uses different keys than 'croptop_*', adjust accordingly.)
+    canvases = canvases || {};
+    canvases['jacket_leds'] = dummyLed;
+    canvases['jacket_top'] = dummyTop;
+    
+    // Get our preview canvas context.
+    var canvasEl = document.getElementById("previewCanvas");
+    var ctx = canvasEl.getContext("2d");
+    
+    // Convert HSV (h in [0,360], s,v in [0,1]) to RGB values [0,255]
+    function hsvToRgb(h, s, v) {
+      let c = v * s;
+      let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      let m = v - c;
+      let r=0, g=0, b=0;
+      if (h < 60) { r=c; g=x; b=0; }
+      else if (h < 120) { r=x; g=c; b=0; }
+      else if (h < 180) { r=0; g=c; b=x; }
+      else if (h < 240) { r=0; g=x; b=c; }
+      else if (h < 300) { r=x; g=0; b=c; }
+      else { r=c; g=0; b=x; }
+      return [Math.round((r + m)*255), Math.round((g + m)*255), Math.round((b + m)*255)];
+    }
+    
+    // Create test (rainbow) data for 30 LEDs (each with an RGB triplet)
+    function generateRainbowColors(frame) {
+      var ledCount = 30;
+      var colors = new Uint8Array(ledCount * 3);
+      // Increment hue over frames (change 6° per frame)
+      var hueOffset = (frame * 6) % 360;
+      for (var i = 0; i < ledCount; i++) {
+        // Distribute hue along LEDs and add a global offset.
+        var hue = ((i / ledCount) * 360 + hueOffset) % 360;
+        var rgb = hsvToRgb(hue, 1, 1);
+        // Place into colors array
+        colors[i*3] = rgb[0];
+        colors[i*3+1] = rgb[1];
+        colors[i*3+2] = rgb[2];
+      }
+      return colors;
+    }
+    
+    // Animation parameters
+    var ledCount = 30;
+    var fps = 10; // 10 frames per second
+    var duration = 6000; // 6 seconds animation
+    var totalFrames = (duration / 1000) * fps;
+    var currentFrame = 0;
+    
+    // Ensure drawFn is available (it comes from the previewOutput.js you included).
+    if (typeof drawFn !== "function") {
+      console.error("drawFn is not defined in the previewOutput.js");
+    }
+    
+    // Run a frame-by-frame animation (at 10 fps)
+    var intervalID = setInterval(function() {
+      if (currentFrame >= totalFrames) {
+        clearInterval(intervalID);
+        return;
+      }
+      // Generate rainbow colors data
+      var testColors = generateRainbowColors(currentFrame);
+      // Call drawFn with our test data
+      drawFn(ctx, testColors, ledCount);
+      currentFrame++;
+    }, 100);
+    
+    </script>
+</body>
+</html>

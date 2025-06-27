@@ -66,9 +66,6 @@ static bool bufferedFind(const char *target, bool fromStart = true) {
 
   size_t index = 0;
   byte buf[FS_BUFSIZE];
-  #if ESP_IDF_VERSION_MAJOR >= 4
-  f.setBufferSize(FS_BUFSIZE);
-  #endif
   if (fromStart) f.seek(0);
 
   while (f.position() < f.size() -1) {
@@ -110,9 +107,6 @@ static bool bufferedFindSpace(size_t targetLen, bool fromStart = true) {
 
   size_t index = 0; // better to use size_t instead if uint16_t
   byte buf[FS_BUFSIZE];
-  #if ESP_IDF_VERSION_MAJOR >= 4
-  f.setBufferSize(FS_BUFSIZE);
-  #endif
   if (fromStart) f.seek(0);
 
   while (f.position() < f.size() -1) {
@@ -156,9 +150,7 @@ static bool bufferedFindObjectEnd() {
   uint16_t objDepth = 0; //num of '{' minus num of '}'. return once 0
   //size_t start = f.position();
   byte buf[FS_BUFSIZE];
-  #if ESP_IDF_VERSION_MAJOR >= 4
-  f.setBufferSize(FS_BUFSIZE);
-  #endif
+
   while (f.position() < f.size() -1) {
     size_t bufsize = f.read(buf, FS_BUFSIZE); // better to use size_t instead of uint16_t
     size_t count = 0;
@@ -183,9 +175,7 @@ static void writeSpace(size_t l)
 {
   byte buf[FS_BUFSIZE];
   memset(buf, ' ', FS_BUFSIZE);
-  #if ESP_IDF_VERSION_MAJOR >= 4
-  f.setBufferSize(FS_BUFSIZE);
-  #endif
+
   while (l > 0) {
     size_t block = (l>FS_BUFSIZE) ? FS_BUFSIZE : l;
     f.write(buf, block);

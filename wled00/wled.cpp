@@ -459,6 +459,34 @@ void WLED::setup()
   if (!Serial) delay(300);  // just a tiny wait to avoid problems later when acessing serial
 #endif
 
+
+
+// NEBULITE
+
+  pinMode(10, INPUT);
+  if (digitalRead(10) == HIGH) {
+    Serial.println("Battery Controller Rev4 detected.");
+    pinMode(21, OUTPUT);
+    digitalWrite(21, HIGH); // enabling enable pin
+    pinMode(14, OUTPUT);
+    digitalWrite(14, HIGH); // enabling main enable pin
+  } else {
+    Serial.println("USB Controller detected.");
+  }
+
+  Serial.println("@E_        Es     xEEEEEEEEEE      BEEEEEEEEx       B<         B<     ss             <B     sEEEEBBEEEEs     sEEEEEEEEEs");
+  Serial.println("BEB<       Es                      B_       sE      B<         B<     ss             <B          sE                     ");
+  Serial.println("@<_Es      Es                      B_       <B      B<         B<     ss             <B          sE                     ");
+  Serial.println("@<  sE_    Es                      B_      <B<      B<         B<     ss             <B          sE                     ");
+  Serial.println("@<   <B<   Es     xEEEEEEEEEE      BEEEEEEEBs_      B<         B<     ss             <B          sE          sEEEEEEEEEs");
+  Serial.println("@<    _Es  Es                      B_       _Bx     Bx         @_     ss             <B          sE                     ");
+  Serial.println("@<      sE_Es                      B_        sE     EE        <B      ss             <B          sE                     ");
+  Serial.println("@<       <BBs                      B_       <B<      Es_     xB_      ss             <B          sE                     ");
+  Serial.println("B<        _Ex     xEEEEEEEEEE_     EEEEEEEEEx_        xEEEEEEx        sEEEEEEEEE_    <E          ss          sEEEEEEEEEE");
+
+  /// NEBULITE
+
+
   #ifdef ARDUINO_ARCH_ESP32
   #if defined(WLED_DEBUG) && (defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32C3) || ARDUINO_USB_CDC_ON_BOOT)
   if (!Serial) delay(2500);  // WLEDMM allow CDC USB serial to initialise (WLED_DEBUG only)
@@ -1370,15 +1398,16 @@ void WLED::handleConnection()
   } else if (!interfacesInited) { //newly connected
     USER_PRINTLN("");
     USER_PRINT(F("Connected! IP address: http://"));
-    USER_PRINT(Network.localIP());
-    if (Network.isEthernet()) {
-     #if ESP32
-     USER_PRINTLN(" via Ethernet (disabling WiFi)");
-     WiFi.disconnect(true);
-     #endif
-    } else {
-     USER_PRINTLN(" via WiFi");
-    }
+    USER_PRINTLN(Network.localIP());
+    //if (Network.isEthernet()) {
+    //  #if ESP32
+    //  USER_PRINT(ETH.localIP());
+    //  USER_PRINTLN(" via Ethernet");
+    //  #endif
+    //} else {
+    //  USER_PRINT(Network.localIP());
+    //  USER_PRINTLN(" via WiFi");
+    //}
 
     if (improvActive) {
       if (improvError == 3) sendImprovStateResponse(0x00, true);

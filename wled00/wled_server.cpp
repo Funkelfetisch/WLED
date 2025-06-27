@@ -24,6 +24,7 @@ static const char s_content_enc[] PROGMEM = "Content-Encoding";
 static const char s_unlock_ota [] PROGMEM = "Please unlock OTA in security settings!";
 static const char s_unlock_cfg [] PROGMEM = "Please unlock settings using PIN code!";
 
+
 //Is this an IP?
 bool isIp(String str) {
   for (size_t i = 0; i < str.length(); i++) {
@@ -135,6 +136,31 @@ void initServer()
     request->send(response);
     //request->send_P(200, "text/html", PAGE_liveviewws);
   });
+  #endif
+  #ifdef USERMOD_NEBULITE
+  server.on("/previewOutput.js", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (handleIfNoneMatchCacheHeader(request)) return;
+    AsyncWebServerResponse *response = request->beginResponse_P(200, "application/javascript", NEBULITE_previewOutput_js, NEBULITE_previewOutput_js_length);
+    response->addHeader(FPSTR(s_content_enc),"gzip");
+    setStaticContentCacheHeaders(response);
+    request->send(response);
+    //request->send_P(200, "text/html", PAGE_liveviewws);
+  });
+  server.on("/rec-*", HTTP_GET, [](AsyncWebServerRequest *request) {
+    String url = request->url();
+    if (!url.endsWith(".jpg")) {
+      request->send(404, "text/plain", "Not found");
+      return;
+    }
+    if (!WLED_FS.exists(url)) {
+      request->send(404, "text/plain", "File not found");
+      return;
+    }
+    AsyncWebServerResponse *response = request->beginResponse(WLED_FS, url, "image/jpeg");
+    response->addHeader(F("Cache-Control"), F("public, max-age=86400"));
+    request->send(response);
+  });
+
   #endif
 #else
   server.on("/liveview", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -395,7 +421,7 @@ void initServer()
     DEBUG_PRINTF("%s min free stack %d\n", pcTaskGetTaskName(NULL), uxTaskGetStackHighWaterMark(NULL)); //WLEDMM
     #endif
     if (captivePortal(request)) return;
-    serveIndexOrWelcome(request);
+    serveIndex(request);
     USER_PRINTLN(" done"); //WLEDMM: want to see if client connects to wled
   });
 

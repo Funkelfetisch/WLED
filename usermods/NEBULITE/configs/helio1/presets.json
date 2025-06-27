@@ -1,0 +1,789 @@
+{
+  "0": {},
+  "1": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 102,
+        "sx": 53,
+        "ix": 255,
+        "pal": 0,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Candle Multi",
+    "r": "/rec-1.jpg?v=46541"
+  },
+  "10": {
+    "playlist": {
+      "ps": [8, 4, 7, 9, 1, 5, 2, 6],
+      "dur": [100, 100, 100, 100, 100, 100, 100, 100],
+      "transition": [7, 7, 7, 7, 7, 7, 7, 7],
+      "repeat": 0,
+      "end": 0,
+      "r": 1
+    },
+    "on": true,
+    "n": "Static Animations",
+    "r": "/rec-10.jpg?v=4201078"
+  },
+  "2": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 74,
+        "sx": 128,
+        "ix": 128,
+        "pal": 28,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Colortwinkles",
+    "r": "/rec-2.jpg?v=64035"
+  },
+  "11": {
+    "playlist": {
+      "ps": [19, 20, 16, 18, 21, 14, 13, 15, 17, 12],
+      "dur": [300, 300, 300, 300, 300, 300, 300, 300, 300, 300],
+      "transition": [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+      "repeat": 0,
+      "end": 0,
+      "r": 1
+    },
+    "on": true,
+    "n": "Audio",
+    "r": "/rec-11.jpg?v=4153582"
+  },
+  "3": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 155,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Freqmap",
+    "r": "/rec-3.jpg?v=34668"
+  },
+  "4": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 75,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Lake",
+    "r": "/rec-4.jpg?v=91548"
+  },
+  "5": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 47,
+        "sx": 128,
+        "ix": 16,
+        "pal": 18,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Loading",
+    "r": "/rec-5.jpg?v=49644"
+  },
+  "6": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 65,
+        "sx": 128,
+        "ix": 128,
+        "pal": 19,
+        "c1": 128,
+        "c2": 128,
+        "c3": 0,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "pink Palette",
+    "r": "/rec-6.jpg?v=59961"
+  },
+  "7": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 105,
+        "sx": 128,
+        "ix": 128,
+        "pal": 45,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Phased",
+    "r": "/rec-7.jpg?v=71655"
+  },
+  "8": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0, 255],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "fx": 79,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Ripple",
+    "r": "/rec-8.jpg?v=83651"
+  },
+  "9": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 15,
+        "sx": 135,
+        "ix": 128,
+        "pal": 73,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Running",
+    "r": "/rec-9.jpg?v=4016159"
+  },
+  "12": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 192,
+        "sx": 75,
+        "ix": 128,
+        "pal": 57,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Fw Starburst audio ☾ 🎨⋮�",
+    "r": "/rec-12.jpg?v=1236702"
+  },
+  "13": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 5,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 156,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 2
+      }
+    ],
+    "ledmap": 0,
+    "n": "Gravcenter 🎨⋮♪",
+    "r": "/rec-13.jpg?v=1476556"
+  },
+  "14": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 5,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 130,
+        "sx": 128,
+        "ix": 255,
+        "pal": 64,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Juggles 🎨•⋮♪",
+    "r": "/rec-14.jpg?v=1836392"
+  },
+  "15": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 133, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 191,
+        "sx": 91,
+        "ix": 7,
+        "pal": 64,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 1,
+        "m12": 7
+      }
+    ],
+    "ledmap": 0,
+    "n": "Multi Comet audio ☾ 🎨⋮♪",
+    "r": "/rec-15.jpg?v=2009871"
+  },
+  "16": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 135, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 136,
+        "sx": 248,
+        "ix": 128,
+        "pal": 64,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 2
+      }
+    ],
+    "ledmap": 0,
+    "n": "Noisemeter 🎨⋮♪",
+    "r": "/rec-16.jpg?v=2608106"
+  },
+  "17": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 135, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 133,
+        "sx": 128,
+        "ix": 80,
+        "pal": 28,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Plasmoid 🎨•⋮♪",
+    "r": "/rec-17.jpg?v=2754861"
+  },
+  "18": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 135, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 155,
+        "sx": 192,
+        "ix": 128,
+        "pal": 63,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": true,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Freqmap 🎨⋮♫",
+    "r": "/rec-18.jpg?v=3173334"
+  },
+  "19": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 135, 0],
+          [111, 255, 0],
+          [0, 0, 0]
+        ],
+        "fx": 139,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "c1": 255,
+        "c2": 64,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "GEQ ☾ 🎨⋮▦♫",
+    "r": "/rec-19.jpg?v=3436078"
+  },
+  "20": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [255, 135, 0],
+          [111, 255, 0],
+          [0, 0, 0]
+        ],
+        "fx": 158,
+        "sx": 71,
+        "ix": 98,
+        "pal": 1,
+        "c1": 128,
+        "c2": 128,
+        "c3": 16,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 0
+      }
+    ],
+    "ledmap": 0,
+    "n": "Gravfreq ☾ 🎨⋮♫",
+    "r": "/rec-20.jpg?v=3600918"
+  },
+  "21": {
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 21,
+        "on": true,
+        "frz": false,
+        "bri": 255,
+        "cct": 127,
+        "set": 0,
+        "n": "",
+        "col": [
+          [0, 0, 255],
+          [111, 255, 0],
+          [0, 0, 0]
+        ],
+        "fx": 137,
+        "sx": 202,
+        "ix": 247,
+        "pal": 1,
+        "c1": 9,
+        "c2": 255,
+        "c3": 9,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "o1": false,
+        "o2": false,
+        "o3": false,
+        "si": 0,
+        "m12": 2
+      }
+    ],
+    "ledmap": 0,
+    "n": "Freqwave •⋮♫",
+    "r": "/rec-21.jpg?v=3832684"
+  }
+}
