@@ -1,7 +1,18 @@
 {
   "rev": [1, 0],
-  "vid": 2404040,
+  "vid": 2501170,
   "id": { "mdns": "helio1", "name": "WLED", "inv": "Light" },
+  "nw": {
+    "ins": [
+      {
+        "ssid": "Your_Network",
+        "pskl": 0,
+        "ip": [0, 0, 0, 0],
+        "gw": [0, 0, 0, 0],
+        "sn": [255, 255, 255, 0]
+      }
+    ]
+  },
   "ap": {
     "ssid": "HELIO",
     "pskl": 8,
@@ -26,14 +37,17 @@
         {
           "start": 0,
           "len": 62,
-          "pin": [2],
-          "order": 34,
+          "pin": [36],
+          "order": 1,
           "rev": false,
           "skip": 0,
-          "type": 30,
+          "type": 22,
           "ref": false,
-          "rgbwm": 3,
-          "freq": 0
+          "rgbwm": 0,
+          "freq": 0,
+          "artnet_outputs": 0,
+          "artnet_fps_limit": 0,
+          "artnet_leds_per_output": 0
         }
       ]
     },
@@ -59,11 +73,11 @@
     "scale-bri": 100,
     "pal-mode": 0,
     "aseg": false,
-    "gc": { "bri": 1, "col": 2.8, "val": 2.8 },
-    "tr": { "mode": true, "fx": true, "dur": 7, "pal": 0, "rpc": 5 },
+    "gc": { "bri": 1, "col": 2.8, "prev": 1, "val": 2.8 },
+    "tr": { "mode": true, "dur": 7, "pal": 0, "rpc": 5 },
     "nl": { "mode": 1, "dur": 60, "tbri": 0, "macro": 0 }
   },
-  "def": { "ps": 0, "on": true, "bri": 128 },
+  "def": { "ps": 10, "on": true, "bri": 255 },
   "if": {
     "sync": {
       "port0": 21324,
@@ -149,14 +163,36 @@
   },
   "ota": { "lock": false, "lock-wifi": false, "pskl": 7, "aota": true },
   "um": {
+    "Autosave": {
+      "enabled": true,
+      "autoSaveAfterSec": 15,
+      "autoSavePreset": 250,
+      "autoSaveApplyOnBoot": true
+    },
     "AudioReactive": {
       "enabled": true,
-      "analogmic": { "pin": -1 },
-      "digitalmic": { "type": 1, "pin": [26, 5, 21, -1] },
+      "digitalmic": { "type": 1, "pin": [39, 38, 40, -1, -1, -1] },
       "config": { "squelch": 10, "gain": 60, "AGC": 1 },
+      "experiments": {
+        "micLev": 0,
+        "Mic_Quality": 0,
+        "freqDist": 0,
+        "FFT_Window": 0,
+        "I2S_FastPath": 1
+      },
+      "frequency": { "scale": 3, "profile": 6 },
       "dynamics": { "limiter": true, "rise": 80, "fall": 1400 },
-      "frequency": { "scale": 3 },
-      "sync": { "port": 11988, "mode": 0 }
+      "sync": { "port": 11988, "mode": 0, "check_sequence": true }
+    },
+    "AutoPlaylist": {
+      "enabled": false,
+      "timeout": 60,
+      "ambientPlaylist": 1,
+      "musicPlaylist": 2,
+      "autoChange": false,
+      "change_lockout": 1000,
+      "ideal_change_min": 10000,
+      "ideal_change_max": 20000
     }
   }
 }
