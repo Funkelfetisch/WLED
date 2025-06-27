@@ -24,7 +24,7 @@
   "wifi": { "sleep": false, "phy": false },
   "hw": {
     "led": {
-      "total": 62,
+      "total": 35,
       "maxpwr": 850,
       "ledma": 0,
       "cct": false,
@@ -36,14 +36,14 @@
       "ins": [
         {
           "start": 0,
-          "len": 62,
-          "pin": [36],
-          "order": 1,
+          "len": 35,
+          "pin": [35],
+          "order": 34,
           "rev": false,
           "skip": 0,
-          "type": 22,
+          "type": 30,
           "ref": false,
-          "rgbwm": 0,
+          "rgbwm": 1,
           "freq": 0,
           "artnet_outputs": 0,
           "artnet_fps_limit": 0,
@@ -77,7 +77,7 @@
     "tr": { "mode": true, "dur": 7, "pal": 0, "rpc": 5 },
     "nl": { "mode": 1, "dur": 60, "tbri": 0, "macro": 0 }
   },
-  "def": { "ps": 10, "on": true, "bri": 255 },
+  "def": { "ps": 11, "on": true, "bri": 255 },
   "if": {
     "sync": {
       "port0": 21324,
@@ -164,7 +164,7 @@
   "ota": { "lock": false, "lock-wifi": false, "pskl": 7, "aota": true },
   "um": {
     "Autosave": {
-      "enabled": true,
+      "enabled": false,
       "autoSaveAfterSec": 15,
       "autoSavePreset": 250,
       "autoSaveApplyOnBoot": true
@@ -172,10 +172,10 @@
     "AudioReactive": {
       "enabled": true,
       "digitalmic": { "type": 1, "pin": [39, 38, 40, -1, -1, -1] },
-      "config": { "squelch": 10, "gain": 60, "AGC": 1 },
+      "config": { "squelch": 30, "gain": 5, "AGC": 3 },
       "experiments": {
         "micLev": 0,
-        "Mic_Quality": 0,
+        "Mic_Quality": 1,
         "freqDist": 0,
         "FFT_Window": 0,
         "I2S_FastPath": 1
